@@ -13,7 +13,7 @@
 
 <VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
-      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="%title" VBox.vgrow="ALWAYS">
+      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="%login" VBox.vgrow="ALWAYS">
          <font>
             <Font size="24.0" />
          </font>
@@ -29,11 +29,11 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="%email" />
+            <Label text="%username" />
             <Label text="%password" GridPane.rowIndex="1" />
             <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="emailTextField" GridPane.columnIndex="1" />
-            <Button fx:id="loginButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginButtonAction" text="%login" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="loginButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginButtonAction" text="%login" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button fx:id="registerButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#registerButtonAction" text="%register" GridPane.rowIndex="2" />
          </children>
       </GridPane>

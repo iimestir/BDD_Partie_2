@@ -59,6 +59,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>11.0.3</version>

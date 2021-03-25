@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import view.Navigator;
 
 /**
  * Controller of the login panel
@@ -24,6 +25,6 @@ public class LoginController {
     }
 
     public void registerButtonAction(ActionEvent actionEvent) {
-        // TODO
+        Navigator.getInstance().push("register.fxml");
     }
 }
