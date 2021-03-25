@@ -4,9 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>AZ</groupId>
     <artifactId>BDD2</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <developers>
+        <developer>
+            <id>000524358</id>
+            <name>IMESTIR Ibrahim</name>
+        </developer>
+        <developer>
+            <id>000479390</id>
+            <name>OUDAHYA Ismaïl</name>
+        </developer>
+        <developer>
+            <id>000479191</id>
+            <name>BELGADA Naoufal</name>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>

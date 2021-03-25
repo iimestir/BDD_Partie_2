@@ -1,6 +1,6 @@
 package view;
 
-import common.Tools;
+import common.Utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,9 +35,13 @@ public class Navigator {
     /**
      * Used to register the navigator local scene to the current main stage
      * @param stage the current main stage
+     * @param path first panel path
      */
-    public void register(Stage stage) {
+    public void register(Stage stage, String path) {
         stage.setScene(this.scene);
+
+        this.push(path);
+        stage.show();
     }
 
     /**
@@ -45,8 +49,8 @@ public class Navigator {
      * @param path panel fxml file
      */
     public void push(String path) {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource(path),
-                ResourceBundle.getBundle("translation", Tools.currentLocale));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path),
+                ResourceBundle.getBundle("translation", Utils.CURRENT_LOCALE));
 
         try {
             final Parent panel = loader.load();

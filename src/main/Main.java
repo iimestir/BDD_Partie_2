@@ -1,15 +1,10 @@
 package main;
 
-import common.Tools;
-
+/**
+ * Main class
+ */
 public class Main {
-
-    /**
-     * Main function
-     * @param args arguments
-     */
     public static void main(String[] args) {
-        System.out.println("Hello World !");
-        System.out.println(Tools.getLocalizedString("title"));
+        App.run(args);
     }
 }
