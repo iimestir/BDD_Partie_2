@@ -26,7 +26,7 @@ public class UserDAO {
         stmt.setString(1,user.getFirstName());
         stmt.setString(2,user.getLastName());
         stmt.setString(3,username);
-        stmt.setString(4,password);
+        stmt.setString(4,"crypt('" + password + "', gen_salt('bf'))");
         stmt.setString(5,user.getStreet());
         stmt.setInt(6,user.getDoorNumber());
         stmt.setString(7,user.getCity());
