@@ -84,7 +84,7 @@ public class UserDAO {
      */
     public static UserDTO select(String username, String password) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "SELECT * FROM public.\"User\" WHERE username = ?, password = crypt('?', password);";
+        String request = "SELECT * FROM public.\"User\" WHERE Username = ?, Password = crypt('?', Password);";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, username);
