@@ -18,10 +18,9 @@ public class UserDAO {
      * @param user userDTO
      * @param username username
      * @param password password
-     * @return the new user ID
      * @throws SQLException if an error occurs
      */
-    public static int insert(UserDTO user, String username, String password) throws SQLException {
+    public static void insert(UserDTO user, String username, String password) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
 
         boolean isEpidemiologist = user instanceof EpidemiologistDTO;
@@ -53,9 +52,6 @@ public class UserDAO {
         }
 
         stmt.executeUpdate();
-
-        // TODO : return the id
-        return -1;
     }
 
     /**
