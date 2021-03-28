@@ -13,68 +13,58 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.RegisterController">
+<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="%register">
         <font>
-          <Font size="24.0"/>
+          <Font size="24.0" />
         </font>
     </Label>
     <GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <TextField fx:id="usernameTextField" promptText="%username" GridPane.columnIndex="1"/>
-        <PasswordField fx:id="passwordField" promptText="%password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <ComboBox fx:id="accountTypeComboBox" maxWidth="1.7976931348623157E308" promptText="%account_type"
-                  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <TextField fx:id="centerTextField" maxWidth="1.7976931348623157E308" promptText="%center"
-                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        <TextField fx:id="servicePhoneTextField" maxWidth="1.7976931348623157E308" promptText="%service_phone"
-                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <TextField fx:id="usernameTextField" promptText="%username" GridPane.columnIndex="1" />
+        <PasswordField fx:id="passwordField" promptText="%password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <ComboBox fx:id="accountTypeComboBox" maxWidth="1.7976931348623157E308" promptText="%account_type" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="centerTextField" maxWidth="1.7976931348623157E308" promptText="%center" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextField fx:id="servicePhoneTextField" maxWidth="1.7976931348623157E308" promptText="%service_phone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-            <TextField fx:id="firstNameTextField" maxWidth="1.7976931348623157E308" promptText="%first_name"
-                       HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="lastNameTextField" maxWidth="1.7976931348623157E308" promptText="%last_name"
-                       HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="firstNameTextField" maxWidth="1.7976931348623157E308" promptText="%first_name" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="lastNameTextField" maxWidth="1.7976931348623157E308" promptText="%last_name" HBox.hgrow="ALWAYS" />
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-            <TextField fx:id="streetTextField" maxWidth="1.7976931348623157E308"
-                       promptText="%address_streetname" HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="doorTextField" maxWidth="1.7976931348623157E308"
-                       promptText="%address_doornumber"/>
+            <TextField fx:id="streetTextField" maxWidth="1.7976931348623157E308" promptText="%address_streetname" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="doorTextField" maxWidth="1.7976931348623157E308" promptText="%address_doornumber" />
         </HBox>
-        <TextField fx:id="cityTextField" maxWidth="1.7976931348623157E308" promptText="%address_city"
-                   GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-        <TextField fx:id="zipTextField" maxWidth="1.7976931348623157E308" promptText="%address_zip"
-                   GridPane.columnIndex="1" GridPane.rowIndex="8"/>
-        <Button fx:id="createAccountButton" defaultButton="true" maxWidth="1.7976931348623157E308"
-                mnemonicParsing="false" onAction="#createAccountButtonAction" text="%create_account"
-                GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-        <Label text="%username"/>
-        <Label text="%password" GridPane.rowIndex="1"/>
-        <Label text="%account_type" GridPane.rowIndex="2"/>
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonAction"
-                text="%cancel" GridPane.rowIndex="9"/>
-        <Label text="%name" GridPane.rowIndex="5"/>
-        <Label text="%address" GridPane.rowIndex="6"/>
-        <Label text="%center" GridPane.rowIndex="3"/>
-        <Label text="%service_phone" GridPane.rowIndex="4"/>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+         <children>
+              <TextField fx:id="cityTextField" maxWidth="1.7976931348623157E308" promptText="%address_city" HBox.hgrow="ALWAYS" />
+              <TextField fx:id="zipTextField" maxWidth="1.7976931348623157E308" promptText="%address_zip" />
+         </children>
+      </HBox>
+        <Button fx:id="createAccountButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createAccountButtonAction" text="%create_account" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        <Label text="%username" />
+        <Label text="%password" GridPane.rowIndex="1" />
+        <Label text="%account_type" GridPane.rowIndex="2" />
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonAction" text="%cancel" GridPane.rowIndex="8" />
+        <Label text="%name" GridPane.rowIndex="5" />
+        <Label text="%address" GridPane.rowIndex="6" />
+        <Label text="%center" GridPane.rowIndex="3" />
+        <Label text="%service_phone" GridPane.rowIndex="4" />
     </GridPane>
 </VBox>
