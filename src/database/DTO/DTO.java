@@ -3,7 +3,7 @@ package database.DTO;
 public abstract class DTO<T> {
     protected T id;
 
-    public boolean isSaved() {
+    public boolean isStored() {
         return (id != null);
     }
 

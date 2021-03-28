@@ -1,7 +1,8 @@
 package database.business;
 
 import database.DTO.UserDTO;
+import java.sql.SQLException;
 
-public interface EpidemiologistInterface {
-    UserDTO getUserByCredentials();
+public interface EpidemiologistInterface extends UserInterface {
+
 }
