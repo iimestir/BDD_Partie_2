@@ -1,5 +1,6 @@
 package database.DAO;
 
+import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
 
 import java.sql.Connection;
@@ -7,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Handles the DB communication around the User table
+ */
 public class UserDAO {
 
     /**
@@ -20,10 +24,17 @@ public class UserDAO {
     public static int insert(UserDTO user, String username, String password) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
 
-        String request =
-                "INSERT INTO Public.\"User\"(\"Firstname\",\"Lastname\",\"Username\"," +
-                        "\"Password\",\"Street\",\"Doornumber\",\"City\",\"ZIP\")" +
-                        " VALUES (?,?,?,crypt(?, gen_salt('bf')),?,?,?,?)";
+        boolean isEpidemiologist = user instanceof EpidemiologistDTO;
+
+        String request;
+        if(!isEpidemiologist)
+            request = "INSERT INTO Public.\"User\"(\"Firstname\",\"Lastname\",\"Username\","
+                    + "\"Password\",\"Street\",\"Doornumber\",\"City\",\"ZIP\")"
+                    + " VALUES (?,?,?,crypt(?, gen_salt('bf')),?,?,?,?)";
+        else
+            request = "INSERT INTO Public.\"User\"(\"Firstname\",\"Lastname\",\"Username\","
+                    + "\"Password\",\"Street\",\"Doornumber\",\"City\",\"ZIP\",\"Center\",\"Service Phone\",\"Type\")"
+                    + " VALUES (?,?,?,crypt(?, gen_salt('bf')),?,?,?,?,?,?,?)";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1,"'"+user.getFirstName()+"'");
@@ -34,6 +45,12 @@ public class UserDAO {
         stmt.setInt(6,user.getDoorNumber());
         stmt.setString(7,"'"+user.getCity()+"'");
         stmt.setString(8,"'"+user.getZipCode()+"'");
+
+        if(isEpidemiologist) {
+            stmt.setString(9,"'"+((EpidemiologistDTO) user).getCenter()+"'");
+            stmt.setString(10,"'"+((EpidemiologistDTO) user).getServiceNumber()+"'");
+            stmt.setInt(11,1);
+        }
 
         stmt.executeUpdate();
 
@@ -49,12 +66,27 @@ public class UserDAO {
      */
     public static void update(UserDTO user, String password) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "";
+        boolean isEpidemiologist = user instanceof EpidemiologistDTO;
 
-        if(password != null) request =
-                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?,Password = ?,Street = ?,Doornumber = ?,City = ?,ZIP = ?";
-        else request =
-                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?,Street = ?,Doornumber = ?,City = ?,ZIP = ?";
+        String request;
+        if(!isEpidemiologist) {
+            // User
+            if(password != null) request =
+                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?,Password = ?" +
+                            ",Street = ?,Doornumber = ?,City = ?,ZIP = ?";
+            else request =
+                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?" +
+                            ",Street = ?,Doornumber = ?,City = ?,ZIP = ?";
+        } else {
+            // Epidemiologist
+            if(password != null) request =
+                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?,Password = ?" +
+                            ",Street = ?,Doornumber = ?,City = ?,ZIP = ?, Center = ?, Service Phone = ?";
+            else request =
+                    "UPDATE Public.\"User\" SET Fistname = ?,Lastname = ?" +
+                            ",Street = ?,Doornumber = ?,City = ?,ZIP = ?, Center = ?, Service Phone = ?";
+        }
+
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1,"'"+user.getFirstName()+"'");
@@ -69,7 +101,12 @@ public class UserDAO {
         stmt.setString(i++, "'"+user.getStreet()+"'");
         stmt.setInt(i++, user.getDoorNumber());
         stmt.setString(i++, "'"+user.getCity()+"'");
-        stmt.setString(i, "'"+user.getZipCode()+"'");
+        stmt.setString(i++, "'"+user.getZipCode()+"'");
+
+        if(isEpidemiologist) {
+            stmt.setString(i++,"'"+((EpidemiologistDTO) user).getCenter()+"'");
+            stmt.setString(i,"'"+((EpidemiologistDTO) user).getServiceNumber()+"'");
+        }
 
         stmt.executeUpdate();
     }
@@ -97,14 +134,33 @@ public class UserDAO {
         ResultSet rs = stmt.executeQuery();
         rs.next();
 
-        return new UserDTO(
-                rs.getInt("UUID"),
-                rs.getString("Firstname"),
-                rs.getString("Lastname"),
-                rs.getString("Street"),
-                rs.getInt("Doornumber"),
-                rs.getString("City"),
-                rs.getString("ZIP")
-        );
+        UserDTO user;
+        int accountType = rs.getInt("Type");
+        if(accountType == 0)
+            // User
+            user = new UserDTO(
+                    rs.getInt("UUID"),
+                    rs.getString("Firstname"),
+                    rs.getString("Lastname"),
+                    rs.getString("Street"),
+                    rs.getInt("Doornumber"),
+                    rs.getString("City"),
+                    rs.getString("ZIP")
+            );
+        else
+            // Epidemiologist
+            user = new EpidemiologistDTO(
+                    rs.getInt("UUID"),
+                    rs.getString("Firstname"),
+                    rs.getString("Lastname"),
+                    rs.getString("Street"),
+                    rs.getInt("Doornumber"),
+                    rs.getString("City"),
+                    rs.getString("ZIP"),
+                    rs.getString("Center"),
+                    rs.getString("Service Phone")
+            );
+
+        return user;
     }
 }

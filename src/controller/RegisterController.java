@@ -1,8 +1,8 @@
 package controller;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import common.Utils;
 import database.DAO.UserDAO;
+import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import model.AccountType;
 import view.Navigator;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -111,17 +110,23 @@ public class RegisterController implements Initializable {
      * @param actionEvent not used here
      */
     public void createAccountButtonAction(ActionEvent actionEvent) {
-        UserDTO user = new UserDTO(firstNameTextField.getText(), lastNameTextField.getText(),
-                streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
-                zipTextField.getText());
-
         try {
+            UserDTO user;
+            if(accountTypeComboBox.getSelectionModel().getSelectedItem().equals(AccountType.USER))
+                user = new UserDTO(firstNameTextField.getText(), lastNameTextField.getText(),
+                        streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
+                        zipTextField.getText());
+            else
+                user = new EpidemiologistDTO(firstNameTextField.getText(), lastNameTextField.getText(),
+                        streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
+                        zipTextField.getText(),centerTextField.getText(),servicePhoneTextField.getText());
+
             UserDAO.insert(user, usernameTextField.getText(), passwordField.getText());
             System.out.println("Account created");
 
             Navigator.getInstance().pop();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (Exception ex) {
+            Utils.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 

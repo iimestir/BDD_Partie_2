@@ -1,6 +1,6 @@
 package common;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
+import javafx.scene.control.Alert;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -21,11 +21,28 @@ public final class Utils {
     }
 
     /**
-     * Used to cipher a string
-     * @param message the string
-     * @return the ciphered string
+     * Used to show an error dialog
+     *
+     * @param errMsg error message
      */
-    public static String getHashedString(String message) {
-        return BCrypt.withDefaults().hashToString(6, message.toCharArray());
+    public static void showErrorDialog(String errMsg) {
+        final Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(getTranslatedString("error"));
+        alert.setHeaderText(getTranslatedString("error_header"));
+        alert.setContentText(errMsg);
+        alert.showAndWait();
+    }
+
+    /**
+     * Used to show a regular dialog
+     *
+     * @param msg dialog message
+     */
+    public static void showDialog(String msg) {
+        final Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle(getTranslatedString("message"));
+        dialog.setHeaderText(getTranslatedString("information"));
+        dialog.setContentText(msg);
+        dialog.showAndWait();
     }
 }
