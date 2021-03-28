@@ -1,5 +1,6 @@
 package controller;
 
+import common.Utils;
 import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
 import database.business.UserBusinessLogic;
@@ -112,6 +113,11 @@ public class RegisterController implements Initializable {
      * @param actionEvent not used here
      */
     public void createAccountButtonAction(ActionEvent actionEvent) {
+        if(Utils.scorePassword(passwordField.getText()) < 10) {
+            UITools.showErrorDialog(Utils.getTranslatedString("password_error_message"));
+            return;
+        }
+
         try {
             UserDTO user;
             if(accountTypeComboBox.getSelectionModel().getSelectedItem().equals(AccountType.USER))
