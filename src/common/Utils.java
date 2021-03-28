@@ -19,6 +19,25 @@ public final class Utils {
     }
 
     /**
+     * Checks if the password has a special character
+     * @param password the password
+     * @return boolean
+     */
+    private static boolean hasSpecial(String password) {
+        return password.contains("+") || password.contains("~") || password.contains("!")
+                || password.contains("@") || password.contains("#") || password.contains("$")
+                || password.contains("^") || password.contains("%") || password.contains("&")
+                || password.contains("(") || password.contains(")") || password.contains("_")
+                || password.contains("-") || password.contains("=") || password.contains("?")
+                || password.contains(".") || password.contains(";") || password.contains(",")
+                || password.contains("[") || password.contains("]") || password.contains("ù")
+                || password.contains("µ") || password.contains("{") || password.contains("}")
+                || password.contains("€") || password.contains("/") || password.contains("\\")
+                || password.contains("<") || password.contains(">") || password.contains("é")
+                || password.contains("ç") || password.contains("à") || password.contains("'");
+    }
+
+    /**
      * Used to score the input password
      * @param password the password
      * @return the score
@@ -39,11 +58,11 @@ public final class Utils {
             score += 2;
         if(password.matches("(?=.*[A-Z]).*"))
             score += 2;
-        if(password.matches("(?=.*[\\+~!@#$%^&*()_-]).*"))
+
+        if(hasSpecial(password))
             score += 2;
 
         return score;
-
     }
 
 }

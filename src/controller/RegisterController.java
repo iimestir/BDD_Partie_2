@@ -113,7 +113,7 @@ public class RegisterController implements Initializable {
      * @param actionEvent not used here
      */
     public void createAccountButtonAction(ActionEvent actionEvent) {
-        if(Utils.scorePassword(passwordField.getText()) < 10) {
+        if(Utils.scorePassword(passwordField.getText()) < 9) {
             UITools.showErrorDialog(Utils.getTranslatedString("password_error_message"));
             return;
         }
