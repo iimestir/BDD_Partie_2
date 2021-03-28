@@ -9,7 +9,9 @@ import java.sql.SQLException;
  */
 public class DBManager {
     private static final DBManager instance = new DBManager();
-
+    private static final String DB_URL = "jdbc:postgresql://localhost/BDD2";
+    private static final String DB_USER = "bdd_application";
+    private static final String DB_PWD = "password";
     private Connection connection;
 
     /**
@@ -31,9 +33,8 @@ public class DBManager {
      * @throws SQLException exception thrown if the connection failed
      */
     public Connection getDBConnection() throws SQLException {
-        // TODO : PostgreSQL DB connection
         if(connection == null)
-            connection = DriverManager.getConnection("");
+            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PWD);
 
         return connection;
     }

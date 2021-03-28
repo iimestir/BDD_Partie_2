@@ -2,6 +2,8 @@ package controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import common.Utils;
+import database.DAO.UserDAO;
+import database.DTO.UserDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +14,7 @@ import javafx.scene.control.TextField;
 import model.AccountType;
 import view.Navigator;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -108,13 +111,18 @@ public class RegisterController implements Initializable {
      * @param actionEvent not used here
      */
     public void createAccountButtonAction(ActionEvent actionEvent) {
-        // TODO
-        String username = Utils.getHashedString(usernameTextField.getText());
-        String password = Utils.getHashedString(passwordField.getText());
+        UserDTO user = new UserDTO(firstNameTextField.getText(), lastNameTextField.getText(),
+                streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
+                zipTextField.getText());
 
-        BCrypt.Result result = BCrypt.verifyer().verify(usernameTextField.getText().toCharArray(),
-                password);
-        System.out.println(result.verified);
+        try {
+            UserDAO.insert(user, usernameTextField.getText(), passwordField.getText());
+            System.out.println("Account created");
+
+            Navigator.getInstance().pop();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     /**
