@@ -1,9 +1,9 @@
 package controller;
 
 import common.Utils;
-import database.DAO.UserDAO;
 import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
+import database.business.UserLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -121,8 +121,10 @@ public class RegisterController implements Initializable {
                         streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
                         zipTextField.getText(),centerTextField.getText(),servicePhoneTextField.getText());
 
-            UserDAO.insert(user, usernameTextField.getText(), passwordField.getText());
-            System.out.println("Account created");
+            UserLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
+            usernameTextField.clear();
+            passwordField.clear();
+            Utils.showDialog("Account created");
 
             Navigator.getInstance().pop();
         } catch (Exception ex) {

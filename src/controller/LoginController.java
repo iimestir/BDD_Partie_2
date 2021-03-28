@@ -1,7 +1,8 @@
 package controller;
 
-import database.DAO.UserDAO;
+import common.Utils;
 import database.DTO.UserDTO;
+import database.business.UserLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,10 +42,13 @@ public class LoginController implements Initializable {
     }
 
     public void loginButtonAction(ActionEvent actionEvent) {
-        // TODO
         try {
-            UserDTO user = UserDAO.select(emailTextField.getText(), passwordField.getText());
-            System.out.println("User found : " + user.getFirstName());
+            UserDTO myUser = UserLogic.getInstance().login(emailTextField.getText(), passwordField.getText());
+
+            emailTextField.clear();
+            passwordField.clear();
+
+            Utils.showDialog("Logged in as : " + myUser.getFirstName());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
