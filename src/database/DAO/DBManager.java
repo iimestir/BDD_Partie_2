@@ -52,6 +52,9 @@ public class DBManager {
      * @throws SQLException if the connection is null
      */
     public void commit() throws SQLException {
+        if(getDBConnection().getAutoCommit())
+            return;
+
         getDBConnection().commit();
         getDBConnection().setAutoCommit(true);
     }
@@ -61,6 +64,9 @@ public class DBManager {
      * @throws SQLException if the connection is null
      */
     public void rollback() throws SQLException {
+        if(getDBConnection().getAutoCommit())
+            return;
+
         getDBConnection().rollback();
         getDBConnection().setAutoCommit(true);
     }
