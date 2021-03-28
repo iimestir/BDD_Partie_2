@@ -11,7 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.AccountType;
-import view.DialogTools;
+import view.UITools;
 import view.Navigator;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -54,6 +54,8 @@ public class RegisterController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         accountTypeComboBox.getItems().addAll(AccountType.class.getEnumConstants());
         setEpidemiologistForms(false);
+        UITools.setNumericField(doorTextField);
+
         initAccountComboBoxListener();
         initRegisterButtonBinding();
     }
@@ -124,11 +126,11 @@ public class RegisterController implements Initializable {
             UserLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
             usernameTextField.clear();
             passwordField.clear();
-            DialogTools.showDialog("Account created");
+            UITools.showDialog("Account created");
 
             Navigator.getInstance().pop();
         } catch (Exception ex) {
-            DialogTools.showErrorDialog(ex.getLocalizedMessage());
+            UITools.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 

@@ -8,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import view.DialogTools;
+import view.UITools;
 import view.Navigator;
 
 import java.net.URL;
@@ -21,7 +21,7 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField passwordField;
     @FXML
-    private TextField emailTextField;
+    private TextField usernameTextField;
     @FXML
     private Button loginButton;
     @FXML
@@ -35,21 +35,21 @@ public class LoginController implements Initializable {
     private void initLoginButtonBinding() {
         loginButton
                 .disableProperty()
-                .bind(emailTextField.textProperty().isEmpty()
+                .bind(usernameTextField.textProperty().isEmpty()
                         .or(passwordField.textProperty().isEmpty())
                 );
     }
 
     public void loginButtonAction(ActionEvent actionEvent) {
         try {
-            UserDTO myUser = UserLogic.getInstance().login(emailTextField.getText(), passwordField.getText());
+            UserDTO myUser = UserLogic.getInstance().login(usernameTextField.getText(), passwordField.getText());
 
-            emailTextField.clear();
+            usernameTextField.clear();
             passwordField.clear();
 
-            DialogTools.showDialog("Logged in as : " + myUser.getFirstName());
+            UITools.showDialog("Logged in as : " + myUser.getFirstName());
         } catch (Exception ex) {
-            DialogTools.showErrorDialog(ex.getLocalizedMessage());
+            UITools.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 
