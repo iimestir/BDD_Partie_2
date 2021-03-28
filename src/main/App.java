@@ -7,10 +7,12 @@ import view.Navigator;
 
 public class App extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // Window settings
         stage.setWidth(800);
         stage.setHeight(500);
+        stage.setMinWidth(800);
+        stage.setMinHeight(500);
         stage.setTitle(Utils.getTranslatedString("title"));
 
         Navigator.getInstance().register(stage, "login.fxml");

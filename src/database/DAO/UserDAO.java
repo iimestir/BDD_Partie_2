@@ -21,6 +21,9 @@ public class UserDAO {
      * @throws SQLException if an error occurs
      */
     public static void insert(UserDTO user, String username, String password) throws SQLException {
+        if(user.isStored())
+            throw new SQLException("The specified UserDTO is already persistent");
+
         Connection conn = DBManager.getInstance().getDBConnection();
 
         boolean isEpidemiologist = user instanceof EpidemiologistDTO;
@@ -61,6 +64,9 @@ public class UserDAO {
      * @throws SQLException if an error occurred
      */
     public static void update(UserDTO user, String password) throws SQLException {
+        if(!user.isStored())
+            throw new SQLException("The specified UserDTO is not persistent");
+
         Connection conn = DBManager.getInstance().getDBConnection();
         boolean isEpidemiologist = user instanceof EpidemiologistDTO;
 

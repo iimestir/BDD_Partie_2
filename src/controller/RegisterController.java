@@ -2,7 +2,7 @@ package controller;
 
 import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
-import database.business.UserLogic;
+import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -123,7 +123,7 @@ public class RegisterController implements Initializable {
                         streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
                         zipTextField.getText(),centerTextField.getText(),servicePhoneTextField.getText());
 
-            UserLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
+            UserBusinessLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
             usernameTextField.clear();
             passwordField.clear();
             UITools.showDialog("Account created");

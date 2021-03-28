@@ -6,19 +6,19 @@ import database.DTO.UserDTO;
 
 import java.sql.SQLException;
 
-public class UserLogic {
-    private static final UserLogic instance = new UserLogic();
+public class UserBusinessLogic {
+    private static final UserBusinessLogic instance = new UserBusinessLogic();
 
     /**
      * Singleton
      */
-    protected UserLogic() {}
+    protected UserBusinessLogic() {}
 
     /**
      * Singleton instance getter
      * @return the singleton
      */
-    public static UserLogic getInstance() {
+    public static UserBusinessLogic getInstance() {
         return instance;
     }
 

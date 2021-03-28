@@ -1,7 +1,7 @@
 package controller;
 
 import database.DTO.UserDTO;
-import database.business.UserLogic;
+import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,7 +42,7 @@ public class LoginController implements Initializable {
 
     public void loginButtonAction(ActionEvent actionEvent) {
         try {
-            UserDTO myUser = UserLogic.getInstance().login(usernameTextField.getText(), passwordField.getText());
+            UserDTO myUser = UserBusinessLogic.getInstance().login(usernameTextField.getText(), passwordField.getText());
 
             usernameTextField.clear();
             passwordField.clear();
