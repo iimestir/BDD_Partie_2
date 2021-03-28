@@ -1,6 +1,5 @@
 package controller;
 
-import common.Utils;
 import database.DTO.EpidemiologistDTO;
 import database.DTO.UserDTO;
 import database.business.UserLogic;
@@ -12,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.AccountType;
+import view.DialogTools;
 import view.Navigator;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -124,11 +124,11 @@ public class RegisterController implements Initializable {
             UserLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
             usernameTextField.clear();
             passwordField.clear();
-            Utils.showDialog("Account created");
+            DialogTools.showDialog("Account created");
 
             Navigator.getInstance().pop();
         } catch (Exception ex) {
-            Utils.showErrorDialog(ex.getLocalizedMessage());
+            DialogTools.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 

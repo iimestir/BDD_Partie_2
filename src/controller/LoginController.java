@@ -1,6 +1,5 @@
 package controller;
 
-import common.Utils;
 import database.DTO.UserDTO;
 import database.business.UserLogic;
 import javafx.event.ActionEvent;
@@ -9,10 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import view.DialogTools;
 import view.Navigator;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -48,9 +47,9 @@ public class LoginController implements Initializable {
             emailTextField.clear();
             passwordField.clear();
 
-            Utils.showDialog("Logged in as : " + myUser.getFirstName());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            DialogTools.showDialog("Logged in as : " + myUser.getFirstName());
+        } catch (Exception ex) {
+            DialogTools.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 

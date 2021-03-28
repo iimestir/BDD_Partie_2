@@ -20,29 +20,4 @@ public final class Utils {
         return ResourceBundle.getBundle("translation", CURRENT_LOCALE).getString(key);
     }
 
-    /**
-     * Used to show an error dialog
-     *
-     * @param errMsg error message
-     */
-    public static void showErrorDialog(String errMsg) {
-        final Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(getTranslatedString("error"));
-        alert.setHeaderText(getTranslatedString("error_header"));
-        alert.setContentText(errMsg);
-        alert.showAndWait();
-    }
-
-    /**
-     * Used to show a regular dialog
-     *
-     * @param msg dialog message
-     */
-    public static void showDialog(String msg) {
-        final Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-        dialog.setTitle(getTranslatedString("message"));
-        dialog.setHeaderText(getTranslatedString("information"));
-        dialog.setContentText(msg);
-        dialog.showAndWait();
-    }
 }
