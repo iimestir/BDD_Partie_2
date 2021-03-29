@@ -25,19 +25,4 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
         return instance;
     }
 
-    public UserDTO login(String username, String password) throws SQLException {
-        return UserBusinessLogic.getInstance().login(username, password);
-    }
-
-    public void register(UserDTO user, String username, String password) throws SQLException {
-        UserBusinessLogic.getInstance().register(user, username, password);
-    }
-
-    public void updateUser(UserDTO user, String password) throws SQLException {
-        UserBusinessLogic.getInstance().updateUser(user, password);
-    }
-
-    public void deleteUser(UserDTO user) throws SQLException {
-        UserBusinessLogic.getInstance().deleteUser(user);
-    }
 }
