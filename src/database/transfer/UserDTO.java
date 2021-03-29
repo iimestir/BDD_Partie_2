@@ -1,11 +1,13 @@
 package database.transfer;
 
+import java.util.UUID;
+
 /**
  * Object storing a User information
  *
  * We purposely don't store the username nor the password
  */
-public class UserDTO extends DTO<Integer> {
+public class UserDTO extends DTO<UUID> {
     private String firstName;
     private String lastName;
 
@@ -17,7 +19,7 @@ public class UserDTO extends DTO<Integer> {
 
     /**
      * UserDTO Constructor
-     * @param id integer
+     * @param id uuid
      * @param firstName string
      * @param lastName string
      * @param street string
@@ -25,7 +27,7 @@ public class UserDTO extends DTO<Integer> {
      * @param city string
      * @param zipCode string
      */
-    public UserDTO(Integer id, String firstName, String lastName, String street,
+    public UserDTO(UUID id, String firstName, String lastName, String street,
                    Integer doorNumber, String city, String zipCode) {
         this(firstName, lastName, street, doorNumber, city, zipCode);
         this.id = id;

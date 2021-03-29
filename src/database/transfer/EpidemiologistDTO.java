@@ -1,5 +1,7 @@
 package database.transfer;
 
+import java.util.UUID;
+
 /**
  * Represents an epidemiologist
  */
@@ -17,7 +19,7 @@ public class EpidemiologistDTO extends UserDTO {
      * @param city city
      * @param zipCode zip code
      */
-    public EpidemiologistDTO(Integer id, String firstName, String lastName, String street, Integer doorNumber, String city,
+    public EpidemiologistDTO(UUID id, String firstName, String lastName, String street, Integer doorNumber, String city,
                              String zipCode, String center, String serviceNumber) {
         super(id,firstName, lastName, street, doorNumber, city, zipCode);
 
