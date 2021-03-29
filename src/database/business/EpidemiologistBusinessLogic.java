@@ -1,6 +1,6 @@
 package database.business;
 
-import database.DTO.UserDTO;
+import database.transfer.UserDTO;
 
 import java.sql.SQLException;
 

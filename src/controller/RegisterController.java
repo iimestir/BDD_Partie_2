@@ -1,8 +1,8 @@
 package controller;
 
 import common.Utils;
-import database.DTO.EpidemiologistDTO;
-import database.DTO.UserDTO;
+import database.transfer.EpidemiologistDTO;
+import database.transfer.UserDTO;
 import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

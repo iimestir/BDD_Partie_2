@@ -1,4 +1,4 @@
-package database.DTO;
+package database.transfer;
 
 public abstract class DTO<T> {
     protected T id;

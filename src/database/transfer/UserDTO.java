@@ -1,4 +1,4 @@
-package database.DTO;
+package database.transfer;
 
 /**
  * Object storing a User information

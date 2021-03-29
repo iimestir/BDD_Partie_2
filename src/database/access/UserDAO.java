@@ -1,7 +1,7 @@
-package database.DAO;
+package database.access;
 
-import database.DTO.EpidemiologistDTO;
-import database.DTO.UserDTO;
+import database.transfer.EpidemiologistDTO;
+import database.transfer.UserDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

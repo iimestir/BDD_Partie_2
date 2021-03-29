@@ -1,6 +1,6 @@
 package controller;
 
-import database.DTO.UserDTO;
+import database.transfer.UserDTO;
 import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

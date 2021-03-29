@@ -1,8 +1,8 @@
 package database.business;
 
-import database.DAO.DBManager;
-import database.DAO.UserDAO;
-import database.DTO.UserDTO;
+import database.access.DBManager;
+import database.access.UserDAO;
+import database.transfer.UserDTO;
 
 import java.sql.SQLException;
 
