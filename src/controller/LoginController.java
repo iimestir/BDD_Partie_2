@@ -1,5 +1,6 @@
 package controller;
 
+import common.LoginToken;
 import database.transfer.UserDTO;
 import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import model.Disposable;
 import view.UITools;
 import view.Navigator;
 
@@ -17,15 +19,11 @@ import java.util.ResourceBundle;
 /**
  * Controller of the login panel
  */
-public class LoginController implements Initializable {
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private TextField usernameTextField;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Button registerButton;
+public class LoginController implements Initializable, Disposable {
+    @FXML private PasswordField passwordField;
+    @FXML private TextField usernameTextField;
+    @FXML private Button loginButton;
+    @FXML private Button registerButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -42,12 +40,10 @@ public class LoginController implements Initializable {
 
     public void loginButtonAction(ActionEvent actionEvent) {
         try {
-            UserDTO myUser = UserBusinessLogic.getInstance().login(usernameTextField.getText(), passwordField.getText());
+            LoginToken.CURRENT_USER = UserBusinessLogic.getInstance()
+                    .login(usernameTextField.getText(), passwordField.getText());
 
-            usernameTextField.clear();
-            passwordField.clear();
-
-            UITools.showDialog("Logged in as : " + myUser.getFirstName());
+            Navigator.getInstance().push("main.fxml");
         } catch (Exception ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
         }
@@ -57,4 +53,18 @@ public class LoginController implements Initializable {
         Navigator.getInstance().push("register.fxml");
     }
 
+    @Override
+    public void dispose() {
+        usernameTextField.clear();
+        passwordField.clear();
+    }
+
+    @Override
+    public void pause() {
+        usernameTextField.clear();
+        passwordField.clear();
+    }
+
+    @Override
+    public void resume() { }
 }

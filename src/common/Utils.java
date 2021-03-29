@@ -1,5 +1,7 @@
 package common;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -63,6 +65,15 @@ public final class Utils {
             score += 2;
 
         return score;
+    }
+
+    /**
+     * Returns the current time formatted to a specified manner
+     * @return the current time
+     */
+    public static String currentFormatedTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
+        return LocalDateTime.now().format(dtf);
     }
 
 }

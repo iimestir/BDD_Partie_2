@@ -21,30 +21,18 @@ import java.util.ResourceBundle;
  * Register panel controller
  */
 public class RegisterController implements Initializable {
-    @FXML
-    private TextField centerTextField;
-    @FXML
-    private TextField servicePhoneTextField;
-    @FXML
-    private TextField firstNameTextField;
-    @FXML
-    private TextField lastNameTextField;
-    @FXML
-    private TextField streetTextField;
-    @FXML
-    private TextField doorTextField;
-    @FXML
-    private TextField cityTextField;
-    @FXML
-    private TextField zipTextField;
-    @FXML
-    private Button createAccountButton;
-    @FXML
-    private ComboBox<AccountType> accountTypeComboBox;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private TextField usernameTextField;
+    @FXML private TextField centerTextField;
+    @FXML private TextField servicePhoneTextField;
+    @FXML private TextField firstNameTextField;
+    @FXML private TextField lastNameTextField;
+    @FXML private TextField streetTextField;
+    @FXML private TextField doorTextField;
+    @FXML private TextField cityTextField;
+    @FXML private TextField zipTextField;
+    @FXML private Button createAccountButton;
+    @FXML private ComboBox<AccountType> accountTypeComboBox;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField usernameTextField;
 
     /**
      * Used to setup the panel before showing it
