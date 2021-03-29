@@ -1,7 +1,6 @@
 package controller;
 
 import common.LoginToken;
-import database.transfer.UserDTO;
 import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

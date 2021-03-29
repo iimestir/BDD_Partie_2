@@ -1,17 +1,17 @@
 package controller;
 
+import controller.subpanels.SQLController;
 import controller.subpanels.WelcomeController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
 import model.Disposable;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable, Disposable {
-    @FXML private VBox welcome;
     @FXML private WelcomeController welcomeController;
+    @FXML private SQLController sqlController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

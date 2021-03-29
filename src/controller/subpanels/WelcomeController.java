@@ -24,6 +24,9 @@ public class WelcomeController implements Initializable, Disposable {
         initTimeRefreshService();
     }
 
+    /**
+     * Initializes the time refresh service
+     */
     private void initTimeRefreshService() {
         service = new Thread(() -> {
             while(!service.isInterrupted()) {
