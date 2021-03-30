@@ -37,7 +37,7 @@ public class LoginController implements Initializable, Disposable {
                 );
     }
 
-    public void loginButtonAction(ActionEvent actionEvent) {
+    public void loginButtonAction() {
         try {
             LoginToken.CURRENT_USER = UserBusinessLogic.getInstance()
                     .login(usernameTextField.getText(), passwordField.getText());
@@ -48,7 +48,7 @@ public class LoginController implements Initializable, Disposable {
         }
     }
 
-    public void registerButtonAction(ActionEvent actionEvent) {
+    public void registerButtonAction() {
         Navigator.getInstance().push("register.fxml");
     }
 

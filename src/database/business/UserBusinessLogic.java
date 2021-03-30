@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 public class UserBusinessLogic {
     private static final UserBusinessLogic instance = new UserBusinessLogic();
+    protected static final UserDAO userDao = UserDAO.getInstance();
 
     /**
      * Singleton
@@ -32,7 +33,7 @@ public class UserBusinessLogic {
     public UserDTO login(String username, String password) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            UserDTO user = UserDAO.select(username, password);
+            UserDTO user = userDao.select(username, password);
             DBManager.getInstance().commit();
 
             return user;
@@ -53,7 +54,7 @@ public class UserBusinessLogic {
     public void register(UserDTO user, String username, String password) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            UserDAO.insert(user, username, password);
+            userDao.insert(user, username, password);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -71,7 +72,7 @@ public class UserBusinessLogic {
     public void updateUser(UserDTO user, String password) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            UserDAO.update(user, password);
+            userDao.update(user, password);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -88,7 +89,7 @@ public class UserBusinessLogic {
     public void deleteUser(UserDTO user) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            UserDAO.delete(user);
+            userDao.delete(user);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();

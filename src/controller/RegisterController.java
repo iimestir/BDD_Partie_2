@@ -1,6 +1,7 @@
 package controller;
 
 import common.Utils;
+import database.business.EpidemiologistBusinessLogic;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 import database.business.UserBusinessLogic;
@@ -108,18 +109,23 @@ public class RegisterController implements Initializable {
 
         try {
             UserDTO user;
-            if(accountTypeComboBox.getSelectionModel().getSelectedItem().equals(AccountType.USER))
+            if(accountTypeComboBox.getSelectionModel().getSelectedItem().equals(AccountType.USER)) {
                 user = new UserDTO(firstNameTextField.getText(), lastNameTextField.getText(),
                         streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
                         zipTextField.getText());
-            else
+
+                UserBusinessLogic.getInstance()
+                        .register(user, usernameTextField.getText(), passwordField.getText());
+            }
+            else {
                 user = new EpidemiologistDTO(firstNameTextField.getText(), lastNameTextField.getText(),
                         streetTextField.getText(), Integer.parseInt(doorTextField.getText()), cityTextField.getText(),
                         zipTextField.getText(),centerTextField.getText(),servicePhoneTextField.getText());
 
-            UserBusinessLogic.getInstance().register(user, usernameTextField.getText(), passwordField.getText());
-            usernameTextField.clear();
-            passwordField.clear();
+                EpidemiologistBusinessLogic.getInstance()
+                        .register(user, usernameTextField.getText(), passwordField.getText());
+            }
+
             UITools.showDialog("Account created");
 
             Navigator.getInstance().pop();
