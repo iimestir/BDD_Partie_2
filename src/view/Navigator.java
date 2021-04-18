@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import model.Disposable;
+import model.Panel;
 
 import java.io.IOException;
 import java.util.*;
@@ -38,28 +39,28 @@ public class Navigator<T> {
     /**
      * Used to register the navigator local scene to the current main stage
      * @param stage the current main stage
-     * @param path first panel path
+     * @param panel first panel
      */
-    public void register(Stage stage, String path) {
+    public void register(Stage stage, Panel panel) {
         stage.setScene(this.scene);
 
-        this.push(path);
+        this.push(panel);
         stage.show();
     }
 
     /**
      * Used to push a new panel to the navigator
-     * @param path panel fxml file
+     * @param panel panel
      */
-    public void push(String path) {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path),
+    public void push(Panel panel) {
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + panel.getPath()),
                 ResourceBundle.getBundle("translation", Utils.CURRENT_LOCALE));
 
         try {
-            final Parent panel = loader.load();
+            final Parent parent = loader.load();
 
-            this.panels.add(new Pair<>(panel,loader.getController()));
-            this.scene.setRoot(panel);
+            this.panels.add(new Pair<>(parent,loader.getController()));
+            this.scene.setRoot(parent);
 
             if(panels.size() >= 2 && panels.get(panels.size()-2).getValue() instanceof Disposable)
                 ((Disposable) panels.get(panels.size()-2).getValue()).pause();

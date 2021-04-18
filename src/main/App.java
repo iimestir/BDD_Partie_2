@@ -3,6 +3,7 @@ package main;
 import common.Utils;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Panel;
 import view.Navigator;
 
 public class App extends Application {
@@ -18,7 +19,7 @@ public class App extends Application {
             Navigator.getInstance().exit();
         });
 
-        Navigator.getInstance().register(stage, "login.fxml");
+        Navigator.getInstance().register(stage, Panel.LOGIN);
     }
 
     public static void run(String[] args) {

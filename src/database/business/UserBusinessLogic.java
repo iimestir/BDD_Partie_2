@@ -46,7 +46,7 @@ public class UserBusinessLogic {
 
     /**
      * Used to register a user in the database
-     * @param user the account informations
+     * @param user the account information
      * @param username the username
      * @param password the password
      * @throws SQLException if an error occurred
@@ -65,14 +65,16 @@ public class UserBusinessLogic {
 
     /**
      * Used to edit a user profile
-     * @param user the account informations (updated)
-     * @param password the password (null if not updated)
+     * @param user the account information (updated)
+     * @param username the current account username
+     * @param password the current account password
+     * @param newPassword the new password
      * @throws SQLException if an error occurred
      */
-    public void updateUser(UserDTO user, String password) throws SQLException {
+    public void updateUser(UserDTO user, String username, String password, String newPassword) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            userDao.update(user, password);
+            userDao.update(user, username, password, newPassword);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -83,8 +85,8 @@ public class UserBusinessLogic {
 
     /**
      * Used to deleted a user from the database
-     * @param user the account informations
-     * @throws SQLException if an error occured
+     * @param user the account information
+     * @throws SQLException if an error occurred
      */
     public void deleteUser(UserDTO user) throws SQLException {
         try {

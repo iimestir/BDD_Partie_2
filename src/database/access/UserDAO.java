@@ -15,7 +15,7 @@ import java.util.UUID;
  * Singleton class that handles the DB communication around the User table
  */
 public class UserDAO {
-    private static UserDAO instance = new UserDAO();
+    private static final UserDAO instance = new UserDAO();
 
     /**
      * Get the singleton instance
@@ -41,8 +41,6 @@ public class UserDAO {
             throw new SQLException("The specified UserDTO is already persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-
-        boolean isEpidemiologist = user instanceof EpidemiologistDTO;
 
         String request = "INSERT INTO Public.\"User\"(\"Firstname\",\"Lastname\",\"Username\","
                 + "\"Password\",\"Street\",\"Doornumber\",\"City\",\"ZIP\")"
@@ -79,17 +77,28 @@ public class UserDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Returns the user ID using its username and password
+     *
+     * @param username username
+     * @param password password
+     * @return the user ID
+     * @throws SQLException if an error occurred
+     */
     public UUID getUserId(String username, String password) throws SQLException {
         return select(username, password).getId();
     }
 
     /**
      * Updates a user in the database
-     * @param user the userDTO
-     * @param password a password if he changed his password
+     *
+     * @param user the user account information
+     * @param username the current account username
+     * @param password the current account password
+     * @param newPassword a password if the user changed his password
      * @throws SQLException if an error occurred
      */
-    public void update(UserDTO user, String password) throws SQLException {
+    public void update(UserDTO user, String username, String password, String newPassword) throws SQLException {
         if(!user.isStored())
             throw new SQLException("The specified UserDTO is not persistent");
 
@@ -97,21 +106,18 @@ public class UserDAO {
 
         boolean isEpidemiologist = user instanceof EpidemiologistDTO;
 
-        String request;
-        if(password != null) request =
-                "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?,\"Password\" = ?" +
-                        ",\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?";
-        else request =
-                "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?" +
-                        ",\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?";
+        String request = "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?,";
+        if(newPassword != null) request += "\"Password\" = crypt(?, \"Password\"),";
+        request += "\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?";
+        request += " WHERE \"Username\" = crypt(?, \"Username\") AND \"Password\" = crypt(?, \"Password\")";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1,user.getFirstName());
         stmt.setString(2,user.getLastName());
 
         int i = 3;
-        if(password != null) {
-            stmt.setString(3, "crypt('" + password + "', gen_salt('bf'))");
+        if(newPassword != null) {
+            stmt.setString(3, newPassword);
             i = 4;
         }
 
@@ -119,11 +125,13 @@ public class UserDAO {
         stmt.setInt(i++, user.getDoorNumber());
         stmt.setString(i++, user.getCity());
         stmt.setString(i++, user.getZipCode());
+        stmt.setString(i++, username);
+        stmt.setString(i, password);
+
+        stmt.executeUpdate();
 
         if(isEpidemiologist)
             updateEpidemiologist(((EpidemiologistDTO) user));
-
-        stmt.executeUpdate();
     }
 
     /**
@@ -142,6 +150,10 @@ public class UserDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Deletes the user account
+     * @param user User
+     */
     public void delete(UserDTO user) {
         // TODO
     }
@@ -168,7 +180,7 @@ public class UserDAO {
             UserDTO user;
             UUID uuid = UUID.fromString(rs.getString("UUID"));
 
-            Pair<String,String> epidemiologistInfos = isEpidemiologist(uuid);
+            Pair<String,String> epidemiologistInfos = getEpidemiologistInfos(uuid);
 
             if(epidemiologistInfos != null) {
                 // Epidemiologist
@@ -208,7 +220,7 @@ public class UserDAO {
      * @return epidemiologist infos
      * @throws SQLException if an error occurred
      */
-    private Pair<String, String> isEpidemiologist(UUID uuid) throws SQLException {
+    private Pair<String, String> getEpidemiologistInfos(UUID uuid) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
 
         String request = "SELECT * FROM Public.\"Epidemiologist\"" +

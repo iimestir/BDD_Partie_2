@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Disposable;
+import model.Panel;
 import view.UITools;
 import view.Navigator;
 
@@ -42,14 +43,14 @@ public class LoginController implements Initializable, Disposable {
             LoginToken.CURRENT_USER = UserBusinessLogic.getInstance()
                     .login(usernameTextField.getText(), passwordField.getText());
 
-            Navigator.getInstance().push("main.fxml");
+            Navigator.getInstance().push(Panel.MAIN);
         } catch (Exception ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
         }
     }
 
     public void registerButtonAction() {
-        Navigator.getInstance().push("register.fxml");
+        Navigator.getInstance().push(Panel.REGISTER);
     }
 
     @Override

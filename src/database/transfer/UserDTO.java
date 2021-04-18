@@ -19,6 +19,7 @@ public class UserDTO extends DTO<UUID> {
 
     /**
      * UserDTO Constructor
+     *
      * @param id uuid
      * @param firstName string
      * @param lastName string
@@ -35,6 +36,7 @@ public class UserDTO extends DTO<UUID> {
 
     /**
      * UserDTO Constructor without the ID
+     *
      * @param firstName string
      * @param lastName string
      * @param street string
