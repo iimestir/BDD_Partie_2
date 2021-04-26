@@ -7,6 +7,7 @@ import database.transfer.ClimateDTO;
 import database.transfer.UserDTO;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserBusinessLogic {
     private static final UserBusinessLogic instance = new UserBusinessLogic();
@@ -20,6 +21,7 @@ public class UserBusinessLogic {
 
     /**
      * Singleton instance getter
+     *
      * @return the singleton
      */
     public static UserBusinessLogic getInstance() {
@@ -28,6 +30,7 @@ public class UserBusinessLogic {
 
     /**
      * Used to log in a user by his username and password
+     *
      * @param username username
      * @param password password
      * @return the user account
@@ -49,6 +52,7 @@ public class UserBusinessLogic {
 
     /**
      * Used to register a user in the database
+     *
      * @param user the account information
      * @param username the username
      * @param password the password
@@ -68,6 +72,7 @@ public class UserBusinessLogic {
 
     /**
      * Used to edit a user profile
+     *
      * @param user the account information (updated)
      * @param username the current account username
      * @param password the current account password
@@ -88,6 +93,7 @@ public class UserBusinessLogic {
 
     /**
      * Used to deleted a user from the database
+     *
      * @param user the account information
      * @throws SQLException if an error occurred
      */
@@ -109,11 +115,13 @@ public class UserBusinessLogic {
      * @param climate the climate
      * @throws SQLException if an error occurred
      */
-    public void selectClimate(ClimateDTO climate) throws SQLException {
+    public List<ClimateDTO> selectClimate(ClimateDTO climate) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            climateDao.select(climate);
+            List<ClimateDTO> result = climateDao.select(climate);
             DBManager.getInstance().commit();
+
+            return result;
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
 

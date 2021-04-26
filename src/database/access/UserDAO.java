@@ -157,8 +157,17 @@ public class UserDAO {
      *
      * @param user User
      */
-    public void delete(UserDTO user) {
-        // TODO
+    public void delete(UserDTO user) throws SQLException {
+        if(!user.isStored())
+            throw new SQLException("The specified ClimateDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        String request = "DELETE FROM Public.\"User\" WHERE Id = ?";
+
+        PreparedStatement stmt = conn.prepareStatement(request);
+        stmt.setString(1, user.getId().toString());
+
+        stmt.executeUpdate();
     }
 
     /**

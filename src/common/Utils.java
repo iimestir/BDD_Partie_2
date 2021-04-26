@@ -2,6 +2,7 @@ package common;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -71,9 +72,35 @@ public final class Utils {
      * Returns the current time formatted to a specified manner
      * @return the current time
      */
-    public static String currentFormatedTime() {
+    public static String currentFormattedTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
         return LocalDateTime.now().format(dtf);
     }
 
+    /**
+     * Fills the SQL request with the sub requests
+     *
+     * @param request the request string builder
+     * @param subRequest the sub requests list
+     */
+    public static void fillSQL(StringBuilder request, List<String> subRequest) {
+        boolean where = false;
+        boolean and = false;
+        for(String sub : subRequest) {
+            if(!where) {
+                request.append(" WHERE");
+                where = true;
+            }
+
+            if(and) {
+                request.append(" AND ").append(sub);
+            } else {
+                request.append(" ").append(sub);
+                and = true;
+            }
+
+            request.append(",");
+        }
+        request.deleteCharAt(request.length()-1);
+    }
 }

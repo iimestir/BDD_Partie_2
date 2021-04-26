@@ -50,6 +50,24 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     }
 
     /**
+     * Used to insert a climate
+     *
+     * @param climate the climate
+     * @throws SQLException if an error occurred
+     */
+    public void insertClimate(ClimateDTO climate) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            climateDao.insert(climate);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
      * Updates a climate from the DB
      *
      * @param climate the climate

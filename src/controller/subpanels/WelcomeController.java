@@ -19,7 +19,7 @@ public class WelcomeController implements Initializable, Disposable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         titleLabel.setText(Utils.getTranslatedString("hello") + " " + LoginToken.CURRENT_USER.getFirstName());
-        subTitleLabel.setText(Utils.currentFormatedTime());
+        subTitleLabel.setText(Utils.currentFormattedTime());
 
         initTimeRefreshService();
     }
@@ -34,7 +34,7 @@ public class WelcomeController implements Initializable, Disposable {
                     Thread.sleep(1000);
 
                     Platform.runLater(() -> {
-                        subTitleLabel.setText(Utils.currentFormatedTime());
+                        subTitleLabel.setText(Utils.currentFormattedTime());
                     });
                 } catch (InterruptedException e) {
                     System.out.println("Interrupted Service");
