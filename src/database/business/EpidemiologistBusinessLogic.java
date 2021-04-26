@@ -1,6 +1,7 @@
 package database.business;
 
 import database.access.DBManager;
+import database.transfer.ClimateDTO;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 
@@ -40,6 +41,42 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
             DBManager.getInstance().initialize();
             UUID id = userDao.getUserId(username, password);
             userDao.defineEpidemiologist(epidemiologist, id);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Updates a climate from the DB
+     *
+     * @param climate the climate
+     * @throws SQLException if an error occurred
+     */
+    public void updateClimate(ClimateDTO climate) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            climateDao.update(climate);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Deletes a climate from the DB
+     *
+     * @param climate the climate
+     * @throws SQLException if an error occurred
+     */
+    public void deleteClimate(ClimateDTO climate) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            climateDao.delete(climate);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();

@@ -31,6 +31,7 @@ public class UserDAO {
 
     /**
      * Insert a new user into the database
+     *
      * @param user userDTO
      * @param username username
      * @param password password
@@ -136,6 +137,7 @@ public class UserDAO {
 
     /**
      * Updates the epidemiologist table
+     *
      * @param epidemiologist epidemiologist
      */
     private void updateEpidemiologist(EpidemiologistDTO epidemiologist) throws SQLException {
@@ -152,6 +154,7 @@ public class UserDAO {
 
     /**
      * Deletes the user account
+     *
      * @param user User
      */
     public void delete(UserDTO user) {
@@ -160,6 +163,7 @@ public class UserDAO {
 
     /**
      * Used to get a user according to the given username and password
+     *
      * @param username the username
      * @param password the password
      * @return the corresponding user
@@ -216,6 +220,7 @@ public class UserDAO {
 
     /**
      * Checks if the UUID is linked to an epidemiologist account
+     *
      * @param uuid the ID
      * @return epidemiologist infos
      * @throws SQLException if an error occurred

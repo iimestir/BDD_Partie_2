@@ -1,7 +1,9 @@
 package database.business;
 
+import database.access.ClimateDAO;
 import database.access.DBManager;
 import database.access.UserDAO;
+import database.transfer.ClimateDTO;
 import database.transfer.UserDTO;
 
 import java.sql.SQLException;
@@ -9,6 +11,7 @@ import java.sql.SQLException;
 public class UserBusinessLogic {
     private static final UserBusinessLogic instance = new UserBusinessLogic();
     protected static final UserDAO userDao = UserDAO.getInstance();
+    protected static final ClimateDAO climateDao = ClimateDAO.getInstance();
 
     /**
      * Singleton
@@ -92,6 +95,24 @@ public class UserBusinessLogic {
         try {
             DBManager.getInstance().initialize();
             userDao.delete(user);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects a climate from the DB
+     *
+     * @param climate the climate
+     * @throws SQLException if an error occurred
+     */
+    public void selectClimate(ClimateDTO climate) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            climateDao.select(climate);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();

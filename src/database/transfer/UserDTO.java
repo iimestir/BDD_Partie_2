@@ -76,4 +76,16 @@ public class UserDTO extends DTO<UUID> {
     public String getZipCode() {
         return zipCode;
     }
+
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public void setStreet(String street) { this.street = street; }
+
+    public void setDoorNumber(Integer doorNumber) { this.doorNumber = doorNumber; }
+
+    public void setCity(String city) { this.city = city; }
+
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
 }

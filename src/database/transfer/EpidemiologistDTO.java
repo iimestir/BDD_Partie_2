@@ -52,11 +52,7 @@ public class EpidemiologistDTO extends UserDTO {
         return serviceNumber;
     }
 
-    public void setCenter(String center) {
-        this.center = center;
-    }
+    public void setCenter(String center) { this.center = center; }
 
-    public void setServiceNumber(String serviceNumber) {
-        this.serviceNumber = serviceNumber;
-    }
+    public void setServiceNumber(String serviceNumber) { this.serviceNumber = serviceNumber; }
 }
