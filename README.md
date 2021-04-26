@@ -27,6 +27,10 @@ Le dashboard permet de visualiser plusieurs statistiques contenues dans la base 
 Le projet a été réalisé avec Java en utilisant le JDK 15 et Maven, il vous faut donc une version du JDK similaire et maven d'installé sur l'ordinateur
 (ou utiliser l'IDE IntelliJ).
 
+Maven peut s'installer de diverses façons :
+* avec la commande "sudo apt-get install maven" (uniquement sur Linux)
+* sur le site officiel de maven : https://maven.apache.org/download.cgi
+
 ### Compilation & Lancement
 La compilation et du programme se fait grâce aux commandes ci-dessous (à exécuter dans l'ordre) :
 * mvn compile
