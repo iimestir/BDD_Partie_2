@@ -28,7 +28,7 @@ Le projet a été réalisé avec Java en utilisant le JDK 15 et Maven, il vous f
 (ou utiliser l'IDE IntelliJ).
 Le programme ne pourra être compilé avec une version antérieure au JDK 15.
 
-Maven peut être obtenu via le site officiel de maven : https://maven.apache.org/download.cgi
+Maven peut être obtenu via le site officiel de maven : https://maven.apache.org/download.cgi \
 La dernière version est compatible avec le JDK 15.
 
 ### Compilation & Lancement
