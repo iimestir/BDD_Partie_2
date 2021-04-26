@@ -25,15 +25,15 @@ public class CountryDAO {
     private CountryDAO() {}
 
     /**
-     * Inserts a new country in the DB
+     * Inserts a new record in the DB
      *
-     * @param ISO country ISO code
-     * @param country the country to insert
+     * @param ISO record ISO code
+     * @param record the record to insert
      * @throws SQLException if an error occurs
      */
-    public void insert(String ISO, CountryDTO country) throws SQLException {
-        if(country.isStored())
-            throw new SQLException("The specified ClimateDTO is already persistent");
+    public void insert(String ISO, CountryDTO record) throws SQLException {
+        if(record.isStored())
+            throw new SQLException("The specified CountryDTO is already persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "INSERT INTO Public.\"Climate\"(\"ISO\",\"Continent\",\"Region\",\"Country\",\"HDI\"," +
@@ -41,13 +41,13 @@ public class CountryDAO {
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, ISO);
-        stmt.setString(2, country.getContinent());
-        stmt.setString(3, country.getRegion());
-        stmt.setString(4, country.getName());
-        stmt.setDouble(5, country.getHdi());
-        stmt.setInt(6, country.getPopulation());
-        stmt.setDouble(7, country.getArea_sq_ml());
-        stmt.setInt(8, country.getClimateId());
+        stmt.setString(2, record.getContinent());
+        stmt.setString(3, record.getRegion());
+        stmt.setString(4, record.getName());
+        stmt.setDouble(5, record.getHdi());
+        stmt.setInt(6, record.getPopulation());
+        stmt.setDouble(7, record.getArea_sq_ml());
+        stmt.setInt(8, record.getClimateId());
 
         stmt.executeUpdate();
     }
@@ -55,52 +55,52 @@ public class CountryDAO {
     /**
      * Selects countries from the DB
      *
-     * @param country countries information
+     * @param record countries information
      * @return countries list
      * @throws SQLException if an error occurs
      */
-    public List<CountryDTO> select(CountryDTO country) throws SQLException {
+    public List<CountryDTO> select(CountryDTO record) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Country\"");
 
         List<String> subRequest = new ArrayList<>();
-        if(country.getId() != null)
+        if(record.getId() != null)
             subRequest.add("\"ISO\" = ?");
-        if(country.getContinent() != null)
+        if(record.getContinent() != null)
             subRequest.add("\"Continent\" = ?");
-        if(country.getRegion() != null)
+        if(record.getRegion() != null)
             subRequest.add("\"Region\" = ?");
-        if(country.getName() != null)
+        if(record.getName() != null)
             subRequest.add("\"Country\" = ?");
-        if(country.getHdi() != null)
+        if(record.getHdi() != null)
             subRequest.add("\"HDI\" = ?");
-        if(country.getPopulation() != null)
+        if(record.getPopulation() != null)
             subRequest.add("\"Population\" = ?");
-        if(country.getArea_sq_ml() != null)
+        if(record.getArea_sq_ml() != null)
             subRequest.add("\"area_sq_ml\" = ?");
-        if(country.getClimateId() != null)
+        if(record.getClimateId() != null)
             subRequest.add("\"Climate\" = ?");
 
         Utils.fillSQL(request, subRequest);
 
         PreparedStatement stmt = conn.prepareStatement(request.toString());
         int i = 1;
-        if(country.getId() != null)
-            stmt.setString(i++, country.getId());
-        if(country.getContinent() != null)
-            stmt.setString(i++, country.getContinent());
-        if(country.getRegion() != null)
-            stmt.setString(i++, country.getRegion());
-        if(country.getName() != null)
-            stmt.setString(i++, country.getName());
-        if(country.getHdi() != null)
-            stmt.setDouble(i++, country.getHdi());
-        if(country.getPopulation() != null)
-            stmt.setInt(i++, country.getPopulation());
-        if(country.getArea_sq_ml() != null)
-            stmt.setDouble(i++, country.getArea_sq_ml());
-        if(country.getClimateId() != null)
-            stmt.setInt(i, country.getClimateId());
+        if(record.getId() != null)
+            stmt.setString(i++, record.getId());
+        if(record.getContinent() != null)
+            stmt.setString(i++, record.getContinent());
+        if(record.getRegion() != null)
+            stmt.setString(i++, record.getRegion());
+        if(record.getName() != null)
+            stmt.setString(i++, record.getName());
+        if(record.getHdi() != null)
+            stmt.setDouble(i++, record.getHdi());
+        if(record.getPopulation() != null)
+            stmt.setInt(i++, record.getPopulation());
+        if(record.getArea_sq_ml() != null)
+            stmt.setDouble(i++, record.getArea_sq_ml());
+        if(record.getClimateId() != null)
+            stmt.setInt(i, record.getClimateId());
 
         return retrieveCountries(stmt);
     }
@@ -142,13 +142,13 @@ public class CountryDAO {
     }
 
     /**
-     * Updates a country from the DB
+     * Updates a record from the DB
      *
-     * @param country the country to update
+     * @param record the record to update
      * @throws SQLException if an error occurs
      */
-    public void update(CountryDTO country) throws SQLException {
-        if(!country.isStored())
+    public void update(CountryDTO record) throws SQLException {
+        if(!record.isStored())
             throw new SQLException("The specified CountryDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
@@ -157,33 +157,33 @@ public class CountryDAO {
                 " WHERE Id = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, country.getContinent());
-        stmt.setString(2, country.getRegion());
-        stmt.setString(3, country.getName());
-        stmt.setDouble(4, country.getHdi());
-        stmt.setInt(5, country.getPopulation());
-        stmt.setDouble(6, country.getArea_sq_ml());
-        stmt.setInt(7, country.getClimateId());
-        stmt.setString(8, country.getId());
+        stmt.setString(1, record.getContinent());
+        stmt.setString(2, record.getRegion());
+        stmt.setString(3, record.getName());
+        stmt.setDouble(4, record.getHdi());
+        stmt.setInt(5, record.getPopulation());
+        stmt.setDouble(6, record.getArea_sq_ml());
+        stmt.setInt(7, record.getClimateId());
+        stmt.setString(8, record.getId());
 
         stmt.executeUpdate();
     }
 
     /**
-     * Deletes a country from the DB
+     * Deletes a record from the DB
      *
-     * @param country the country
+     * @param record the record
      * @throws SQLException if an error occurs
      */
-    public void delete(CountryDTO country) throws SQLException {
-        if(!country.isStored())
+    public void delete(CountryDTO record) throws SQLException {
+        if(!record.isStored())
             throw new SQLException("The specified CountryDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "DELETE FROM Public.\"Country\" WHERE ISO = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, country.getId());
+        stmt.setString(1, record.getId());
 
         stmt.executeUpdate();
     }

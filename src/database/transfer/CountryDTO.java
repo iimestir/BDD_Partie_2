@@ -9,12 +9,12 @@ public class CountryDTO extends DTO<String> {
     private Double area_sq_ml;
     private Integer climateId;
 
-    public CountryDTO(String id, String name, String continent, String region, double hdi, int population, double area_sq_ml, int climateId) {
+    public CountryDTO(String id, String name, String continent, String region, Double hdi, Integer population, Double area_sq_ml, Integer climateId) {
         this(name, continent, region, hdi, population, area_sq_ml, climateId);
         this.id = id;
     }
 
-    public CountryDTO(String name, String continent, String region, double hdi, int population, double area_sq_ml, int climateId) {
+    public CountryDTO(String name, String continent, String region, Double hdi, Integer population, Double area_sq_ml, Integer climateId) {
         this.name = name;
         this.continent = continent;
         this.region = region;

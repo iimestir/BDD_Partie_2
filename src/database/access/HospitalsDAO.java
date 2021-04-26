@@ -23,40 +23,53 @@ public class HospitalsDAO {
      */
     private HospitalsDAO() {}
 
-    public List<HospitalsDTO> select(HospitalsDTO report) throws SQLException {
+    /**
+     * Selects records from the DB
+     *
+     * @param record records information
+     * @return records list
+     * @throws SQLException if an error occurs
+     */
+    public List<HospitalsDTO> select(HospitalsDTO record) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Hospitals\"");
 
         List<String> subRequest = new ArrayList<>();
-        if(report.getISO() != null)
+        if(record.getISO() != null)
             subRequest.add("\"ISO\" = ?");
-        if(report.getDate() != null)
+        if(record.getDate() != null)
             subRequest.add("\"Date\" = ?");
-        if(report.getIcu_patients() != null)
+        if(record.getIcu_patients() != null)
             subRequest.add("\"icu_patients\" = ?");
-        if(report.getHosp_patients() != null)
+        if(record.getHosp_patients() != null)
             subRequest.add("\"hosp_patients\" = ?");
-        if(report.getEpidemiologistUUID() != null)
+        if(record.getEpidemiologistUUID() != null)
             subRequest.add("\"epidemiologist\" = ?");
 
         Utils.fillSQL(request, subRequest);
 
         PreparedStatement stmt = conn.prepareStatement(request.toString());
         int i = 1;
-        if(report.getISO() != null)
-            stmt.setString(i++, report.getISO());
-        if(report.getDate() != null)
-            stmt.setDate(i++, report.getDate());
-        if(report.getIcu_patients() != null)
-            stmt.setInt(i++, report.getIcu_patients());
-        if(report.getHosp_patients() != null)
-            stmt.setInt(i++, report.getHosp_patients());
-        if(report.getEpidemiologistUUID() != null)
-            stmt.setString(i, report.getEpidemiologistUUID().toString());
+        if(record.getISO() != null)
+            stmt.setString(i++, record.getISO());
+        if(record.getDate() != null)
+            stmt.setDate(i++, record.getDate());
+        if(record.getIcu_patients() != null)
+            stmt.setInt(i++, record.getIcu_patients());
+        if(record.getHosp_patients() != null)
+            stmt.setInt(i++, record.getHosp_patients());
+        if(record.getEpidemiologistUUID() != null)
+            stmt.setString(i, record.getEpidemiologistUUID().toString());
 
         return retrieveHospitals(stmt);
     }
 
+    /**
+     * Selects all records
+     *
+     * @return records list
+     * @throws SQLException if an error occurs
+     */
     public List<HospitalsDTO> selectAll() throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "SELECT * FROM Public.\"Hospitals\"";
@@ -84,17 +97,23 @@ public class HospitalsDAO {
         return results;
     }
 
-    public void insert(HospitalsDTO report) throws SQLException {
+    /**
+     * Inserts a new record in the DB
+     *
+     * @param record the record to insert
+     * @throws SQLException if an error occurs
+     */
+    public void insert(HospitalsDTO record) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "INSERT INTO Public.\"Hospitals\"(\"ISO\",\"Date\",\"icu_patients\",\"hosp_patients\",\"epidemiologist\") " +
                 "VALUES (?,?,?,?,?)";
 
         PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, report.getISO());
-        stmt.setDate(2, report.getDate());
-        stmt.setInt(3, report.getIcu_patients());
-        stmt.setInt(4, report.getHosp_patients());
-        stmt.setString(5, report.getEpidemiologistUUID().toString());
+        stmt.setString(1, record.getISO());
+        stmt.setDate(2, record.getDate());
+        stmt.setInt(3, record.getIcu_patients());
+        stmt.setInt(4, record.getHosp_patients());
+        stmt.setString(5, record.getEpidemiologistUUID().toString());
 
         stmt.executeUpdate();
     }

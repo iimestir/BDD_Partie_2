@@ -98,9 +98,6 @@ public final class Utils {
                 request.append(" ").append(sub);
                 and = true;
             }
-
-            request.append(",");
         }
-        request.deleteCharAt(request.length()-1);
     }
 }

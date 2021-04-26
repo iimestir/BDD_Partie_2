@@ -3,7 +3,7 @@ package database.transfer;
 public class ClimateDTO extends DTO<Integer> {
     private String description;
 
-    public ClimateDTO(int id, String description) {
+    public ClimateDTO(Integer id, String description) {
         this(description);
         this.id = id;
     }

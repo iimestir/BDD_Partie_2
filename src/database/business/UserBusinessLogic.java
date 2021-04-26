@@ -1,10 +1,7 @@
 package database.business;
 
-import database.access.ClimateDAO;
-import database.access.DBManager;
-import database.access.UserDAO;
-import database.transfer.ClimateDTO;
-import database.transfer.UserDTO;
+import database.access.*;
+import database.transfer.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,6 +10,10 @@ public class UserBusinessLogic {
     private static final UserBusinessLogic instance = new UserBusinessLogic();
     protected static final UserDAO userDao = UserDAO.getInstance();
     protected static final ClimateDAO climateDao = ClimateDAO.getInstance();
+    protected static final CountryDAO countryDao = CountryDAO.getInstance();
+    protected static final HospitalsDAO hospitalsDao = HospitalsDAO.getInstance();
+    protected static final VaccinationsDAO vaccinationsDao = VaccinationsDAO.getInstance();
+    protected static final ProducersDAO producersDao = ProducersDAO.getInstance();
 
     /**
      * Singleton
@@ -71,45 +72,6 @@ public class UserBusinessLogic {
     }
 
     /**
-     * Used to edit a user profile
-     *
-     * @param user the account information (updated)
-     * @param username the current account username
-     * @param password the current account password
-     * @param newPassword the new password
-     * @throws SQLException if an error occurred
-     */
-    public void updateUser(UserDTO user, String username, String password, String newPassword) throws SQLException {
-        try {
-            DBManager.getInstance().initialize();
-            userDao.update(user, username, password, newPassword);
-            DBManager.getInstance().commit();
-        } catch(SQLException ex) {
-            DBManager.getInstance().rollback();
-
-            throw ex;
-        }
-    }
-
-    /**
-     * Used to deleted a user from the database
-     *
-     * @param user the account information
-     * @throws SQLException if an error occurred
-     */
-    public void deleteUser(UserDTO user) throws SQLException {
-        try {
-            DBManager.getInstance().initialize();
-            userDao.delete(user);
-            DBManager.getInstance().commit();
-        } catch(SQLException ex) {
-            DBManager.getInstance().rollback();
-
-            throw ex;
-        }
-    }
-
-    /**
      * Selects a climate from the DB
      *
      * @param climate the climate
@@ -128,4 +90,180 @@ public class UserBusinessLogic {
             throw ex;
         }
     }
+
+    /**
+     * Selects all climates from the DB
+     *
+     * @throws SQLException if an error occurred
+     */
+    public List<ClimateDTO> selectAllClimate() throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<ClimateDTO> result = climateDao.selectAll();
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects a country from the DB
+     *
+     * @param country the country
+     * @throws SQLException if an error occurred
+     */
+    public List<CountryDTO> selectCountry(CountryDTO country) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<CountryDTO> result = countryDao.select(country);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects all climates from the DB
+     *
+     * @throws SQLException if an error occurred
+     */
+    public List<CountryDTO> selectAllCountries() throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<CountryDTO> result = countryDao.selectAll();
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects a vaccinations report from the DB
+     *
+     * @param hospitals the vaccinations report
+     * @throws SQLException if an error occurred
+     */
+    public List<HospitalsDTO> selectHospitals(HospitalsDTO hospitals) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<HospitalsDTO> result = hospitalsDao.select(hospitals);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects all hospitals reports from the DB
+     *
+     * @throws SQLException if an error occurred
+     */
+    public List<HospitalsDTO> selectAllHospitals() throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<HospitalsDTO> result = hospitalsDao.selectAll();
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects a vaccinations report from the DB
+     *
+     * @param vaccinations the vaccinations report
+     * @throws SQLException if an error occurred
+     */
+    public List<VaccinationsDTO> selectVaccinations(VaccinationsDTO vaccinations) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<VaccinationsDTO> result = vaccinationsDao.select(vaccinations);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects all vaccinations reports from the DB
+     *
+     * @throws SQLException if an error occurred
+     */
+    public List<VaccinationsDTO> selectAllVaccinations() throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<VaccinationsDTO> result = vaccinationsDao.selectAll();
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects a producers from the DB
+     *
+     * @param producers the producers
+     * @throws SQLException if an error occurred
+     */
+    public List<ProducersDTO> selectProducers(ProducersDTO producers) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<ProducersDTO> result = producersDao.select(producers);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Selects all producers from the DB
+     *
+     * @throws SQLException if an error occurred
+     */
+    public List<ProducersDTO> selectAllProducers() throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<ProducersDTO> result = producersDao.selectAll();
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
 }
