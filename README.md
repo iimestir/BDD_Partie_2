@@ -20,6 +20,7 @@ Le dashboard permet de visualiser plusieurs statistiques contenues dans la base 
 - Types de vaccins par pays (Camembert)
 - Nombre de vaccinations par pays (Camembert)
 - Nombre d'infectés par pays selon le rapport le plus récent (Camembert)
+- Evolution du nombre d'hospitalisations par pays (Graphique)
 - Evolution du nombre d'infectés par pays (Graphique)
 
 ## Compilation
