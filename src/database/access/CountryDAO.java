@@ -127,12 +127,12 @@ public class CountryDAO {
         while (rs.next()) {
             String id = rs.getString("ISO");
             String name = rs.getString("Country");
-            String continent = rs.getString("Continent");;
-            String region = rs.getString("Region");;
-            double hdi = rs.getDouble("HDI");;
-            int population = rs.getInt("Population");;
-            double area_sq_ml = rs.getDouble("area_sq_ml");;
-            int climateId = rs.getInt("Climate");;
+            String continent = rs.getString("Continent");
+            String region = rs.getString("Region");
+            double hdi = rs.getDouble("HDI");
+            int population = rs.getInt("Population");
+            double area_sq_ml = rs.getDouble("area_sq_ml");
+            int climateId = rs.getInt("Climate");
 
             CountryDTO selected = new CountryDTO(id, name, continent, region, hdi, population, area_sq_ml, climateId);
 

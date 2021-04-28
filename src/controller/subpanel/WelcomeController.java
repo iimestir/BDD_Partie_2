@@ -1,4 +1,4 @@
-package controller.subpanels;
+package controller.subpanel;
 
 import common.LoginToken;
 import common.Utils;

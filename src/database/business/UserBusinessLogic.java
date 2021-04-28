@@ -77,7 +77,7 @@ public class UserBusinessLogic {
      * @param climate the climate
      * @throws SQLException if an error occurred
      */
-    public List<ClimateDTO> selectClimate(ClimateDTO climate) throws SQLException {
+    public List<ClimateDTO> select(ClimateDTO climate) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             List<ClimateDTO> result = climateDao.select(climate);
@@ -116,7 +116,7 @@ public class UserBusinessLogic {
      * @param country the country
      * @throws SQLException if an error occurred
      */
-    public List<CountryDTO> selectCountry(CountryDTO country) throws SQLException {
+    public List<CountryDTO> select(CountryDTO country) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             List<CountryDTO> result = countryDao.select(country);
@@ -155,7 +155,7 @@ public class UserBusinessLogic {
      * @param hospitals the vaccinations report
      * @throws SQLException if an error occurred
      */
-    public List<HospitalsDTO> selectHospitals(HospitalsDTO hospitals) throws SQLException {
+    public List<HospitalsDTO> select(HospitalsDTO hospitals) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             List<HospitalsDTO> result = hospitalsDao.select(hospitals);
@@ -194,7 +194,7 @@ public class UserBusinessLogic {
      * @param vaccinations the vaccinations report
      * @throws SQLException if an error occurred
      */
-    public List<VaccinationsDTO> selectVaccinations(VaccinationsDTO vaccinations) throws SQLException {
+    public List<VaccinationsDTO> select(VaccinationsDTO vaccinations) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             List<VaccinationsDTO> result = vaccinationsDao.select(vaccinations);
@@ -233,7 +233,7 @@ public class UserBusinessLogic {
      * @param producers the producers
      * @throws SQLException if an error occurred
      */
-    public List<ProducersDTO> selectProducers(ProducersDTO producers) throws SQLException {
+    public List<ProducersDTO> select(ProducersDTO producers) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             List<ProducersDTO> result = producersDao.select(producers);

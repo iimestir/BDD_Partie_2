@@ -48,7 +48,6 @@ public class ClimateDAO {
                 request += " WHERE \"Description\" = ?";
         }
 
-
         PreparedStatement stmt = conn.prepareStatement(request);
         int i = 1;
         if(climate.getId() != null)

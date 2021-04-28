@@ -1,7 +1,7 @@
 package controller;
 
-import controller.subpanels.SQLController;
-import controller.subpanels.WelcomeController;
+import controller.subpanel.SQLController;
+import controller.subpanel.WelcomeController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import model.Disposable;

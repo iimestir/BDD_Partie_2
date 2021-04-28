@@ -92,7 +92,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param climate the climate
      * @throws SQLException if an error occurred
      */
-    public void insertClimate(ClimateDTO climate) throws SQLException {
+    public void insert(ClimateDTO climate) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             climateDao.insert(climate);
@@ -110,7 +110,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param climate the climate
      * @throws SQLException if an error occurred
      */
-    public void updateClimate(ClimateDTO climate) throws SQLException {
+    public void update(ClimateDTO climate) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             climateDao.update(climate);
@@ -128,7 +128,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param climate the climate
      * @throws SQLException if an error occurred
      */
-    public void deleteClimate(ClimateDTO climate) throws SQLException {
+    public void delete(ClimateDTO climate) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             climateDao.delete(climate);
@@ -147,7 +147,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param country the country
      * @throws SQLException if an error occurred
      */
-    public void insertCountry(String ISO, CountryDTO country) throws SQLException {
+    public void insert(String ISO, CountryDTO country) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             countryDao.insert(ISO, country);
@@ -165,7 +165,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param country the country
      * @throws SQLException if an error occurred
      */
-    public void updateCountry(CountryDTO country) throws SQLException {
+    public void update(CountryDTO country) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             countryDao.update(country);
@@ -183,7 +183,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param country the country
      * @throws SQLException if an error occurred
      */
-    public void deleteCountry(CountryDTO country) throws SQLException {
+    public void delete(CountryDTO country) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             countryDao.delete(country);
@@ -201,7 +201,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param hospitals the hospitals record
      * @throws SQLException if an error occurred
      */
-    public void insertHospitals(HospitalsDTO hospitals) throws SQLException {
+    public void insert(HospitalsDTO hospitals) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             hospitalsDao.insert(hospitals);
@@ -219,7 +219,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param vaccinations the vaccinations record
      * @throws SQLException if an error occurred
      */
-    public void insertVaccinations(VaccinationsDTO vaccinations) throws SQLException {
+    public void insert(VaccinationsDTO vaccinations) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             vaccinationsDao.insert(vaccinations);
@@ -237,7 +237,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param producers the producers record
      * @throws SQLException if an error occurred
      */
-    public void insertProducers(ProducersDTO producers) throws SQLException {
+    public void insert(ProducersDTO producers) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             producersDao.insert(producers);
@@ -255,7 +255,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param producers the producers record
      * @throws SQLException if an error occurred
      */
-    public void updateProducers(ProducersDTO producers) throws SQLException {
+    public void update(ProducersDTO producers) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             producersDao.update(producers);
@@ -273,7 +273,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
      * @param producers the producers record
      * @throws SQLException if an error occurred
      */
-    public void deleteProducers(ProducersDTO producers) throws SQLException {
+    public void delete(ProducersDTO producers) throws SQLException {
         try {
             DBManager.getInstance().initialize();
             producersDao.delete(producers);
