@@ -1,6 +1,7 @@
 package database.access;
 
 import common.Utils;
+import database.transfer.HospitalsDTO;
 import database.transfer.ProducersDTO;
 
 import java.sql.*;
@@ -49,24 +50,7 @@ public class ProducersDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Producers\"");
 
-        List<String> subRequest = new ArrayList<>();
-        if(record.getId() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(record.getDate() != null)
-            subRequest.add("\"Date\" = ?");
-        if(record.getVaccines() != null)
-            subRequest.add("\"Vaccines\" = ?");
-
-        Utils.fillSQL(request, subRequest);
-
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-        int i = 1;
-        if(record.getId() != null)
-            stmt.setString(i++, record.getId());
-        if(record.getDate() != null)
-            stmt.setDate(i++, record.getDate());
-        if(record.getVaccines() != null)
-            stmt.setArray(i, conn.createArrayOf("text",record.getVaccines()));
+        PreparedStatement stmt = getStatement(record, conn, request);
 
         return retrieveProducers(stmt);
     }
@@ -84,6 +68,24 @@ public class ProducersDAO {
         PreparedStatement stmt = conn.prepareStatement(request);
 
         return retrieveProducers(stmt);
+    }
+
+    /**
+     * Deletes a record from the DB
+     *
+     * @param record the record
+     * @throws SQLException if an error occurs
+     */
+    public void delete(ProducersDTO record) throws SQLException {
+        if(select(record).isEmpty())
+            throw new SQLException("The specified ProducersDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("DELETE FROM Public.\"Producers\"");
+
+        PreparedStatement stmt = getStatement(record, conn, request);
+
+        stmt.executeUpdate();
     }
 
     private List<ProducersDTO> retrieveProducers(PreparedStatement stmt) throws SQLException {
@@ -124,22 +126,26 @@ public class ProducersDAO {
         stmt.executeUpdate();
     }
 
-    /**
-     * Deletes a record from the DB
-     *
-     * @param record the record
-     * @throws SQLException if an error occurs
-     */
-    public void delete(ProducersDTO record) throws SQLException {
-        if(!record.isStored())
-            throw new SQLException("The specified ProducersDTO is not persistent");
+    private PreparedStatement getStatement(ProducersDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getDate() != null)
+            subRequest.add("\"Date\" = ?");
+        if(record.getVaccines() != null)
+            subRequest.add("\"Vaccines\" = ?");
 
-        Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Producers\" WHERE \"ISO\" = ?";
+        Utils.fillSQL(request, subRequest);
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, record.getId());
+        int i = 1;
+        if(record.getId() != null)
+            stmt.setString(i++, record.getId());
+        if(record.getDate() != null)
+            stmt.setDate(i++, record.getDate());
+        if(record.getVaccines() != null)
+            stmt.setArray(i, conn.createArrayOf("text",record.getVaccines()));
 
-        stmt.executeUpdate();
+        return stmt;
     }
 }

@@ -34,32 +34,7 @@ public class HospitalsDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Hospitals\"");
 
-        List<String> subRequest = new ArrayList<>();
-        if(record.getISO() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(record.getDate() != null)
-            subRequest.add("\"Date\" = ?");
-        if(record.getIcu_patients() != null)
-            subRequest.add("\"icu_patients\" = ?");
-        if(record.getHosp_patients() != null)
-            subRequest.add("\"hosp_patients\" = ?");
-        if(record.getEpidemiologistUUID() != null)
-            subRequest.add("\"epidemiologist\" = ?");
-
-        Utils.fillSQL(request, subRequest);
-
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-        int i = 1;
-        if(record.getISO() != null)
-            stmt.setString(i++, record.getISO());
-        if(record.getDate() != null)
-            stmt.setDate(i++, record.getDate());
-        if(record.getIcu_patients() != null)
-            stmt.setInt(i++, record.getIcu_patients());
-        if(record.getHosp_patients() != null)
-            stmt.setInt(i++, record.getHosp_patients());
-        if(record.getEpidemiologistUUID() != null)
-            stmt.setObject(i, record.getEpidemiologistUUID());
+        PreparedStatement stmt = getStatement(record, conn, request);
 
         return retrieveHospitals(stmt);
     }
@@ -77,6 +52,24 @@ public class HospitalsDAO {
         PreparedStatement stmt = conn.prepareStatement(request);
 
         return retrieveHospitals(stmt);
+    }
+
+    /**
+     * Deletes a record from the DB
+     *
+     * @param record the record
+     * @throws SQLException if an error occurs
+     */
+    public void delete(HospitalsDTO record) throws SQLException {
+        if(select(record).isEmpty())
+            throw new SQLException("The specified CountryDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("DELETE FROM Public.\"Hospitals\"");
+
+        PreparedStatement stmt = getStatement(record, conn, request);
+
+        stmt.executeUpdate();
     }
 
     private List<HospitalsDTO> retrieveHospitals(PreparedStatement stmt) throws SQLException {
@@ -104,6 +97,9 @@ public class HospitalsDAO {
      * @throws SQLException if an error occurs
      */
     public void insert(HospitalsDTO record) throws SQLException {
+        if(!select(record).isEmpty())
+            throw new SQLException("The specified HospitalsDTO is already persistent");
+
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "INSERT INTO Public.\"Hospitals\"(\"ISO\",\"Date\",\"icu_patients\",\"hosp_patients\",\"epidemiologist\") " +
                 "VALUES (?,?,?,?,?)";
@@ -116,5 +112,36 @@ public class HospitalsDAO {
         stmt.setObject(5, record.getEpidemiologistUUID());
 
         stmt.executeUpdate();
+    }
+
+    private PreparedStatement getStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getISO() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getDate() != null)
+            subRequest.add("\"Date\" = ?");
+        if(record.getIcu_patients() != null)
+            subRequest.add("\"icu_patients\" = ?");
+        if(record.getHosp_patients() != null)
+            subRequest.add("\"hosp_patients\" = ?");
+        if(record.getEpidemiologistUUID() != null)
+            subRequest.add("\"epidemiologist\" = ?");
+
+        Utils.fillSQL(request, subRequest);
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+
+        int i = 1;
+        if(record.getISO() != null)
+            stmt.setString(i++, record.getISO());
+        if(record.getDate() != null)
+            stmt.setDate(i++, record.getDate());
+        if(record.getIcu_patients() != null)
+            stmt.setInt(i++, record.getIcu_patients());
+        if(record.getHosp_patients() != null)
+            stmt.setInt(i++, record.getHosp_patients());
+        if(record.getEpidemiologistUUID() != null)
+            stmt.setObject(i, record.getEpidemiologistUUID());
+
+        return stmt;
     }
 }

@@ -1,7 +1,9 @@
 package database.access;
 
+import common.Utils;
 import database.transfer.ClimateDTO;
 import database.transfer.CountryDTO;
+import database.transfer.HospitalsDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,26 +36,10 @@ public class ClimateDAO {
      */
     public List<ClimateDTO> select(ClimateDTO climate) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "SELECT * FROM Public.\"Climate\"";
+        StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Climate\"");
 
-        boolean and = false;
-        if(climate.getId() != null) {
-            request += " WHERE \"Id\" = ?";
-            and = true;
-        }
-        if(climate.getDescription() != null) {
-            if(and)
-                request += " AND \"Description\" = ?";
-            else
-                request += " WHERE \"Description\" = ?";
-        }
-
-        PreparedStatement stmt = conn.prepareStatement(request);
-        int i = 1;
-        if(climate.getId() != null)
-            stmt.setInt(i++, climate.getId());
-        if(climate.getDescription() != null)
-            stmt.setString(i, climate.getDescription());
+        PreparedStatement stmt = getStatement(climate, conn, request);
+        stmt.executeUpdate();
 
         return retrieveClimates(stmt);
     }
@@ -71,6 +57,23 @@ public class ClimateDAO {
         PreparedStatement stmt = conn.prepareStatement(request);
 
         return retrieveClimates(stmt);
+    }
+
+    /**
+     * Deletes a climate from the DB
+     *
+     * @param climate the climate
+     * @throws SQLException if an error occurs
+     */
+    public void delete(ClimateDTO climate) throws SQLException {
+        if(select(climate).isEmpty())
+            throw new SQLException("The specified ClimateDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("DELETE FROM Public.\"Climate\"");
+
+        PreparedStatement stmt = getStatement(climate, conn, request);
+        stmt.executeUpdate();
     }
 
     private List<ClimateDTO> retrieveClimates(PreparedStatement stmt) throws SQLException {
@@ -126,22 +129,22 @@ public class ClimateDAO {
         stmt.executeUpdate();
     }
 
-    /**
-     * Deletes a climate from the DB
-     *
-     * @param climate the climate
-     * @throws SQLException if an error occurs
-     */
-    public void delete(ClimateDTO climate) throws SQLException {
-        if(!climate.isStored())
-            throw new SQLException("The specified ClimateDTO is not persistent");
+    private PreparedStatement getStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"Id\" = ?");
+        if(record.getDescription() != null)
+            subRequest.add("\"Description\" = ?");
 
-        Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Climate\" WHERE \"Id\" = ?";
+        Utils.fillSQL(request, subRequest);
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setInt(1, climate.getId());
+        int i = 1;
+        if(record.getId() != null)
+            stmt.setInt(i++, record.getId());
+        if(record.getDescription() != null)
+            stmt.setString(i, record.getDescription());
 
-        stmt.executeUpdate();
+        return stmt;
     }
 }

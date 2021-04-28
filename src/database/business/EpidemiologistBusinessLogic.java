@@ -234,6 +234,26 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     }
 
     /**
+     * Used to delete a hospitals record
+     *
+     * @param hospitals the hospitals record
+     * @throws SQLException if an error occurred
+     */
+    public void delete(HospitalsDTO hospitals) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            hospitalsDao.delete(hospitals);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
+    }
+
+    /**
      * Used to insert a vaccinations record
      *
      * @param vaccinations the vaccinations record
@@ -243,6 +263,26 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
         try {
             DBManager.getInstance().initialize();
             vaccinationsDao.insert(vaccinations);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
+    }
+
+    /**
+     * Used to delete a hospitals record
+     *
+     * @param vaccinations the hospitals record
+     * @throws SQLException if an error occurred
+     */
+    public void delete(VaccinationsDTO vaccinations) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            vaccinationsDao.delete(vaccinations);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();

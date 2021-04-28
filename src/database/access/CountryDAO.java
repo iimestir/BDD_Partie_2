@@ -63,45 +63,7 @@ public class CountryDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Country\"");
 
-        List<String> subRequest = new ArrayList<>();
-        if(record.getId() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(record.getContinent() != null)
-            subRequest.add("\"Continent\" = ?");
-        if(record.getRegion() != null)
-            subRequest.add("\"Region\" = ?");
-        if(record.getName() != null)
-            subRequest.add("\"Country\" = ?");
-        if(record.getHdi() != null)
-            subRequest.add("\"HDI\" = ?");
-        if(record.getPopulation() != null)
-            subRequest.add("\"Population\" = ?");
-        if(record.getArea_sq_ml() != null)
-            subRequest.add("\"area_sq_ml\" = ?");
-        if(record.getClimateId() != null)
-            subRequest.add("\"Climate\" = ?");
-
-        Utils.fillSQL(request, subRequest);
-
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-
-        int i = 1;
-        if(record.getId() != null)
-            stmt.setString(i++, record.getId());
-        if(record.getContinent() != null)
-            stmt.setString(i++, record.getContinent());
-        if(record.getRegion() != null)
-            stmt.setString(i++, record.getRegion());
-        if(record.getName() != null)
-            stmt.setString(i++, record.getName());
-        if(record.getHdi() != null)
-            stmt.setDouble(i++, record.getHdi());
-        if(record.getPopulation() != null)
-            stmt.setInt(i++, record.getPopulation());
-        if(record.getArea_sq_ml() != null)
-            stmt.setDouble(i++, record.getArea_sq_ml());
-        if(record.getClimateId() != null)
-            stmt.setInt(i, record.getClimateId());
+        PreparedStatement stmt = getStatement(record, conn, request);
 
         return retrieveCountries(stmt);
     }
@@ -121,6 +83,23 @@ public class CountryDAO {
         return retrieveCountries(stmt);
     }
 
+    /**
+     * Deletes a record from the DB
+     *
+     * @param record the record
+     * @throws SQLException if an error occurs
+     */
+    public void delete(CountryDTO record) throws SQLException {
+        if(select(record).isEmpty())
+            throw new SQLException("The specified CountryDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("DELETE FROM Public.\"Country\"");
+
+        PreparedStatement stmt = getStatement(record, conn, request);
+
+        stmt.executeUpdate();
+    }
 
     private List<CountryDTO> retrieveCountries(PreparedStatement stmt) throws SQLException {
         ResultSet rs = stmt.executeQuery();
@@ -170,22 +149,47 @@ public class CountryDAO {
         stmt.executeUpdate();
     }
 
-    /**
-     * Deletes a record from the DB
-     *
-     * @param record the record
-     * @throws SQLException if an error occurs
-     */
-    public void delete(CountryDTO record) throws SQLException {
-        if(!record.isStored())
-            throw new SQLException("The specified CountryDTO is not persistent");
+    private PreparedStatement getStatement(CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getContinent() != null)
+            subRequest.add("\"Continent\" = ?");
+        if(record.getRegion() != null)
+            subRequest.add("\"Region\" = ?");
+        if(record.getName() != null)
+            subRequest.add("\"Country\" = ?");
+        if(record.getHdi() != null)
+            subRequest.add("\"HDI\" = ?");
+        if(record.getPopulation() != null)
+            subRequest.add("\"Population\" = ?");
+        if(record.getArea_sq_ml() != null)
+            subRequest.add("\"area_sq_ml\" = ?");
+        if(record.getClimateId() != null)
+            subRequest.add("\"Climate\" = ?");
 
-        Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Country\" WHERE \"ISO\" = ?";
+        Utils.fillSQL(request, subRequest);
 
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, record.getId());
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        stmt.executeUpdate();
+        int i = 1;
+        if(record.getId() != null)
+            stmt.setString(i++, record.getId());
+        if(record.getContinent() != null)
+            stmt.setString(i++, record.getContinent());
+        if(record.getRegion() != null)
+            stmt.setString(i++, record.getRegion());
+        if(record.getName() != null)
+            stmt.setString(i++, record.getName());
+        if(record.getHdi() != null)
+            stmt.setDouble(i++, record.getHdi());
+        if(record.getPopulation() != null)
+            stmt.setInt(i++, record.getPopulation());
+        if(record.getArea_sq_ml() != null)
+            stmt.setDouble(i++, record.getArea_sq_ml());
+        if(record.getClimateId() != null)
+            stmt.setInt(i, record.getClimateId());
+
+        return stmt;
     }
 }

@@ -6,20 +6,12 @@ import database.business.EpidemiologistBusinessLogic;
 import database.business.UserBusinessLogic;
 import database.transfer.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import model.DTOType;
 import model.SQLRequest;
 import view.UITools;
@@ -54,8 +46,8 @@ public class SQLController implements Initializable {
         tableView.getColumns().clear();
 
         // Columns
-        TableColumn<DTO, String> id = new TableColumn("Id");
-        TableColumn<DTO, String> description = new TableColumn("Description");
+        TableColumn<DTO, String> id = new TableColumn<>("Id");
+        TableColumn<DTO, String> description = new TableColumn<>("Description");
         id.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(data.getValue().getId().toString()));
         description.setCellValueFactory(data ->
@@ -71,14 +63,14 @@ public class SQLController implements Initializable {
         tableView.getColumns().clear();
 
         // Columns
-        TableColumn<DTO, String> iso = new TableColumn("ISO");
+        TableColumn<DTO, String> iso = new TableColumn<>("ISO");
         TableColumn<DTO, String> continent = new TableColumn("Continent");
-        TableColumn<DTO, String> region = new TableColumn("Region");
-        TableColumn<DTO, String> country = new TableColumn("Country");
-        TableColumn<DTO, String> hdi = new TableColumn("HDI");
-        TableColumn<DTO, String> population = new TableColumn("Population");
-        TableColumn<DTO, String> area_sq_ml = new TableColumn("area_sq_ml");
-        TableColumn<DTO, String> climate = new TableColumn("Climate");
+        TableColumn<DTO, String> region = new TableColumn<>("Region");
+        TableColumn<DTO, String> country = new TableColumn<>("Country");
+        TableColumn<DTO, String> hdi = new TableColumn<>("HDI");
+        TableColumn<DTO, String> population = new TableColumn<>("Population");
+        TableColumn<DTO, String> area_sq_ml = new TableColumn<>("area_sq_ml");
+        TableColumn<DTO, String> climate = new TableColumn<>("Climate");
         iso.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getId()));
         continent.setCellValueFactory(data ->
@@ -106,11 +98,11 @@ public class SQLController implements Initializable {
         tableView.getColumns().clear();
 
         // Columns
-        TableColumn<DTO, String> iso = new TableColumn("ISO");
-        TableColumn<DTO, String> date = new TableColumn("Date");
-        TableColumn<DTO, String> icu_patients = new TableColumn("icu_patients");
-        TableColumn<DTO, String> hosp_patients = new TableColumn("hosp_patients");
-        TableColumn<DTO, String> epidemiologist = new TableColumn("epidemiologist");
+        TableColumn<DTO, String> iso = new TableColumn<>("ISO");
+        TableColumn<DTO, String> date = new TableColumn<>("Date");
+        TableColumn<DTO, String> icu_patients = new TableColumn<>("icu_patients");
+        TableColumn<DTO, String> hosp_patients = new TableColumn<>("hosp_patients");
+        TableColumn<DTO, String> epidemiologist = new TableColumn<>("epidemiologist");
         iso.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getISO()));
         date.setCellValueFactory(data ->
@@ -132,9 +124,9 @@ public class SQLController implements Initializable {
         tableView.getColumns().clear();
 
         // Columns
-        TableColumn<DTO, String> iso = new TableColumn("ISO");
-        TableColumn<DTO, String> date = new TableColumn("Date");
-        TableColumn<DTO, String> vaccines = new TableColumn("Vaccines");
+        TableColumn<DTO, String> iso = new TableColumn<>("ISO");
+        TableColumn<DTO, String> date = new TableColumn<>("Date");
+        TableColumn<DTO, String> vaccines = new TableColumn<>("Vaccines");
         iso.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((ProducersDTO) data.getValue()).getId()));
         date.setCellValueFactory(data ->
@@ -152,10 +144,10 @@ public class SQLController implements Initializable {
         tableView.getColumns().clear();
 
         // Columns
-        TableColumn<DTO, String> iso = new TableColumn("ISO");
-        TableColumn<DTO, String> date = new TableColumn("Date");
-        TableColumn<DTO, String> tests = new TableColumn("Tests");
-        TableColumn<DTO, String> vaccinations = new TableColumn("Vaccinations");
+        TableColumn<DTO, String> iso = new TableColumn<>("ISO");
+        TableColumn<DTO, String> date = new TableColumn<>("Date");
+        TableColumn<DTO, String> tests = new TableColumn<>("Tests");
+        TableColumn<DTO, String> vaccinations = new TableColumn<>("Vaccinations");
         iso.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getISO()));
         date.setCellValueFactory(data ->
@@ -219,7 +211,9 @@ public class SQLController implements Initializable {
         switch(table) {
             case CLIMATE -> EpidemiologistBusinessLogic.getInstance().delete(((ClimateDTO) dto));
             case COUNTRY -> EpidemiologistBusinessLogic.getInstance().delete(((CountryDTO) dto));
+            case HOSPITALS -> EpidemiologistBusinessLogic.getInstance().delete(((HospitalsDTO) dto));
             case PRODUCERS -> EpidemiologistBusinessLogic.getInstance().delete(((ProducersDTO) dto));
+            case VACCINATIONS -> EpidemiologistBusinessLogic.getInstance().delete(((VaccinationsDTO) dto));
             case USER -> {
                 // TODO
             }
