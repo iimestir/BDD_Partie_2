@@ -27,6 +27,11 @@ public class SQLDialogController implements Initializable {
 
     }
 
+    /**
+     * Returns the user inputs
+     *
+     * @return the user inputs
+     */
     private List<String> getDTOArguments() {
         return formGridPane.getChildren().stream()
                 .filter(p -> p instanceof TextField)
@@ -34,6 +39,11 @@ public class SQLDialogController implements Initializable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Fills the gridpane with the criteria information
+     *
+     * @param labels nodes
+     */
     private void fillForm(Label... labels) {
         for(Label l : labels) {
             formGridPane.add(l,0,rowIndex);
@@ -41,6 +51,12 @@ public class SQLDialogController implements Initializable {
         }
     }
 
+    /**
+     * Saves the criteria in the form
+     *
+     * @param sqlType Request type
+     * @param dto criteria
+     */
     public void setData(SQLRequest sqlType, DTOType dto) {
         this.dto = dto;
         this.sqlType = sqlType;
@@ -74,10 +90,8 @@ public class SQLDialogController implements Initializable {
                 );
             }
             case PRODUCERS -> {
-                if(sqlType != SQLRequest.INSERT)
-                    fillForm(new Label("ISO"));
-
                 fillForm(
+                        new Label("ISO"),
                         new Label("Date"),
                         new Label("Vaccines")
                 );
@@ -96,6 +110,13 @@ public class SQLDialogController implements Initializable {
         }
     }
 
+    /**
+     * Returns the dialog final information
+     *
+     * @return DTO
+     * @throws IllegalArgumentException if an input is not correct
+     * @throws NumberFormatException if an input is not correct
+     */
     public DTO getDTO() throws IllegalArgumentException, NumberFormatException {
         List<String> args = getDTOArguments();
         int i = -1;
@@ -132,17 +153,11 @@ public class SQLDialogController implements Initializable {
                 );
             }
             case PRODUCERS -> {
-                if(sqlType != SQLRequest.INSERT)
-                    return new ProducersDTO(
-                            args.get(++i).equals("") ? null : args.get(i),
-                            args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
-                            args.get(++i).equals("") ? null : args.get(i).split(",")
-                    );
-                else
-                    return new ProducersDTO(
-                            args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
-                            args.get(++i).equals("") ? null : args.get(i).split(",")
-                    );
+                return new ProducersDTO(
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
+                        args.get(++i).equals("") ? null : args.get(i).split(",")
+                );
             }
             case USER -> {
                 // TODO

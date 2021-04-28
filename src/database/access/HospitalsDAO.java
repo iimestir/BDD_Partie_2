@@ -71,6 +71,13 @@ public class HospitalsDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Used on select methods
+     *
+     * @param stmt prepared statement
+     * @return the list of records from the DB
+     * @throws SQLException if an error occurred
+     */
     private List<HospitalsDTO> retrieveHospitals(PreparedStatement stmt) throws SQLException {
         ResultSet rs = stmt.executeQuery();
         List<HospitalsDTO> results = new ArrayList<>();
@@ -113,6 +120,15 @@ public class HospitalsDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     *
+     * @param record the record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
     private PreparedStatement getStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(record.getISO() != null)

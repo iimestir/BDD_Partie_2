@@ -24,11 +24,11 @@ public class ProducersDAO {
     private ProducersDAO() {}
 
     public void insert(ProducersDTO record) throws SQLException {
-        if(record.isStored())
+        if(!select(record).isEmpty())
             throw new SQLException("The specified ProducersDTO is already persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "INSERT INTO Public.\"Climate\"(\"ISO\",\"Date\",\"Vaccines\")" +
+        String request = "INSERT INTO Public.\"Producers\"(\"ISO\",\"Date\",\"Vaccines\")" +
                 " VALUES (?,?,?)";
 
         PreparedStatement stmt = conn.prepareStatement(request);
@@ -87,6 +87,13 @@ public class ProducersDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Used on select methods
+     *
+     * @param stmt prepared statement
+     * @return the list of records from the DB
+     * @throws SQLException if an error occurred
+     */
     private List<ProducersDTO> retrieveProducers(PreparedStatement stmt) throws SQLException {
         ResultSet rs = stmt.executeQuery();
         List<ProducersDTO> results = new ArrayList<>();
@@ -125,6 +132,15 @@ public class ProducersDAO {
         stmt.executeUpdate();
     }
 
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     *
+     * @param record the record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
     private PreparedStatement getStatement(ProducersDTO record, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(record.getId() != null)

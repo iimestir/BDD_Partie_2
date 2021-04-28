@@ -41,6 +41,10 @@ public class SQLController implements Initializable {
         tableView.setEditable(false);
     }
 
+    /**
+     * Fill the table with a list of records
+     * @param dto list of records
+     */
     private void fillClimates(List<ClimateDTO> dto) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -58,6 +62,10 @@ public class SQLController implements Initializable {
         tableView.getItems().addAll(dto);
     }
 
+    /**
+     * Fill the table with a list of records
+     * @param dto list of records
+     */
     private void fillCountries(List<CountryDTO> dto) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -93,6 +101,10 @@ public class SQLController implements Initializable {
         tableView.getItems().addAll(dto);
     }
 
+    /**
+     * Fill the table with a list of records
+     * @param dto list of records
+     */
     private void fillHospitals(List<HospitalsDTO> dto) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -119,6 +131,10 @@ public class SQLController implements Initializable {
         tableView.getItems().addAll(dto);
     }
 
+    /**
+     * Fill the table with a list of records
+     * @param dto list of records
+     */
     private void fillProducers(List<ProducersDTO> dto) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -139,6 +155,10 @@ public class SQLController implements Initializable {
         tableView.getItems().addAll(dto);
     }
 
+    /**
+     * Fill the table with a list of records
+     * @param dto list of records
+     */
     private void fillVaccinations(List<VaccinationsDTO> dto) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -162,6 +182,13 @@ public class SQLController implements Initializable {
         tableView.getItems().addAll(dto);
     }
 
+    /**
+     * Fill the table with the returned value from the DB
+     *
+     * @param table the table type
+     * @param dto the selection criteria
+     * @throws SQLException if an error occurred
+     */
     private void selectOnTable(DTOType table, DTO dto) throws SQLException {
         switch(table) {
             case CLIMATE -> fillClimates(UserBusinessLogic.getInstance().select(((ClimateDTO) dto)));
@@ -175,6 +202,14 @@ public class SQLController implements Initializable {
         }
     }
 
+    /**
+     * Inserts a record in the table
+     *
+     * @param table table type
+     * @param dto insertion values
+     * @throws IllegalAccessException if the user is not an epidemiologist
+     * @throws SQLException if an error occurred
+     */
     private void insertOnTable(DTOType table, DTO dto) throws IllegalAccessException, SQLException {
         if(!LoginToken.isEpidemiologist())
             throw new IllegalAccessException(Utils.getTranslatedString("error_message_only_epidemiologist"));
@@ -189,6 +224,14 @@ public class SQLController implements Initializable {
         }
     }
 
+    /**
+     * Updates a record in the DB
+     *
+     * @param table table type
+     * @param dto update criteria
+     * @throws IllegalAccessException if the user is not an epidemiologist
+     * @throws SQLException if an error occurred
+     */
     private void updateOnTable(DTOType table, DTO dto) throws IllegalAccessException, SQLException {
         if(!LoginToken.isEpidemiologist())
             throw new IllegalAccessException(Utils.getTranslatedString("error_message_only_epidemiologist"));
@@ -204,6 +247,14 @@ public class SQLController implements Initializable {
         }
     }
 
+    /**
+     * Deletes a record in the DB
+     *
+     * @param table table type
+     * @param dto deletion criteria
+     * @throws IllegalAccessException if the user is not an epidemiologist
+     * @throws SQLException if an error occurred
+     */
     private void deleteOnTable(DTOType table, DTO dto) throws IllegalAccessException, SQLException {
         if(!LoginToken.isEpidemiologist())
             throw new IllegalAccessException(Utils.getTranslatedString("error_message_only_epidemiologist"));
@@ -220,6 +271,15 @@ public class SQLController implements Initializable {
         }
     }
 
+    /**
+     * Create a request in the business layer
+     *
+     * @param request the request type
+     * @param table the table type
+     * @param dto the request criteria
+     * @throws SQLException if an error occurred
+     * @throws IllegalAccessException if the user is not an epidemiologist
+     */
     private void request(SQLRequest request, DTOType table, DTO dto) throws SQLException, IllegalAccessException {
         switch(request) {
             case SELECT -> selectOnTable(table, dto);
@@ -229,6 +289,11 @@ public class SQLController implements Initializable {
         }
     }
 
+    /**
+     * When the user pushes the "SQL" button
+     *
+     * @param actionEvent not used here
+     */
     public void requestButtonAction(ActionEvent actionEvent) {
         try {
             final SQLRequest request = requestComboBox.getValue();
