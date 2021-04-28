@@ -13,7 +13,7 @@ public abstract class DTO<T> {
 
     @Override
     public boolean equals(Object dto) {
-        if(dto == null || dto.getClass() != getClass() || ((DTO)dto).getId().equals(getId()))
+        if(dto == null || id == null || dto.getClass() != getClass() || ((DTO)dto).getId().equals(getId()))
             return false;
 
         return ((DTO) dto).getId().equals(getId());

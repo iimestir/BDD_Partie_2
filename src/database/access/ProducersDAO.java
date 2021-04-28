@@ -114,7 +114,7 @@ public class ProducersDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "UPDATE Public.\"Producers\" SET " +
                 "\"Date\" = ?,\"Vaccines\" = ?" +
-                " WHERE Id = ?";
+                " WHERE \"Id\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setDate(1, record.getDate());
@@ -135,7 +135,7 @@ public class ProducersDAO {
             throw new SQLException("The specified ProducersDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Producers\" WHERE ISO = ?";
+        String request = "DELETE FROM Public.\"Producers\" WHERE \"ISO\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, record.getId());

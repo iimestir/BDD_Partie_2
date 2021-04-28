@@ -32,11 +32,11 @@ public class CountryDAO {
      * @throws SQLException if an error occurs
      */
     public void insert(String ISO, CountryDTO record) throws SQLException {
-        if(record.isStored())
+        if(!select(record).isEmpty())
             throw new SQLException("The specified CountryDTO is already persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "INSERT INTO Public.\"Climate\"(\"ISO\",\"Continent\",\"Region\",\"Country\",\"HDI\"," +
+        String request = "INSERT INTO Public.\"Country\"(\"ISO\",\"Continent\",\"Region\",\"Country\",\"HDI\"," +
                 "\"Population\",\"area_sq_ml\",\"Climate\") VALUES (?,?,?,?,?,?,?,?)";
 
         PreparedStatement stmt = conn.prepareStatement(request);
@@ -84,6 +84,7 @@ public class CountryDAO {
         Utils.fillSQL(request, subRequest);
 
         PreparedStatement stmt = conn.prepareStatement(request.toString());
+
         int i = 1;
         if(record.getId() != null)
             stmt.setString(i++, record.getId());
@@ -154,7 +155,7 @@ public class CountryDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         String request = "UPDATE Public.\"Country\" SET " +
                 "\"Continent\" = ?,\"Region\" = ?,\"Country\" = ?,\"HDI\" = ?,\"Population\" = ?,\"area_sq_ml\" = ?,\"Climate\" = ?" +
-                " WHERE Id = ?";
+                " WHERE \"Id\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, record.getContinent());
@@ -180,7 +181,7 @@ public class CountryDAO {
             throw new SQLException("The specified CountryDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Country\" WHERE ISO = ?";
+        String request = "DELETE FROM Public.\"Country\" WHERE \"ISO\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, record.getId());

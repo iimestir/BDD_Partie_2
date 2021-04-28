@@ -5,12 +5,21 @@ import common.Utils;
 import database.business.EpidemiologistBusinessLogic;
 import database.business.UserBusinessLogic;
 import database.transfer.*;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 import model.DTOType;
 import model.SQLRequest;
 import view.UITools;
@@ -18,6 +27,7 @@ import view.dialog.SQLDialog;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -32,7 +42,7 @@ public class SQLController implements Initializable {
         if(LoginToken.isEpidemiologist())
             requestComboBox.getItems().addAll(SQLRequest.class.getEnumConstants());
         else
-            requestComboBox.getItems().add(SQLRequest.INSERT);
+            requestComboBox.getItems().add(SQLRequest.SELECT);
 
         tableComboBox.getItems().addAll(DTOType.class.getEnumConstants());
 
@@ -41,10 +51,16 @@ public class SQLController implements Initializable {
 
     private void fillClimates(List<ClimateDTO> dto) {
         tableView.getItems().clear();
+        tableView.getColumns().clear();
 
         // Columns
-        TableColumn id = new TableColumn("Id");
-        TableColumn description = new TableColumn("Description");
+        TableColumn<DTO, String> id = new TableColumn("Id");
+        TableColumn<DTO, String> description = new TableColumn("Description");
+        id.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(data.getValue().getId().toString()));
+        description.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((ClimateDTO) data.getValue()).getDescription()));
+
         tableView.getColumns().addAll(id, description);
 
         tableView.getItems().addAll(dto);
@@ -52,16 +68,34 @@ public class SQLController implements Initializable {
 
     private void fillCountries(List<CountryDTO> dto) {
         tableView.getItems().clear();
+        tableView.getColumns().clear();
 
         // Columns
-        TableColumn iso = new TableColumn("ISO");
-        TableColumn continent = new TableColumn("Continent");
-        TableColumn region = new TableColumn("Region");
-        TableColumn country = new TableColumn("Country");
-        TableColumn hdi = new TableColumn("HDI");
-        TableColumn population = new TableColumn("Population");
-        TableColumn area_sq_ml = new TableColumn("area_sq_ml");
-        TableColumn climate = new TableColumn("Climate");
+        TableColumn<DTO, String> iso = new TableColumn("ISO");
+        TableColumn<DTO, String> continent = new TableColumn("Continent");
+        TableColumn<DTO, String> region = new TableColumn("Region");
+        TableColumn<DTO, String> country = new TableColumn("Country");
+        TableColumn<DTO, String> hdi = new TableColumn("HDI");
+        TableColumn<DTO, String> population = new TableColumn("Population");
+        TableColumn<DTO, String> area_sq_ml = new TableColumn("area_sq_ml");
+        TableColumn<DTO, String> climate = new TableColumn("Climate");
+        iso.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getId()));
+        continent.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getContinent()));
+        region.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getRegion()));
+        country.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getName()));
+        hdi.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getHdi().toString()));
+        population.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getPopulation().toString()));
+        area_sq_ml.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getArea_sq_ml().toString()));
+        climate.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getClimateId().toString()));
+
         tableView.getColumns().addAll(iso, continent, region, country, hdi, population, area_sq_ml, climate);
 
         tableView.getItems().addAll(dto);
@@ -69,13 +103,25 @@ public class SQLController implements Initializable {
 
     private void fillHospitals(List<HospitalsDTO> dto) {
         tableView.getItems().clear();
+        tableView.getColumns().clear();
 
         // Columns
-        TableColumn iso = new TableColumn("ISO");
-        TableColumn date = new TableColumn("Date");
-        TableColumn icu_patients = new TableColumn("icu_patients");
-        TableColumn hosp_patients = new TableColumn("hosp_patients");
-        TableColumn epidemiologist = new TableColumn("epidemiologist");
+        TableColumn<DTO, String> iso = new TableColumn("ISO");
+        TableColumn<DTO, String> date = new TableColumn("Date");
+        TableColumn<DTO, String> icu_patients = new TableColumn("icu_patients");
+        TableColumn<DTO, String> hosp_patients = new TableColumn("hosp_patients");
+        TableColumn<DTO, String> epidemiologist = new TableColumn("epidemiologist");
+        iso.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getISO()));
+        date.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getDate().toString()));
+        icu_patients.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getIcu_patients().toString()));
+        hosp_patients.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getHosp_patients().toString()));
+        epidemiologist.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getEpidemiologistUUID().toString()));
+
         tableView.getColumns().addAll(iso, date, icu_patients, hosp_patients, epidemiologist);
 
         tableView.getItems().addAll(dto);
@@ -83,11 +129,19 @@ public class SQLController implements Initializable {
 
     private void fillProducers(List<ProducersDTO> dto) {
         tableView.getItems().clear();
+        tableView.getColumns().clear();
 
         // Columns
-        TableColumn iso = new TableColumn("ISO");
-        TableColumn date = new TableColumn("Date");
-        TableColumn vaccines = new TableColumn("Vaccines");
+        TableColumn<DTO, String> iso = new TableColumn("ISO");
+        TableColumn<DTO, String> date = new TableColumn("Date");
+        TableColumn<DTO, String> vaccines = new TableColumn("Vaccines");
+        iso.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((ProducersDTO) data.getValue()).getId()));
+        date.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((ProducersDTO) data.getValue()).getDate().toString()));
+        vaccines.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(Arrays.toString(((ProducersDTO) data.getValue()).getVaccines())));
+
         tableView.getColumns().addAll(iso, date, vaccines);
 
         tableView.getItems().addAll(dto);
@@ -95,12 +149,22 @@ public class SQLController implements Initializable {
 
     private void fillVaccinations(List<VaccinationsDTO> dto) {
         tableView.getItems().clear();
+        tableView.getColumns().clear();
 
         // Columns
-        TableColumn iso = new TableColumn("ISO");
-        TableColumn date = new TableColumn("Date");
-        TableColumn tests = new TableColumn("Tests");
-        TableColumn vaccinations = new TableColumn("Vaccinations");
+        TableColumn<DTO, String> iso = new TableColumn("ISO");
+        TableColumn<DTO, String> date = new TableColumn("Date");
+        TableColumn<DTO, String> tests = new TableColumn("Tests");
+        TableColumn<DTO, String> vaccinations = new TableColumn("Vaccinations");
+        iso.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getISO()));
+        date.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getDate().toString()));
+        tests.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getTests().toString()));
+        vaccinations.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getVaccinations().toString()));
+
         tableView.getColumns().addAll(iso, date, tests, vaccinations);
 
         tableView.getItems().addAll(dto);

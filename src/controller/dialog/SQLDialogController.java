@@ -53,10 +53,8 @@ public class SQLDialogController implements Initializable {
                 fillForm(new Label("Description"));
             }
             case COUNTRY -> {
-                if(sqlType != SQLRequest.INSERT)
-                    fillForm(new Label("ISO"));
-
                 fillForm(
+                        new Label("ISO"),
                         new Label("Continent"),
                         new Label("Region"),
                         new Label("Country"),
@@ -100,61 +98,50 @@ public class SQLDialogController implements Initializable {
 
     public DTO getDTO() throws IllegalArgumentException, NumberFormatException {
         List<String> args = getDTOArguments();
-        int i = 0;
+        int i = -1;
 
         switch(dto) {
             case CLIMATE -> {
                 if(sqlType != SQLRequest.INSERT)
                     return new ClimateDTO(
-                            Integer.parseInt(args.get(i++)),
-                            args.get(i)
+                            args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i)
                     );
                 else
-                    return new ClimateDTO(args.get(i));
+                    return new ClimateDTO(args.get(++i));
             }
             case COUNTRY -> {
-                if(sqlType != SQLRequest.INSERT)
-                    return new CountryDTO(
-                            args.get(i++),
-                            args.get(i++),
-                            args.get(i++),
-                            args.get(i++),
-                            Double.parseDouble(args.get(i++)),
-                            Integer.parseInt(args.get(i++)),
-                            Double.parseDouble(args.get(i++)),
-                            Integer.parseInt(args.get(i))
-                    );
-                else
-                    return new CountryDTO(
-                            args.get(i++),
-                            args.get(i++),
-                            args.get(i++),
-                            Double.parseDouble(args.get(i++)),
-                            Integer.parseInt(args.get(i++)),
-                            Double.parseDouble(args.get(i++)),
-                            Integer.parseInt(args.get(i))
-                    );
+                return new CountryDTO(
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : Double.parseDouble(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                        args.get(++i).equals("") ? null : Double.parseDouble(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i))
+                );
             }
             case HOSPITALS -> {
                 return new HospitalsDTO(
-                        args.get(i++),
-                        java.sql.Date.valueOf(args.get(i++)),
-                        Integer.parseInt(args.get(i)),
-                        Integer.parseInt(args.get(i)),
-                        UUID.fromString(args.get(i))
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                        args.get(++i).equals("") ? null : UUID.fromString(args.get(i))
                 );
             }
             case PRODUCERS -> {
                 if(sqlType != SQLRequest.INSERT)
                     return new ProducersDTO(
-                            args.get(i++),
-                            java.sql.Date.valueOf(args.get(i++)),
-                            args.get(i).split(",")
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i).split(",")
                     );
                 else
                     return new ProducersDTO(
-                            java.sql.Date.valueOf(args.get(i++)),
-                            args.get(i).split(",")
+                            args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i).split(",")
                     );
             }
             case USER -> {
@@ -162,9 +149,10 @@ public class SQLDialogController implements Initializable {
             }
             case VACCINATIONS -> {
                 return new VaccinationsDTO(
-                        args.get(i++), java.sql.Date.valueOf(args.get(i++)),
-                        Integer.parseInt(args.get(i)),
-                        Integer.parseInt(args.get(i))
+                        args.get(++i).equals("") ? null : args.get(i),
+                        args.get(++i).equals("") ? null : java.sql.Date.valueOf(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                        args.get(++i).equals("") ? null : Integer.parseInt(args.get(i))
                 );
             }
         }

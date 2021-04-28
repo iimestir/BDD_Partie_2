@@ -53,7 +53,7 @@ public class ClimateDAO {
         if(climate.getId() != null)
             stmt.setInt(i++, climate.getId());
         if(climate.getDescription() != null)
-            stmt.setString(i++, climate.getDescription());
+            stmt.setString(i, climate.getDescription());
 
         return retrieveClimates(stmt);
     }
@@ -117,7 +117,7 @@ public class ClimateDAO {
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "UPDATE Public.\"Climate\" SET \"Description\" = ? WHERE Id = ?";
+        String request = "UPDATE Public.\"Climate\" SET \"Description\" = ? WHERE \"Id\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setString(1, climate.getDescription());
@@ -137,7 +137,7 @@ public class ClimateDAO {
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"Climate\" WHERE Id = ?";
+        String request = "DELETE FROM Public.\"Climate\" WHERE \"Id\" = ?";
 
         PreparedStatement stmt = conn.prepareStatement(request);
         stmt.setInt(1, climate.getId());

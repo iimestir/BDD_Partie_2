@@ -16,7 +16,7 @@
          <children>
             <ComboBox fx:id="requestComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="%request" HBox.hgrow="ALWAYS" />
             <ComboBox fx:id="tableComboBox" prefWidth="150.0" promptText="%db_table" />
-            <Button fx:id="requestButton" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#requestButtonAction" text="%confirm" />
+            <Button alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#requestButtonAction" text="%sql" />
          </children>
       </HBox>
       <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">

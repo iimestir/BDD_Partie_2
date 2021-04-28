@@ -1,7 +1,9 @@
 package database.business;
 
+import common.Utils;
 import database.access.DBManager;
 import database.transfer.*;
+import view.UITools;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -66,6 +68,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**
@@ -84,6 +88,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**
@@ -102,6 +108,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
     }
 
     /**
@@ -120,6 +128,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**
@@ -138,6 +148,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**
@@ -157,6 +169,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
     }
 
     /**
@@ -175,6 +189,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**
@@ -193,6 +209,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**
@@ -211,6 +229,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
     }
 
     /**
@@ -229,6 +249,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
     }
 
     /**
@@ -247,6 +269,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
     }
 
     /**
@@ -265,6 +289,8 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**
@@ -283,5 +309,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 }

@@ -59,7 +59,7 @@ public class HospitalsDAO {
         if(record.getHosp_patients() != null)
             stmt.setInt(i++, record.getHosp_patients());
         if(record.getEpidemiologistUUID() != null)
-            stmt.setString(i, record.getEpidemiologistUUID().toString());
+            stmt.setObject(i, record.getEpidemiologistUUID());
 
         return retrieveHospitals(stmt);
     }
@@ -113,7 +113,7 @@ public class HospitalsDAO {
         stmt.setDate(2, record.getDate());
         stmt.setInt(3, record.getIcu_patients());
         stmt.setInt(4, record.getHosp_patients());
-        stmt.setString(5, record.getEpidemiologistUUID().toString());
+        stmt.setObject(5, record.getEpidemiologistUUID());
 
         stmt.executeUpdate();
     }
