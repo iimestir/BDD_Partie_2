@@ -39,7 +39,6 @@ public class ClimateDAO {
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Climate\"");
 
         PreparedStatement stmt = getStatement(climate, conn, request);
-        stmt.executeUpdate();
 
         return retrieveClimates(stmt);
     }

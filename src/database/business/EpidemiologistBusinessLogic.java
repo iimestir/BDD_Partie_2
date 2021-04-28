@@ -250,7 +250,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
             throw ex;
         }
 
-        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**
@@ -290,7 +290,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
             throw ex;
         }
 
-        UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**

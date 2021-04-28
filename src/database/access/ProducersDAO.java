@@ -84,7 +84,6 @@ public class ProducersDAO {
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Producers\"");
 
         PreparedStatement stmt = getStatement(record, conn, request);
-
         stmt.executeUpdate();
     }
 

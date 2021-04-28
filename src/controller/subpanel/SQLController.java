@@ -64,7 +64,7 @@ public class SQLController implements Initializable {
 
         // Columns
         TableColumn<DTO, String> iso = new TableColumn<>("ISO");
-        TableColumn<DTO, String> continent = new TableColumn("Continent");
+        TableColumn<DTO, String> continent = new TableColumn<>("Continent");
         TableColumn<DTO, String> region = new TableColumn<>("Region");
         TableColumn<DTO, String> country = new TableColumn<>("Country");
         TableColumn<DTO, String> hdi = new TableColumn<>("HDI");

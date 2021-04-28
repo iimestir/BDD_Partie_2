@@ -68,7 +68,6 @@ public class HospitalsDAO {
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Hospitals\"");
 
         PreparedStatement stmt = getStatement(record, conn, request);
-
         stmt.executeUpdate();
     }
 

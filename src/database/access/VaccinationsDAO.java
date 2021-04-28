@@ -84,7 +84,7 @@ public class VaccinationsDAO {
      * @return records list
      * @throws SQLException if an error occurs
      */
-    public List<VaccinationsDTO> delete(VaccinationsDTO record) throws SQLException {
+    public void delete(VaccinationsDTO record) throws SQLException {
         if(select(record).isEmpty())
             throw new SQLException("The specified VaccinationsDTO is not persistent");
 
@@ -93,7 +93,7 @@ public class VaccinationsDAO {
 
         PreparedStatement stmt = getStatement(record, conn, request);
 
-        return retrieveCountries(stmt);
+        stmt.executeUpdate();
     }
 
     private List<VaccinationsDTO> retrieveCountries(PreparedStatement stmt) throws SQLException {
