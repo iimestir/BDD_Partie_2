@@ -74,7 +74,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     }
 
     /**
-     * Used to deleted a user from the database
+     * Used to delete a user from the database
      *
      * @param user the account information
      * @throws SQLException if an error occurred
@@ -254,7 +254,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
             throw ex;
         }
 
-        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**
@@ -315,7 +315,7 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
             throw ex;
         }
 
-        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
     }
 
     /**

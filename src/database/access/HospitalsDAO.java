@@ -34,7 +34,8 @@ public class HospitalsDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Hospitals\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         return retrieveHospitals(stmt);
     }
@@ -67,7 +68,9 @@ public class HospitalsDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Hospitals\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
+
         stmt.executeUpdate();
     }
 
@@ -79,15 +82,18 @@ public class HospitalsDAO {
      * @throws SQLException if an error occurs
      */
     public void update(HospitalsDTO oldRecord, HospitalsDTO newRecord) throws SQLException {
-        if(!oldRecord.isStored())
+        if(select(oldRecord).isEmpty())
             throw new SQLException("The specified CountryDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("UPDATE Public.\"Hospitals\" SET " +
-                "\"ISO\" = ?,\"Date\" = ?,\"icu_patients\" = ?,\"hosp_patients\" = ?,\"epidemiologist\" = ?");
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Hospitals\"");
 
-        PreparedStatement stmt = getStatement(6, oldRecord, conn, request);
-        updateStatement(stmt, newRecord);
+        prepareStringBuilderStatement(true, newRecord, conn, request);
+        prepareStringBuilderStatement(false, oldRecord, conn, request);
+
+        PreparedStatement stmt = getPreparedStatement(oldRecord, newRecord, conn, request);
+
+        stmt.executeUpdate();
     }
 
     /**
@@ -142,49 +148,13 @@ public class HospitalsDAO {
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      *
+     * @param type request type
      * @param record the record
      * @param conn connection
      * @param request the current request string builder
-     * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(1, record, conn, request);
-    }
-
-    /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "UPDATE" requests
-     *
-     * @param d number of parameters before those that will be declared
-     * @param record the old record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
-     */
-    private PreparedStatement getStatement(int d, HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(d, record, conn, request);
-    }
-
-    private void updateStatement(PreparedStatement stmt, HospitalsDTO newRecord) throws SQLException {
-        int i = 1;
-
-        if(newRecord.getISO() != null)
-            stmt.setString(i++, newRecord.getISO());
-        if(newRecord.getDate() != null)
-            stmt.setDate(i++, newRecord.getDate());
-        if(newRecord.getIcu_patients() != null)
-            stmt.setInt(i++, newRecord.getIcu_patients());
-        if(newRecord.getHosp_patients() != null)
-            stmt.setInt(i++, newRecord.getHosp_patients());
-        if(newRecord.getEpidemiologistUUID() != null)
-            stmt.setObject(i, newRecord.getEpidemiologistUUID());
-
-        stmt.executeUpdate();
-    }
-
-    private PreparedStatement getPreparedStatement(int d, HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+    private void prepareStringBuilderStatement(boolean type, HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(record.getISO() != null)
             subRequest.add("\"ISO\" = ?");
@@ -197,10 +167,55 @@ public class HospitalsDAO {
         if(record.getEpidemiologistUUID() != null)
             subRequest.add("\"epidemiologist\" = ?");
 
-        Utils.fillSQLSelect(request, subRequest);
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        if(type)
+            Utils.fillSQLUpdate(request, subRequest);
+        else
+            Utils.fillSQLSelect(request, subRequest);
+    }
 
-        int i = d;
+    /**
+     * Returns the preparedStatement of a selection request
+     *
+     * @param record
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // WHERE ...
+        prepareStatement(record, stmt, i);
+
+        return stmt;
+    }
+
+    /**
+     * Returns the prepared statement of an update request
+     *
+     * @param oldRecord
+     * @param newRecord
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(HospitalsDTO oldRecord, HospitalsDTO newRecord
+            , Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // SET ...
+        i = prepareStatement(newRecord,stmt,i);
+        // WHERE ...
+        prepareStatement(oldRecord, stmt, i);
+
+        return stmt;
+    }
+
+    private int prepareStatement(HospitalsDTO record, PreparedStatement stmt, int i) throws SQLException {
         if(record.getISO() != null)
             stmt.setString(i++, record.getISO());
         if(record.getDate() != null)
@@ -210,8 +225,7 @@ public class HospitalsDAO {
         if(record.getHosp_patients() != null)
             stmt.setInt(i++, record.getHosp_patients());
         if(record.getEpidemiologistUUID() != null)
-            stmt.setObject(i, record.getEpidemiologistUUID());
-
-        return stmt;
+            stmt.setObject(i++, record.getEpidemiologistUUID());
+        return i;
     }
 }

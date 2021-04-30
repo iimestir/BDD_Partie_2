@@ -160,13 +160,14 @@ public class UserDAO {
      * @param user User
      */
     public void delete(UserDTO user) throws SQLException {
-        if(!user.isStored())
+        if(select(user).isEmpty())
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"User\"");
 
-        PreparedStatement stmt = getStatement(user, conn, request);
+        prepareStringBuilderStatement(false, user, conn, request);
+        PreparedStatement stmt = getPreparedStatement(user, conn, request);
 
         stmt.executeUpdate();
     }
@@ -270,7 +271,8 @@ public class UserDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"User\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         return retrieveUsers(stmt);
     }
@@ -283,18 +285,21 @@ public class UserDAO {
      * @throws SQLException if an error occurs
      */
     public void update(UserDTO oldRecord, UserDTO newRecord) throws SQLException {
-        if(!oldRecord.isStored())
+        if(select(oldRecord).isEmpty())
             throw new SQLException("The specified UserDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
 
         StringBuilder request = new StringBuilder(
-                "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?," +
-                        "\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?"
+                "UPDATE Public.\"User\""
         );
 
-        PreparedStatement stmt = getStatement(7, oldRecord, conn, request);
-        updateStatement(stmt, newRecord);
+        prepareStringBuilderStatement(true, newRecord, conn, request);
+        prepareStringBuilderStatement(false, oldRecord, conn, request);
+
+        PreparedStatement stmt = getPreparedStatement(oldRecord, newRecord, conn, request);
+
+        stmt.executeUpdate();
     }
 
     /**
@@ -329,90 +334,93 @@ public class UserDAO {
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "SELECT" requests
      *
+     * @param type request type
      * @param record the record
      * @param conn connection
      * @param request the current request string builder
-     * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(UserDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(1, record, conn, request);
+    private void prepareStringBuilderStatement(boolean type, UserDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"UUID\" = ?");
+        if(record.getFirstName() != null)
+            subRequest.add("\"Firstname\" = ?");
+        if(record.getLastName() != null)
+            subRequest.add("\"Lastname\" = ?");
+        if(record.getStreet() != null)
+            subRequest.add("\"Street\" = ?");
+        if(record.getDoorNumber() != null)
+            subRequest.add("\"Doornumber\" = ?");
+        if(record.getCity() != null)
+            subRequest.add("\"City\" = ?");
+        if(record.getZipCode() != null)
+            subRequest.add("\"ZIP\" = ?");
+
+        if(type)
+            Utils.fillSQLUpdate(request, subRequest);
+        else
+            Utils.fillSQLSelect(request, subRequest);
     }
 
     /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "UPDATE" requests
+     * Returns the preparedStatement of a selection request
      *
-     * @param d number of parameters before those that will be declared
-     * @param oldRecord the old record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
+     * @param record
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
      */
-    private PreparedStatement getStatement(int d, UserDTO oldRecord,  Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(d, oldRecord, conn, request);
-    }
-
-    private void updateStatement(PreparedStatement stmt, UserDTO newRecord) throws SQLException {
+    private PreparedStatement getPreparedStatement(UserDTO record, Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
         int i = 1;
 
-        if(newRecord.getId() != null)
-            stmt.setObject(i++, newRecord.getId());
-        if(newRecord.getFirstName() != null)
-            stmt.setString(i++, newRecord.getFirstName());
-        if(newRecord.getLastName() != null)
-            stmt.setString(i++, newRecord.getLastName());
-        if(newRecord.getStreet() != null)
-            stmt.setString(i++, newRecord.getStreet());
-        if(newRecord.getDoorNumber() != null)
-            stmt.setInt(i++, newRecord.getDoorNumber());
-        if(newRecord.getCity() != null)
-            stmt.setString(i++, newRecord.getCity());
-        if(newRecord.getZipCode() != null)
-            stmt.setString(i, newRecord.getZipCode());
-
-        stmt.executeUpdate();
-    }
-
-    private PreparedStatement getPreparedStatement(int d, UserDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
-        List<String> subRequest = new ArrayList<>();
-        if(oldRecord.getId() != null)
-            subRequest.add("\"UUID\" = ?");
-        if(oldRecord.getFirstName() != null)
-            subRequest.add("\"Firstname\" = ?");
-        if(oldRecord.getLastName() != null)
-            subRequest.add("\"Lastname\" = ?");
-        if(oldRecord.getStreet() != null)
-            subRequest.add("\"Street\" = ?");
-        if(oldRecord.getDoorNumber() != null)
-            subRequest.add("\"Doornumber\" = ?");
-        if(oldRecord.getCity() != null)
-            subRequest.add("\"City\" = ?");
-        if(oldRecord.getZipCode() != null)
-            subRequest.add("\"ZIP\" = ?");
-
-        Utils.fillSQLSelect(request, subRequest);
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-
-        int i = d;
-        if(oldRecord.getId() != null)
-            stmt.setObject(i++, oldRecord.getId());
-        if(oldRecord.getFirstName() != null)
-            stmt.setString(i++, oldRecord.getFirstName());
-        if(oldRecord.getLastName() != null)
-            stmt.setString(i++, oldRecord.getLastName());
-        if(oldRecord.getStreet() != null)
-            stmt.setString(i++, oldRecord.getStreet());
-        if(oldRecord.getDoorNumber() != null)
-            stmt.setInt(i++, oldRecord.getDoorNumber());
-        if(oldRecord.getCity() != null)
-            stmt.setString(i++, oldRecord.getCity());
-        if(oldRecord.getZipCode() != null)
-            stmt.setString(i, oldRecord.getZipCode());
+        // WHERE ...
+        prepareStatement(record, stmt, i);
 
         return stmt;
+    }
+
+    /**
+     * Returns the prepared statement of an update request
+     *
+     * @param oldRecord
+     * @param newRecord
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(UserDTO oldRecord, UserDTO newRecord
+            , Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // SET ...
+        i = prepareStatement(newRecord, stmt, i);
+        // WHERE ...
+        prepareStatement(oldRecord, stmt, i);
+
+        return stmt;
+    }
+
+    private int prepareStatement(UserDTO record, PreparedStatement stmt, int i) throws SQLException {
+        if(record.getId() != null)
+            stmt.setObject(i++, record.getId());
+        if(record.getFirstName() != null)
+            stmt.setString(i++, record.getFirstName());
+        if(record.getLastName() != null)
+            stmt.setString(i++, record.getLastName());
+        if(record.getStreet() != null)
+            stmt.setString(i++, record.getStreet());
+        if(record.getDoorNumber() != null)
+            stmt.setInt(i++, record.getDoorNumber());
+        if(record.getCity() != null)
+            stmt.setString(i++, record.getCity());
+        if(record.getZipCode() != null)
+            stmt.setString(i++, record.getZipCode());
+        return i;
     }
 }

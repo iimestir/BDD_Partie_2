@@ -2,7 +2,6 @@ package database.access;
 
 import common.Utils;
 import database.transfer.ClimateDTO;
-import model.SQLRequest;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public class ClimateDAO {
      * @throws SQLException if an error occurs
      */
     public void update(ClimateDTO oldRecord, ClimateDTO newRecord) throws SQLException {
-        if(!oldRecord.isStored())
+        if(select(oldRecord).isEmpty())
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
@@ -168,20 +167,11 @@ public class ClimateDAO {
      * @throws SQLException
      */
     private PreparedStatement getPreparedStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
-        List<String> subRequest = new ArrayList<>();
-        if(record.getId() != null)
-            subRequest.add("\"Id\" = ?");
-        if(record.getDescription() != null)
-            subRequest.add("\"Description\" = ?");
-
-        Utils.fillSQLSelect(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
-
         int i = 1;
-        if(record.getId() != null)
-            stmt.setInt(i++, record.getId());
-        if(record.getDescription() != null)
-            stmt.setString(i, record.getDescription());
+
+        // WHERE ...
+        prepareStatement(record, stmt, i);
 
         return stmt;
     }
@@ -202,16 +192,18 @@ public class ClimateDAO {
         int i = 1;
 
         // SET ...
-        if(newRecord.getId() != null)
-            stmt.setInt(i++, newRecord.getId());
-        if(newRecord.getDescription() != null)
-            stmt.setString(i++, newRecord.getDescription());
+        i = prepareStatement(newRecord,stmt,i);
         // WHERE ...
-        if(oldRecord.getId() != null)
-            stmt.setInt(i++, oldRecord.getId());
-        if(oldRecord.getDescription() != null)
-            stmt.setString(i, oldRecord.getDescription());
+        prepareStatement(oldRecord, stmt, i);
 
         return stmt;
+    }
+
+    private int prepareStatement(ClimateDTO record, PreparedStatement stmt, int i) throws SQLException {
+        if (record.getId() != null)
+            stmt.setInt(i++, record.getId());
+        if (record.getDescription() != null)
+            stmt.setString(i++, record.getDescription());
+        return i;
     }
 }

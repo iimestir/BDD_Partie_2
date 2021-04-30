@@ -125,6 +125,7 @@ public class SQLDialogController implements Initializable {
                         sqlType, false,
                         new Label("Firstname"),
                         new Label("Lastname"),
+                        new Label("Street"),
                         new Label("Doornumber"),
                         new Label("City"),
                         new Label("ZIP")
@@ -199,6 +200,7 @@ public class SQLDialogController implements Initializable {
             case USER -> {
                 if(sqlType != SQLRequest.INSERT)
                     return new UserDTO(
+                            args.get(++i).equals("") ? null : UUID.fromString(args.get(i)),
                             args.get(++i).equals("") ? null : args.get(i),
                             args.get(++i).equals("") ? null : args.get(i),
                             args.get(++i).equals("") ? null : args.get(i),
@@ -208,7 +210,6 @@ public class SQLDialogController implements Initializable {
                     );
                 else
                     return new UserDTO(
-                            args.get(++i).equals("") ? null : UUID.fromString(args.get(i)),
                             args.get(++i).equals("") ? null : args.get(i),
                             args.get(++i).equals("") ? null : args.get(i),
                             args.get(++i).equals("") ? null : args.get(i),

@@ -467,7 +467,7 @@ public class SQLController implements Initializable {
         } catch(Exception ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
 
-            // TODO : DEBUG
+            // FIXME : DEBUG
             ex.printStackTrace();
         }
     }

@@ -56,7 +56,8 @@ public class VaccinationsDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Vaccinations\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         return retrieveCountries(stmt);
     }
@@ -89,7 +90,8 @@ public class VaccinationsDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Vaccinations\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         stmt.executeUpdate();
     }
@@ -103,11 +105,14 @@ public class VaccinationsDAO {
      */
     public void update(VaccinationsDTO oldRecord, VaccinationsDTO newRecord) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("UPDATE Public.\"Vaccinations\" SET " +
-                "\"ISO\" = ?,\"Date\" = ?,\"Tests\" = ?,\"Vaccinations\" = ?");
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Vaccinations\"");
 
-        PreparedStatement stmt = getStatement(5, oldRecord, conn, request);
-        updateStatement(stmt, newRecord);
+        prepareStringBuilderStatement(true, newRecord, conn, request);
+        prepareStringBuilderStatement(false, oldRecord, conn, request);
+
+        PreparedStatement stmt = getPreparedStatement(oldRecord, newRecord, conn, request);
+
+        stmt.executeUpdate();
     }
 
     /**
@@ -137,71 +142,80 @@ public class VaccinationsDAO {
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      *
+     * @param type request type
      * @param record the record
      * @param conn connection
      * @param request the current request string builder
-     * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(VaccinationsDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(1, record, conn, request);
+    private void prepareStringBuilderStatement(boolean type, VaccinationsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getISO() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getDate() != null)
+            subRequest.add("\"Date\" = ?");
+        if(record.getTests() != null)
+            subRequest.add("\"Tests\" = ?");
+        if(record.getVaccinations() != null)
+            subRequest.add("\"Vaccinations\" = ?");
+
+        if(type)
+            Utils.fillSQLUpdate(request, subRequest);
+        else
+            Utils.fillSQLSelect(request, subRequest);
     }
 
     /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "UPDATE" requests
+     * Returns the preparedStatement of a selection request
      *
-     * @param d number of parameters before those that will be declared
-     * @param oldRecord the old record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
+     * @param record
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
      */
-    private PreparedStatement getStatement(int d, VaccinationsDTO oldRecord,  Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(d, oldRecord, conn, request);
-    }
-
-    private void updateStatement(PreparedStatement stmt, VaccinationsDTO newRecord) throws SQLException {
+    private PreparedStatement getPreparedStatement(VaccinationsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
         int i = 1;
 
-        if(newRecord.getISO() != null)
-            stmt.setString(i++, newRecord.getISO());
-        if(newRecord.getDate() != null)
-            stmt.setDate(i++, newRecord.getDate());
-        if(newRecord.getTests() != null)
-            stmt.setInt(i++, newRecord.getTests());
-        if(newRecord.getVaccinations() != null)
-            stmt.setInt(i, newRecord.getVaccinations());
-
-        stmt.executeUpdate();
-    }
-
-    private PreparedStatement getPreparedStatement(int d, VaccinationsDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
-        List<String> subRequest = new ArrayList<>();
-        if(oldRecord.getISO() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(oldRecord.getDate() != null)
-            subRequest.add("\"Date\" = ?");
-        if(oldRecord.getTests() != null)
-            subRequest.add("\"Tests\" = ?");
-        if(oldRecord.getVaccinations() != null)
-            subRequest.add("\"Vaccinations\" = ?");
-
-        Utils.fillSQLSelect(request, subRequest);
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-
-        int i = d;
-        if(oldRecord.getISO() != null)
-            stmt.setString(i++, oldRecord.getISO());
-        if(oldRecord.getDate() != null)
-            stmt.setDate(i++, oldRecord.getDate());
-        if(oldRecord.getTests() != null)
-            stmt.setInt(i++, oldRecord.getTests());
-        if(oldRecord.getVaccinations() != null)
-            stmt.setInt(i, oldRecord.getVaccinations());
+        // WHERE ...
+        prepareStatement(record, stmt, i);
 
         return stmt;
     }
 
+    /**
+     * Returns the prepared statement of an update request
+     *
+     * @param oldRecord
+     * @param newRecord
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(VaccinationsDTO oldRecord, VaccinationsDTO newRecord
+            , Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // SET ...
+        i = prepareStatement(newRecord, stmt, i);
+        // WHERE ...
+        prepareStatement(oldRecord, stmt, i);
+
+        return stmt;
+    }
+
+    private int prepareStatement(VaccinationsDTO record, PreparedStatement stmt, int i) throws SQLException {
+        if(record.getISO() != null)
+            stmt.setString(i++, record.getISO());
+        if(record.getDate() != null)
+            stmt.setDate(i++, record.getDate());
+        if(record.getTests() != null)
+            stmt.setInt(i++, record.getTests());
+        if(record.getVaccinations() != null)
+            stmt.setInt(i++, record.getVaccinations());
+        return i;
+    }
 }

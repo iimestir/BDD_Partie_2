@@ -63,7 +63,8 @@ public class CountryDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Country\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         return retrieveCountries(stmt);
     }
@@ -96,7 +97,8 @@ public class CountryDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Country\"");
 
-        PreparedStatement stmt = getStatement(record, conn, request);
+        prepareStringBuilderStatement(false, record, conn, request);
+        PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
         stmt.executeUpdate();
     }
@@ -113,15 +115,15 @@ public class CountryDAO {
         List<CountryDTO> results = new ArrayList<>();
         while (rs.next()) {
             String id = rs.getString("ISO");
-            String name = rs.getString("Country");
             String continent = rs.getString("Continent");
             String region = rs.getString("Region");
+            String name = rs.getString("Country");
             double hdi = rs.getDouble("HDI");
             int population = rs.getInt("Population");
             double area_sq_ml = rs.getDouble("area_sq_ml");
             int climateId = rs.getInt("Climate");
 
-            CountryDTO selected = new CountryDTO(id, name, continent, region, hdi, population, area_sq_ml, climateId);
+            CountryDTO selected = new CountryDTO(id, continent, region, name, hdi, population, area_sq_ml, climateId);
 
             results.add(selected);
         }
@@ -136,68 +138,30 @@ public class CountryDAO {
      * @throws SQLException if an error occurs
      */
     public void update(CountryDTO oldRecord, CountryDTO newRecord) throws SQLException {
-        if(!oldRecord.isStored())
+        if(select(oldRecord).isEmpty())
             throw new SQLException("The specified CountryDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("UPDATE Public.\"Country\" SET " +
-                "\"Continent\" = ?,\"Region\" = ?,\"Country\" = ?,\"HDI\" = ?,\"Population\" = ?,\"area_sq_ml\" = ?" +
-                ",\"Climate\" = ?");
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Country\"");
 
-        PreparedStatement stmt = getStatement(8, oldRecord, conn, request);
-        updateStatement(stmt, newRecord);
-    }
+        prepareStringBuilderStatement(true, newRecord, conn, request);
+        prepareStringBuilderStatement(false, oldRecord, conn, request);
 
-    /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     *
-     * @param record the record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
-     */
-    private PreparedStatement getStatement(CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(1, record, conn, request);
-    }
-
-    /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "UPDATE" requests
-     *
-     * @param d number of parameters before those that will be declared
-     * @param record the record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
-     */
-    private PreparedStatement getStatement(int d, CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(d, record, conn, request);
-    }
-
-    private void updateStatement(PreparedStatement stmt, CountryDTO newRecord) throws SQLException {
-        int i = 1;
-
-        if(newRecord.getContinent() != null)
-            stmt.setString(i++, newRecord.getContinent());
-        if(newRecord.getRegion() != null)
-            stmt.setString(i++, newRecord.getRegion());
-        if(newRecord.getName() != null)
-            stmt.setString(i++, newRecord.getName());
-        if(newRecord.getHdi() != null)
-            stmt.setDouble(i++, newRecord.getHdi());
-        if(newRecord.getPopulation() != null)
-            stmt.setInt(i++, newRecord.getPopulation());
-        if(newRecord.getArea_sq_ml() != null)
-            stmt.setDouble(i++, newRecord.getArea_sq_ml());
-        if(newRecord.getClimateId() != null)
-            stmt.setInt(i, newRecord.getClimateId());
+        PreparedStatement stmt = getPreparedStatement(oldRecord, newRecord, conn, request);
 
         stmt.executeUpdate();
     }
 
-    private PreparedStatement getPreparedStatement(int d, CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     *
+     * @param type request type
+     * @param record the record
+     * @param conn connection
+     * @param request the current request string builder
+     * @throws SQLException if an error occurred
+     */
+    private void prepareStringBuilderStatement(boolean type, CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(record.getId() != null)
             subRequest.add("\"ISO\" = ?");
@@ -216,11 +180,55 @@ public class CountryDAO {
         if(record.getClimateId() != null)
             subRequest.add("\"Climate\" = ?");
 
-        Utils.fillSQLSelect(request, subRequest);
+        if(type)
+            Utils.fillSQLUpdate(request, subRequest);
+        else
+            Utils.fillSQLSelect(request, subRequest);
+    }
 
+    /**
+     * Returns the preparedStatement of a selection request
+     *
+     * @param record
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
 
-        int i = d;
+        // WHERE ...
+        prepareStatement(record, stmt, i);
+
+        return stmt;
+    }
+
+    /**
+     * Returns the prepared statement of an update request
+     *
+     * @param oldRecord
+     * @param newRecord
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(CountryDTO oldRecord, CountryDTO newRecord
+            , Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // SET ...
+        i = prepareStatement(newRecord, stmt, i);
+        // WHERE ...
+        prepareStatement(oldRecord, stmt, i);
+
+        return stmt;
+    }
+
+    private int prepareStatement(CountryDTO record, PreparedStatement stmt, int i) throws SQLException {
         if(record.getId() != null)
             stmt.setString(i++, record.getId());
         if(record.getContinent() != null)
@@ -236,8 +244,7 @@ public class CountryDAO {
         if(record.getArea_sq_ml() != null)
             stmt.setDouble(i++, record.getArea_sq_ml());
         if(record.getClimateId() != null)
-            stmt.setInt(i, record.getClimateId());
-
-        return stmt;
+            stmt.setInt(i++, record.getClimateId());
+        return i;
     }
 }

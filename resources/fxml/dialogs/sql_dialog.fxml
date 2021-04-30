@@ -10,7 +10,7 @@
 
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="8.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.dialog.SQLDialogController">
    <children>
-      <Label fx:id="titleLabel" text="%sql_title">
+      <Label text="%sql_title">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>

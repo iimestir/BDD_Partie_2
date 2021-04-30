@@ -66,7 +66,7 @@ public class Navigator<T> {
                 ((Disposable) panels.get(panels.size()-2).getValue()).pause();
 
         } catch(IOException ex) {
-            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }
 
