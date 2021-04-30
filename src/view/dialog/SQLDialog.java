@@ -2,7 +2,6 @@ package view.dialog;
 
 import common.Utils;
 import controller.dialog.SQLDialogController;
-import database.transfer.DTO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -12,7 +11,7 @@ import model.SQLRequest;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-public class SQLDialog extends Dialog<DTO> {
+public class SQLDialog extends Dialog<Object> {
     private static final String FXML_PATH = "/fxml/dialogs/sql_dialog.fxml";
 
     private SQLDialog(SQLRequest sqlType, DTOType dto) throws IOException, IllegalArgumentException, NumberFormatException {

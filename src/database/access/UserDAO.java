@@ -1,14 +1,18 @@
 package database.access;
 
 import common.Utils;
+import database.transfer.ClimateDTO;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 import javafx.util.Pair;
+import model.SQLRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -162,10 +166,9 @@ public class UserDAO {
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "DELETE FROM Public.\"User\" WHERE Id = ?";
+        StringBuilder request = new StringBuilder("DELETE FROM Public.\"User\"");
 
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, user.getId().toString());
+        PreparedStatement stmt = getStatement(user, conn, request);
 
         stmt.executeUpdate();
     }
@@ -253,5 +256,145 @@ public class UserDAO {
         }
 
         return null;
+    }
+
+
+    ///////
+
+    /**
+     * Used to get a user according to a given record
+     *
+     * @param record the given record
+     * @return the corresponding user
+     * @throws SQLException if an error occurred
+     */
+    public List<UserDTO> select(UserDTO record) throws SQLException {
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("SELECT * FROM Public.\"User\"");
+
+        PreparedStatement stmt = getStatement(record, conn, request);
+
+        return retrieveUsers(stmt);
+    }
+
+    /**
+     * Updates a user stored in the DB
+     *
+     * @param oldRecord the criteria
+     * @param newRecord the updated informations
+     * @throws SQLException if an error occurs
+     */
+    public void update(UserDTO oldRecord, UserDTO newRecord) throws SQLException {
+        if(!oldRecord.isStored())
+            throw new SQLException("The specified UserDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+
+        StringBuilder request = new StringBuilder(
+                "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?," +
+                        "\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?"
+        );
+
+        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
+
+        stmt.executeUpdate();
+    }
+
+    /**
+     * Used on select methods
+     *
+     * @param stmt prepared statement
+     * @return the list of records from the DB
+     * @throws SQLException if an error occurred
+     */
+    private List<UserDTO> retrieveUsers(PreparedStatement stmt) throws SQLException {
+        ResultSet rs = stmt.executeQuery();
+        List<UserDTO> results = new ArrayList<>();
+
+        while (rs.next()) {
+            UserDTO user;
+            UUID uuid = UUID.fromString(rs.getString("UUID"));
+            // User
+            user = new UserDTO(
+                    uuid,
+                    rs.getString("Firstname"),
+                    rs.getString("Lastname"),
+                    rs.getString("Street"),
+                    rs.getInt("Doornumber"),
+                    rs.getString("City"),
+                    rs.getString("ZIP")
+            );
+
+            results.add(user);
+        }
+        return results;
+    }
+
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     * Used for "SELECT" requests
+     *
+     * @param record the record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
+    private PreparedStatement getStatement(UserDTO record, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(record, record, conn, request);
+    }
+
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     * Used for "UPDATE" requests
+     *
+     * @param oldRecord the old record
+     * @param newRecord the new record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
+    private PreparedStatement getStatement(UserDTO oldRecord, UserDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    }
+
+    private PreparedStatement getPreparedStatement(UserDTO oldRecord, UserDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(oldRecord.getId() != null)
+            subRequest.add("\"UUID\" = ?");
+        if(oldRecord.getFirstName() != null)
+            subRequest.add("\"Firstname\" = ?");
+        if(oldRecord.getLastName() != null)
+            subRequest.add("\"Lastname\" = ?");
+        if(oldRecord.getStreet() != null)
+            subRequest.add("\"Street\" = ?");
+        if(oldRecord.getDoorNumber() != null)
+            subRequest.add("\"Doornumber\" = ?");
+        if(oldRecord.getCity() != null)
+            subRequest.add("\"City\" = ?");
+        if(oldRecord.getZipCode() != null)
+            subRequest.add("\"ZIP\" = ?");
+
+        Utils.fillSQL(request, subRequest);
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+
+        int i = 1;
+        if(newRecord.getId() != null)
+            stmt.setObject(i++, newRecord.getId());
+        if(newRecord.getFirstName() != null)
+            stmt.setString(i++, newRecord.getFirstName());
+        if(newRecord.getLastName() != null)
+            stmt.setString(i++, newRecord.getLastName());
+        if(newRecord.getStreet() != null)
+            stmt.setString(i++, newRecord.getStreet());
+        if(newRecord.getDoorNumber() != null)
+            stmt.setInt(i++, newRecord.getDoorNumber());
+        if(newRecord.getCity() != null)
+            stmt.setString(i++, newRecord.getCity());
+        if(newRecord.getZipCode() != null)
+            stmt.setString(i, newRecord.getZipCode());
+
+        return stmt;
     }
 }

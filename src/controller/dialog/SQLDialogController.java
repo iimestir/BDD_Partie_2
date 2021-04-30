@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import model.DTOType;
 import model.SQLRequest;
 
@@ -44,10 +45,16 @@ public class SQLDialogController implements Initializable {
      *
      * @param labels nodes
      */
-    private void fillForm(Label... labels) {
+    private void fillForm(SQLRequest type, Label... labels) {
         for(Label l : labels) {
-            formGridPane.add(l,0,rowIndex);
-            formGridPane.add(new TextField(),1,rowIndex++);
+            if(type == SQLRequest.UPDATE) {
+                formGridPane.add(l,0,rowIndex);
+                formGridPane.add(new TextField(),1,rowIndex++);
+                formGridPane.add(new TextField(),2,rowIndex++);
+            } else {
+                formGridPane.add(l,0,rowIndex);
+                formGridPane.add(new TextField(),1,rowIndex++);
+            }
         }
     }
 
@@ -64,12 +71,13 @@ public class SQLDialogController implements Initializable {
         switch(dto) {
             case CLIMATE -> {
                 if(sqlType != SQLRequest.INSERT)
-                    fillForm(new Label("Id"));
+                    fillForm(sqlType, new Label("Id"));
 
-                fillForm(new Label("Description"));
+                fillForm(sqlType, new Label("Description"));
             }
             case COUNTRY -> {
                 fillForm(
+                        sqlType,
                         new Label("ISO"),
                         new Label("Continent"),
                         new Label("Region"),
@@ -82,6 +90,7 @@ public class SQLDialogController implements Initializable {
             }
             case HOSPITALS -> {
                 fillForm(
+                        sqlType,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("icu_patients"),
@@ -91,16 +100,26 @@ public class SQLDialogController implements Initializable {
             }
             case PRODUCERS -> {
                 fillForm(
+                        sqlType,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("Vaccines")
                 );
             }
             case USER -> {
-                // TODO
+                if(sqlType != SQLRequest.INSERT)
+                    fillForm(sqlType, new Label("UUID"));
+
+                fillForm(sqlType, new Label("Firstname"));
+                fillForm(sqlType, new Label("Lastname"));
+                fillForm(sqlType, new Label("Street"));
+                fillForm(sqlType, new Label("Doornumber"));
+                fillForm(sqlType, new Label("City"));
+                fillForm(sqlType, new Label("ZIP"));
             }
             case VACCINATIONS -> {
                 fillForm(
+                        sqlType,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("Tests"),
@@ -117,8 +136,13 @@ public class SQLDialogController implements Initializable {
      * @throws IllegalArgumentException if an input is not correct
      * @throws NumberFormatException if an input is not correct
      */
-    public DTO getDTO() throws IllegalArgumentException, NumberFormatException {
+    public Object getDTO() throws IllegalArgumentException, NumberFormatException {
         List<String> args = getDTOArguments();
+
+        return sqlType == SQLRequest.UPDATE ? getPairDTO(args) : getSingleDTO(args);
+    }
+
+    private DTO getSingleDTO(List<String> args) {
         int i = -1;
 
         switch(dto) {
@@ -160,7 +184,25 @@ public class SQLDialogController implements Initializable {
                 );
             }
             case USER -> {
-                // TODO
+                if(sqlType != SQLRequest.INSERT)
+                    return new UserDTO(
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i)
+                    );
+                else
+                    return new UserDTO(
+                            args.get(++i).equals("") ? null : UUID.fromString(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : Integer.parseInt(args.get(i)),
+                            args.get(++i).equals("") ? null : args.get(i),
+                            args.get(++i).equals("") ? null : args.get(i)
+                    );
             }
             case VACCINATIONS -> {
                 return new VaccinationsDTO(
@@ -173,5 +215,129 @@ public class SQLDialogController implements Initializable {
         }
 
         throw new IllegalArgumentException("Unknown DTO: " + dto);
+    }
+
+    private Pair<DTO,DTO> getPairDTO(List<String> args) {
+        int o = -2;
+
+        switch(dto) {
+            case CLIMATE -> {
+                int n = 1;
+
+                return new Pair<>(
+                        new ClimateDTO(
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : args.get(o)
+                        ),
+                        new ClimateDTO(
+                                args.get(n+=2).equals("") ? null : args.get(n)
+                        )
+                );
+            }
+            case COUNTRY -> {
+                int n = 1;
+
+                return new Pair<>(
+                        new CountryDTO(
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : Double.parseDouble(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Double.parseDouble(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o))
+                        ),
+                        new CountryDTO(
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : Double.parseDouble(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Double.parseDouble(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n))
+                        )
+                );
+            }
+            case HOSPITALS -> {
+                int n = -1;
+
+                return new Pair<>(
+                        new HospitalsDTO(
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : java.sql.Date.valueOf(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : UUID.fromString(args.get(o))
+                        ),
+                        new HospitalsDTO(
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : java.sql.Date.valueOf(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n)),
+                                args.get(n+=2).equals("") ? null : UUID.fromString(args.get(n))
+                        )
+                );
+            }
+            case PRODUCERS -> {
+                int n = 1;
+
+                return new Pair<>(
+                        new ProducersDTO(
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : java.sql.Date.valueOf(args.get(o)),
+                                args.get(o+=2).equals("") ? null : args.get(o).split(",")
+                        ),
+                        new ProducersDTO(
+                                args.get(n+=2).equals("") ? null : java.sql.Date.valueOf(args.get(n)),
+                                args.get(n+=2).equals("") ? null : args.get(n).split(",")
+                        )
+                );
+            }
+            case VACCINATIONS -> {
+                int n = -1;
+
+                return new Pair<>(
+                        new VaccinationsDTO(
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : java.sql.Date.valueOf(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o))
+                        ),
+                        new VaccinationsDTO(
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : java.sql.Date.valueOf(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n)),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n))
+                        )
+                );
+            }
+            case USER -> {
+                int n = 1;
+
+                return new Pair<>(
+                        new UserDTO(
+                                args.get(o+=2).equals("") ? null : UUID.fromString(args.get(o)),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : Integer.parseInt(args.get(o)),
+                                args.get(o+=2).equals("") ? null : args.get(o),
+                                args.get(o+=2).equals("") ? null : args.get(o)
+                        ),
+                        new UserDTO(
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : Integer.parseInt(args.get(n)),
+                                args.get(n+=2).equals("") ? null : args.get(n),
+                                args.get(n+=2).equals("") ? null : args.get(n)
+                        )
+                );
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 }

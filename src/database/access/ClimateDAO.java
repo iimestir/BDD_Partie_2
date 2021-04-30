@@ -4,6 +4,7 @@ import common.Utils;
 import database.transfer.ClimateDTO;
 import database.transfer.CountryDTO;
 import database.transfer.HospitalsDTO;
+import database.transfer.UserDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -118,19 +119,18 @@ public class ClimateDAO {
     /**
      * Updates a climate stored in the DB
      *
-     * @param climate the climate
+     * @param oldRecord the old climate informations
+     * @param newRecord the updated climate informations
      * @throws SQLException if an error occurs
      */
-    public void update(ClimateDTO climate) throws SQLException {
-        if(!climate.isStored())
+    public void update(ClimateDTO oldRecord, ClimateDTO newRecord) throws SQLException {
+        if(!oldRecord.isStored())
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        String request = "UPDATE Public.\"Climate\" SET \"Description\" = ? WHERE \"Id\" = ?";
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Climate\" SET \"Description\" = ?");
 
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1, climate.getDescription());
-        stmt.setInt(2, climate.getId());
+        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
 
         stmt.executeUpdate();
     }
@@ -145,20 +145,39 @@ public class ClimateDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(record, record, conn, request);
+    }
+
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     * Used for "UPDATE" requests
+     *
+     * @param oldRecord the old record
+     * @param newRecord the new record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
+    private PreparedStatement getStatement(ClimateDTO oldRecord, ClimateDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    }
+
+    private PreparedStatement getPreparedStatement(ClimateDTO oldRecord, ClimateDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
-        if(record.getId() != null)
+        if(oldRecord.getId() != null)
             subRequest.add("\"Id\" = ?");
-        if(record.getDescription() != null)
+        if(oldRecord.getDescription() != null)
             subRequest.add("\"Description\" = ?");
 
         Utils.fillSQL(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
         int i = 1;
-        if(record.getId() != null)
-            stmt.setInt(i++, record.getId());
-        if(record.getDescription() != null)
-            stmt.setString(i, record.getDescription());
+        if(newRecord.getId() != null)
+            stmt.setInt(i++, newRecord.getId());
+        if(newRecord.getDescription() != null)
+            stmt.setString(i, newRecord.getDescription());
 
         return stmt;
     }

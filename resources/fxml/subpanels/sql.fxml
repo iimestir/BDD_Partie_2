@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="30.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.subpanel.SQLController">
    <padding>
@@ -16,6 +17,7 @@
          <children>
             <ComboBox fx:id="requestComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="%request" HBox.hgrow="ALWAYS" />
             <ComboBox fx:id="tableComboBox" prefWidth="150.0" promptText="%db_table" />
+            <CheckComboBox fx:id="columnCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" title="" />
             <Button alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#requestButtonAction" text="%sql" />
          </children>
       </HBox>

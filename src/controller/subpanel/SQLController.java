@@ -5,15 +5,20 @@ import common.Utils;
 import database.business.EpidemiologistBusinessLogic;
 import database.business.UserBusinessLogic;
 import database.transfer.*;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.util.Pair;
 import model.DTOType;
+import model.SQLColumn;
 import model.SQLRequest;
+import org.controlsfx.control.CheckComboBox;
 import view.UITools;
 import view.dialog.SQLDialog;
 
@@ -25,9 +30,13 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class SQLController implements Initializable {
+    @FXML private CheckComboBox<SQLColumn> columnCheckBox;
     @FXML private ComboBox<SQLRequest> requestComboBox;
     @FXML private ComboBox<DTOType> tableComboBox;
     @FXML private TableView<DTO> tableView;
+
+    // Used to check if the checkComboBox selection is empty
+    private BooleanProperty selectAll;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,10 +48,56 @@ public class SQLController implements Initializable {
         tableComboBox.getItems().addAll(DTOType.class.getEnumConstants());
 
         tableView.setEditable(false);
+
+        tableComboBox.valueProperty().addListener((observableValue, dtoType, t1) -> {
+            fillColumnBox(t1);
+        });
+
+        selectAll = new SimpleBooleanProperty();
+        selectAll.bind(columnCheckBox.checkModelProperty().isNull());
+    }
+
+    /**
+     * Updates the column combobox when the value of the table combobox is changed
+     *
+     * @param table new value
+     */
+    private void fillColumnBox(DTOType table) {
+        columnCheckBox.getItems().clear();
+
+        switch(table) {
+            case CLIMATE ->
+                    columnCheckBox.getItems().addAll(SQLColumn.ID, SQLColumn.DESCRIPTION);
+            case COUNTRY ->
+                    columnCheckBox.getItems().addAll(
+                            SQLColumn.ISO, SQLColumn.CONTINENT, SQLColumn.REGION, SQLColumn.COUNTRY,
+                            SQLColumn.HDI, SQLColumn.POPULATION, SQLColumn.AREA_SQ_ML, SQLColumn.CLIMATE
+                    );
+            case HOSPITALS ->
+                    columnCheckBox.getItems().addAll(
+                            SQLColumn.ISO, SQLColumn.DATE, SQLColumn.ICU_PATIENTS, SQLColumn.HOSP_PATIENTS,
+                            SQLColumn.EPIDEMIOLOGIST
+                    );
+            case PRODUCERS ->
+                    columnCheckBox.getItems().addAll(
+                            SQLColumn.ISO, SQLColumn.DATE, SQLColumn.VACCINES
+                    );
+            case VACCINATIONS ->
+                    columnCheckBox.getItems().addAll(
+                            SQLColumn.ISO, SQLColumn.DATE, SQLColumn.TESTS, SQLColumn.VACCINATIONS
+                    );
+            case USER -> {
+                    columnCheckBox.getItems().addAll(
+                            SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
+                            SQLColumn.CITY, SQLColumn.ZIP
+                    );
+            }
+        }
     }
 
     /**
      * Fill the table with a list of records
+     *
      * @param dto list of records
      */
     private void fillClimates(List<ClimateDTO> dto) {
@@ -57,13 +112,17 @@ public class SQLController implements Initializable {
         description.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((ClimateDTO) data.getValue()).getDescription()));
 
-        tableView.getColumns().addAll(id, description);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ID))
+            tableView.getColumns().add(id);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.DESCRIPTION))
+            tableView.getColumns().add(description);
 
         tableView.getItems().addAll(dto);
     }
 
     /**
      * Fill the table with a list of records
+     *
      * @param dto list of records
      */
     private void fillCountries(List<CountryDTO> dto) {
@@ -96,13 +155,29 @@ public class SQLController implements Initializable {
         climate.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getClimateId().toString()));
 
-        tableView.getColumns().addAll(iso, continent, region, country, hdi, population, area_sq_ml, climate);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+            tableView.getColumns().add(iso);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.CONTINENT))
+            tableView.getColumns().add(continent);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.REGION))
+            tableView.getColumns().add(region);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.COUNTRY))
+            tableView.getColumns().add(country);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.HDI))
+            tableView.getColumns().add(hdi);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.POPULATION))
+            tableView.getColumns().add(population);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.AREA_SQ_ML))
+            tableView.getColumns().add(area_sq_ml);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.CLIMATE))
+            tableView.getColumns().add(climate);
 
         tableView.getItems().addAll(dto);
     }
 
     /**
      * Fill the table with a list of records
+     *
      * @param dto list of records
      */
     private void fillHospitals(List<HospitalsDTO> dto) {
@@ -126,13 +201,23 @@ public class SQLController implements Initializable {
         epidemiologist.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getEpidemiologistUUID().toString()));
 
-        tableView.getColumns().addAll(iso, date, icu_patients, hosp_patients, epidemiologist);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+            tableView.getColumns().add(iso);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+            tableView.getColumns().add(date);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ICU_PATIENTS))
+            tableView.getColumns().add(icu_patients);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.HOSP_PATIENTS))
+            tableView.getColumns().add(hosp_patients);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.EPIDEMIOLOGIST))
+            tableView.getColumns().add(epidemiologist);
 
         tableView.getItems().addAll(dto);
     }
 
     /**
      * Fill the table with a list of records
+     *
      * @param dto list of records
      */
     private void fillProducers(List<ProducersDTO> dto) {
@@ -150,13 +235,19 @@ public class SQLController implements Initializable {
         vaccines.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(Arrays.toString(((ProducersDTO) data.getValue()).getVaccines())));
 
-        tableView.getColumns().addAll(iso, date, vaccines);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+            tableView.getColumns().add(iso);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+            tableView.getColumns().add(date);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINES))
+            tableView.getColumns().add(vaccines);
 
         tableView.getItems().addAll(dto);
     }
 
     /**
      * Fill the table with a list of records
+     *
      * @param dto list of records
      */
     private void fillVaccinations(List<VaccinationsDTO> dto) {
@@ -177,7 +268,64 @@ public class SQLController implements Initializable {
         vaccinations.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getVaccinations().toString()));
 
-        tableView.getColumns().addAll(iso, date, tests, vaccinations);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+            tableView.getColumns().add(iso);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+            tableView.getColumns().add(date);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.TESTS))
+            tableView.getColumns().add(tests);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINATIONS))
+            tableView.getColumns().add(vaccinations);
+
+        tableView.getItems().addAll(dto);
+    }
+
+    /**
+     * Fill the table with a list of records
+     *
+     * @param dto list of records
+     */
+    private void fillUsers(List<UserDTO> dto) {
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+
+        // Columns
+        TableColumn<DTO, String> uuid = new TableColumn<>("UUID");
+        TableColumn<DTO, String> firstname = new TableColumn<>("Firstname");
+        TableColumn<DTO, String> lastname = new TableColumn<>("Lastname");
+        TableColumn<DTO, String> street = new TableColumn<>("Street");
+        TableColumn<DTO, String> door = new TableColumn<>("Doornumber");
+        TableColumn<DTO, String> city = new TableColumn<>("City");
+        TableColumn<DTO, String> zip = new TableColumn<>("ZIP");
+        uuid.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getId().toString()));
+        firstname.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getFirstName()));
+        lastname.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getLastName()));
+        street.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getStreet()));
+        door.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getDoorNumber().toString()));
+        city.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getCity()));
+        zip.setCellValueFactory(data ->
+                new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getZipCode()));
+
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.UUID))
+            tableView.getColumns().add(uuid);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.FIRSTNAME))
+            tableView.getColumns().add(firstname);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.LASTNAME))
+            tableView.getColumns().add(lastname);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.STREET))
+            tableView.getColumns().add(street);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.DOOR_NUMBER))
+            tableView.getColumns().add(door);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.CITY))
+            tableView.getColumns().add(city);
+        if(selectAll.get() || columnCheckBox.getCheckModel().isChecked(SQLColumn.ZIP))
+            tableView.getColumns().add(zip);
 
         tableView.getItems().addAll(dto);
     }
@@ -189,7 +337,7 @@ public class SQLController implements Initializable {
      * @param dto the selection criteria
      * @throws SQLException if an error occurred
      */
-    private void selectOnTable(DTOType table, DTO dto) throws SQLException {
+    private void selectOnTable(DTOType table, DTO dto) throws SQLException, IllegalAccessException {
         switch(table) {
             case CLIMATE -> fillClimates(UserBusinessLogic.getInstance().select(((ClimateDTO) dto)));
             case COUNTRY -> fillCountries(UserBusinessLogic.getInstance().select(((CountryDTO) dto)));
@@ -197,7 +345,10 @@ public class SQLController implements Initializable {
             case PRODUCERS -> fillProducers(UserBusinessLogic.getInstance().select(((ProducersDTO) dto)));
             case VACCINATIONS -> fillVaccinations(UserBusinessLogic.getInstance().select(((VaccinationsDTO) dto)));
             case USER -> {
-                // TODO
+                if(!LoginToken.isEpidemiologist())
+                    throw new IllegalAccessException(Utils.getTranslatedString("error_message_only_epidemiologist"));
+
+                fillUsers(EpidemiologistBusinessLogic.getInstance().select(((UserDTO) dto)));
             }
         }
     }
@@ -229,21 +380,21 @@ public class SQLController implements Initializable {
      *
      * @param table table type
      * @param dto update criteria
+     * @param updated the updated informations
      * @throws IllegalAccessException if the user is not an epidemiologist
      * @throws SQLException if an error occurred
      */
-    private void updateOnTable(DTOType table, DTO dto) throws IllegalAccessException, SQLException {
+    private void updateOnTable(DTOType table, DTO dto, DTO updated) throws IllegalAccessException, SQLException {
         if(!LoginToken.isEpidemiologist())
             throw new IllegalAccessException(Utils.getTranslatedString("error_message_only_epidemiologist"));
 
         switch(table) {
-            case CLIMATE -> EpidemiologistBusinessLogic.getInstance().update(((ClimateDTO) dto));
-            case COUNTRY -> EpidemiologistBusinessLogic.getInstance().update(((CountryDTO) dto));
-            case PRODUCERS -> EpidemiologistBusinessLogic.getInstance().update(((ProducersDTO) dto));
-            case USER -> {
-                // TODO
-            }
-            default -> throw new IllegalArgumentException(Utils.getTranslatedString("error_message_table_update"));
+            case CLIMATE -> EpidemiologistBusinessLogic.getInstance().update(((ClimateDTO) dto), ((ClimateDTO) updated));
+            case COUNTRY -> EpidemiologistBusinessLogic.getInstance().update(((CountryDTO) dto), ((CountryDTO) updated));
+            case HOSPITALS -> EpidemiologistBusinessLogic.getInstance().update(((HospitalsDTO) dto), ((HospitalsDTO) updated));
+            case PRODUCERS -> EpidemiologistBusinessLogic.getInstance().update(((ProducersDTO) dto), ((ProducersDTO) updated));
+            case VACCINATIONS -> EpidemiologistBusinessLogic.getInstance().update(((VaccinationsDTO) dto), ((VaccinationsDTO) updated));
+            case USER -> EpidemiologistBusinessLogic.getInstance().update(((UserDTO) dto), ((UserDTO) updated));
         }
     }
 
@@ -265,9 +416,7 @@ public class SQLController implements Initializable {
             case HOSPITALS -> EpidemiologistBusinessLogic.getInstance().delete(((HospitalsDTO) dto));
             case PRODUCERS -> EpidemiologistBusinessLogic.getInstance().delete(((ProducersDTO) dto));
             case VACCINATIONS -> EpidemiologistBusinessLogic.getInstance().delete(((VaccinationsDTO) dto));
-            case USER -> {
-                // TODO
-            }
+            case USER -> EpidemiologistBusinessLogic.getInstance().delete(((UserDTO) dto));
         }
     }
 
@@ -276,16 +425,22 @@ public class SQLController implements Initializable {
      *
      * @param request the request type
      * @param table the table type
-     * @param dto the request criteria
+     * @param dto the request criteria (will be a pair of dto if the request is "update")
      * @throws SQLException if an error occurred
      * @throws IllegalAccessException if the user is not an epidemiologist
      */
-    private void request(SQLRequest request, DTOType table, DTO dto) throws SQLException, IllegalAccessException {
+    private void request(SQLRequest request, DTOType table, Object dto) throws SQLException, IllegalAccessException {
         switch(request) {
-            case SELECT -> selectOnTable(table, dto);
-            case INSERT -> insertOnTable(table, dto);
-            case UPDATE -> updateOnTable(table, dto);
-            case DELETE -> deleteOnTable(table, dto);
+            case SELECT -> selectOnTable(table, ((DTO) dto));
+            case INSERT -> insertOnTable(table, ((DTO) dto));
+            case UPDATE -> {
+                Pair<DTO, DTO> dtos = ((Pair<DTO,DTO>) dto);
+                DTO oldRecord = dtos.getKey();
+                DTO newRecord = dtos.getValue();
+
+                updateOnTable(table, oldRecord, newRecord);
+            }
+            case DELETE -> deleteOnTable(table, ((DTO) dto));
         }
     }
 
@@ -301,11 +456,11 @@ public class SQLController implements Initializable {
 
             final SQLDialog dialog = SQLDialog.promptDialog(request, table);
 
-            final Optional<DTO> optional = dialog.showAndWait();
+            final Optional<Object> optional = Optional.ofNullable(dialog.showAndWait());
             if(optional.isEmpty())
                 return;
 
-            final DTO dto = dialog.getResult();
+            final Object dto = dialog.getResult();
 
             request(request, table, dto);
         } catch(Exception ex) {

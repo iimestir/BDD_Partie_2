@@ -1,6 +1,7 @@
 package database.access;
 
 import common.Utils;
+import database.transfer.CountryDTO;
 import database.transfer.HospitalsDTO;
 
 import java.sql.*;
@@ -72,6 +73,26 @@ public class HospitalsDAO {
     }
 
     /**
+     * Updates a record from the DB
+     *
+     * @param oldRecord the criteria
+     * @param newRecord the updated informations
+     * @throws SQLException if an error occurs
+     */
+    public void update(HospitalsDTO oldRecord, HospitalsDTO newRecord) throws SQLException {
+        if(!oldRecord.isStored())
+            throw new SQLException("The specified CountryDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Hospitals\" SET " +
+                "\"ISO\" = ?,\"Date\" = ?,\"icu_patients\" = ?,\"hosp_patients\" = ?,\"epidemiologist\" = ?");
+
+        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
+
+        stmt.executeUpdate();
+    }
+
+    /**
      * Used on select methods
      *
      * @param stmt prepared statement
@@ -130,32 +151,51 @@ public class HospitalsDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(record, record, conn, request);
+    }
+
+    /**
+     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
+     * Used for "UPDATE" requests
+     *
+     * @param oldRecord the old record
+     * @param newRecord the new record
+     * @param conn connection
+     * @param request the current request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurred
+     */
+    private PreparedStatement getStatement(HospitalsDTO oldRecord, HospitalsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    }
+
+    private PreparedStatement getPreparedStatement(HospitalsDTO oldRecord, HospitalsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
-        if(record.getISO() != null)
+        if(oldRecord.getISO() != null)
             subRequest.add("\"ISO\" = ?");
-        if(record.getDate() != null)
+        if(oldRecord.getDate() != null)
             subRequest.add("\"Date\" = ?");
-        if(record.getIcu_patients() != null)
+        if(oldRecord.getIcu_patients() != null)
             subRequest.add("\"icu_patients\" = ?");
-        if(record.getHosp_patients() != null)
+        if(oldRecord.getHosp_patients() != null)
             subRequest.add("\"hosp_patients\" = ?");
-        if(record.getEpidemiologistUUID() != null)
+        if(oldRecord.getEpidemiologistUUID() != null)
             subRequest.add("\"epidemiologist\" = ?");
 
         Utils.fillSQL(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
         int i = 1;
-        if(record.getISO() != null)
-            stmt.setString(i++, record.getISO());
-        if(record.getDate() != null)
-            stmt.setDate(i++, record.getDate());
-        if(record.getIcu_patients() != null)
-            stmt.setInt(i++, record.getIcu_patients());
-        if(record.getHosp_patients() != null)
-            stmt.setInt(i++, record.getHosp_patients());
-        if(record.getEpidemiologistUUID() != null)
-            stmt.setObject(i, record.getEpidemiologistUUID());
+        if(newRecord.getISO() != null)
+            stmt.setString(i++, newRecord.getISO());
+        if(newRecord.getDate() != null)
+            stmt.setDate(i++, newRecord.getDate());
+        if(newRecord.getIcu_patients() != null)
+            stmt.setInt(i++, newRecord.getIcu_patients());
+        if(newRecord.getHosp_patients() != null)
+            stmt.setInt(i++, newRecord.getHosp_patients());
+        if(newRecord.getEpidemiologistUUID() != null)
+            stmt.setObject(i, newRecord.getEpidemiologistUUID());
 
         return stmt;
     }

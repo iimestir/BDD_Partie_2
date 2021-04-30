@@ -6,6 +6,7 @@ import database.transfer.*;
 import view.UITools;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -115,13 +116,14 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     /**
      * Updates a climate from the DB
      *
-     * @param climate the climate
+     * @param oldRecord the old climate
+     * @param newRecord the updated climate
      * @throws SQLException if an error occurred
      */
-    public void update(ClimateDTO climate) throws SQLException {
+    public void update(ClimateDTO oldRecord, ClimateDTO newRecord) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            climateDao.update(climate);
+            climateDao.update(oldRecord, newRecord);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -176,13 +178,14 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     /**
      * Updates a country from the DB
      *
-     * @param country the country
+     * @param oldRecord the old country
+     * @param  newRecord the new country
      * @throws SQLException if an error occurred
      */
-    public void update(CountryDTO country) throws SQLException {
+    public void update(CountryDTO oldRecord, CountryDTO newRecord) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            countryDao.update(country);
+            countryDao.update(oldRecord, newRecord);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -234,6 +237,27 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     }
 
     /**
+     * Updates hospitals records
+     *
+     * @param oldRecord the update criteria
+     * @param newRecord the updated record
+     * @throws SQLException if an error occurred
+     */
+    public void update(HospitalsDTO oldRecord, HospitalsDTO newRecord) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            hospitalsDao.update(oldRecord, newRecord);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
+    }
+
+    /**
      * Used to delete a hospitals record
      *
      * @param hospitals the hospitals record
@@ -271,6 +295,27 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
         }
 
         UITools.showDialog(Utils.getTranslatedString("message_record_inserted"));
+    }
+
+    /**
+     * Updates vaccinations records
+     *
+     * @param oldRecord the update criteria
+     * @param newRecord the updated record
+     * @throws SQLException if an error occurred
+     */
+    public void update(VaccinationsDTO oldRecord, VaccinationsDTO newRecord) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            vaccinationsDao.update(oldRecord, newRecord);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }
 
     /**
@@ -316,13 +361,14 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     /**
      * Updates a producers record from the DB
      *
-     * @param producers the producers record
+     * @param oldRecord the producers record
+     * @param newRecord the updated producers record
      * @throws SQLException if an error occurred
      */
-    public void update(ProducersDTO producers) throws SQLException {
+    public void update(ProducersDTO oldRecord, ProducersDTO newRecord) throws SQLException {
         try {
             DBManager.getInstance().initialize();
-            producersDao.update(producers);
+            producersDao.update(oldRecord, newRecord);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
@@ -343,6 +389,67 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
         try {
             DBManager.getInstance().initialize();
             producersDao.delete(producers);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
+    }
+
+    /**
+     * Selects a record from the user table in the DB
+     *
+     * @param record the user informations
+     * @throws SQLException if an error occurred
+     */
+    public List<UserDTO> select(UserDTO record) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<UserDTO> result = userDao.select(record);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Updates a user record from the DB
+     *
+     * @param oldRecord the user record
+     * @param newRecord the updated user record
+     * @throws SQLException if an error occurred
+     */
+    public void update(UserDTO oldRecord, UserDTO newRecord) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            userDao.update(oldRecord, newRecord);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
+    }
+
+    /**
+     * Deletes a user record from the DB
+     *
+     * @param record the user record
+     * @throws SQLException if an error occurred
+     */
+    public void delete(UserDTO record) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            userDao.delete(record);
             DBManager.getInstance().commit();
         } catch(SQLException ex) {
             DBManager.getInstance().rollback();
