@@ -2,14 +2,9 @@ package database.access;
 
 import common.Utils;
 import database.transfer.ClimateDTO;
-import database.transfer.CountryDTO;
-import database.transfer.HospitalsDTO;
-import database.transfer.UserDTO;
+import model.SQLRequest;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +34,8 @@ public class ClimateDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Climate\"");
 
-        PreparedStatement stmt = getStatement(climate, conn, request);
+        prepareStringBuilderStatement(false, climate, conn, request);
+        PreparedStatement stmt = getPreparedStatement(climate, conn, request);
 
         return retrieveClimates(stmt);
     }
@@ -72,7 +68,9 @@ public class ClimateDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("DELETE FROM Public.\"Climate\"");
 
-        PreparedStatement stmt = getStatement(climate, conn, request);
+        prepareStringBuilderStatement(false, climate, conn, request);
+        PreparedStatement stmt = getPreparedStatement(climate, conn, request);
+
         stmt.executeUpdate();
     }
 
@@ -119,8 +117,8 @@ public class ClimateDAO {
     /**
      * Updates a climate stored in the DB
      *
-     * @param oldRecord the old climate informations
-     * @param newRecord the updated climate informations
+     * @param oldRecord the old climate information
+     * @param newRecord the updated climate information
      * @throws SQLException if an error occurs
      */
     public void update(ClimateDTO oldRecord, ClimateDTO newRecord) throws SQLException {
@@ -128,9 +126,12 @@ public class ClimateDAO {
             throw new SQLException("The specified ClimateDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("UPDATE Public.\"Climate\" SET \"Description\" = ?");
+        StringBuilder request = new StringBuilder("UPDATE Public.\"Climate\"");
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
+        prepareStringBuilderStatement(true, newRecord, conn, request);
+        prepareStringBuilderStatement(false, oldRecord, conn, request);
+
+        PreparedStatement stmt = getPreparedStatement(oldRecord, newRecord, conn, request);
 
         stmt.executeUpdate();
     }
@@ -138,46 +139,78 @@ public class ClimateDAO {
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      *
+     * @param type request type
      * @param record the record
      * @param conn connection
      * @param request the current request string builder
-     * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+    private void prepareStringBuilderStatement(boolean type, ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"Id\" = ?");
+        if(record.getDescription() != null)
+            subRequest.add("\"Description\" = ?");
+
+        if(type)
+            Utils.fillSQLUpdate(request, subRequest);
+        else
+            Utils.fillSQLSelect(request, subRequest);
     }
 
     /**
-     * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
-     * Used for "UPDATE" requests
+     * Returns the preparedStatement of a selection request
      *
-     * @param oldRecord the old record
-     * @param newRecord the new record
-     * @param conn connection
-     * @param request the current request string builder
-     * @return the prepared statement
-     * @throws SQLException if an error occurred
+     * @param record
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
      */
-    private PreparedStatement getStatement(ClimateDTO oldRecord, ClimateDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
-    }
-
-    private PreparedStatement getPreparedStatement(ClimateDTO oldRecord, ClimateDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+    private PreparedStatement getPreparedStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
-        if(oldRecord.getId() != null)
+        if(record.getId() != null)
             subRequest.add("\"Id\" = ?");
-        if(oldRecord.getDescription() != null)
+        if(record.getDescription() != null)
             subRequest.add("\"Description\" = ?");
 
-        Utils.fillSQL(request, subRequest);
+        Utils.fillSQLSelect(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
         int i = 1;
+        if(record.getId() != null)
+            stmt.setInt(i++, record.getId());
+        if(record.getDescription() != null)
+            stmt.setString(i, record.getDescription());
+
+        return stmt;
+    }
+
+    /**
+     * Returns the prepared statement of an update request
+     *
+     * @param oldRecord
+     * @param newRecord
+     * @param conn
+     * @param request
+     * @return
+     * @throws SQLException
+     */
+    private PreparedStatement getPreparedStatement(ClimateDTO oldRecord, ClimateDTO newRecord
+            , Connection conn, StringBuilder request) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+        int i = 1;
+
+        // SET ...
         if(newRecord.getId() != null)
             stmt.setInt(i++, newRecord.getId());
         if(newRecord.getDescription() != null)
-            stmt.setString(i, newRecord.getDescription());
+            stmt.setString(i++, newRecord.getDescription());
+        // WHERE ...
+        if(oldRecord.getId() != null)
+            stmt.setInt(i++, oldRecord.getId());
+        if(oldRecord.getDescription() != null)
+            stmt.setString(i, oldRecord.getDescription());
 
         return stmt;
     }

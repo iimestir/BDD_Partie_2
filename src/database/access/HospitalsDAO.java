@@ -1,7 +1,6 @@
 package database.access;
 
 import common.Utils;
-import database.transfer.CountryDTO;
 import database.transfer.HospitalsDTO;
 
 import java.sql.*;
@@ -76,7 +75,7 @@ public class HospitalsDAO {
      * Updates a record from the DB
      *
      * @param oldRecord the criteria
-     * @param newRecord the updated informations
+     * @param newRecord the updated information
      * @throws SQLException if an error occurs
      */
     public void update(HospitalsDTO oldRecord, HospitalsDTO newRecord) throws SQLException {
@@ -87,9 +86,8 @@ public class HospitalsDAO {
         StringBuilder request = new StringBuilder("UPDATE Public.\"Hospitals\" SET " +
                 "\"ISO\" = ?,\"Date\" = ?,\"icu_patients\" = ?,\"hosp_patients\" = ?,\"epidemiologist\" = ?");
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
-
-        stmt.executeUpdate();
+        PreparedStatement stmt = getStatement(6, oldRecord, conn, request);
+        updateStatement(stmt, newRecord);
     }
 
     /**
@@ -151,41 +149,27 @@ public class HospitalsDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+        return getPreparedStatement(1, record, conn, request);
     }
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      * Used for "UPDATE" requests
      *
-     * @param oldRecord the old record
-     * @param newRecord the new record
+     * @param d number of parameters before those that will be declared
+     * @param record the old record
      * @param conn connection
      * @param request the current request string builder
      * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(HospitalsDTO oldRecord, HospitalsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    private PreparedStatement getStatement(int d, HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(d, record, conn, request);
     }
 
-    private PreparedStatement getPreparedStatement(HospitalsDTO oldRecord, HospitalsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        List<String> subRequest = new ArrayList<>();
-        if(oldRecord.getISO() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(oldRecord.getDate() != null)
-            subRequest.add("\"Date\" = ?");
-        if(oldRecord.getIcu_patients() != null)
-            subRequest.add("\"icu_patients\" = ?");
-        if(oldRecord.getHosp_patients() != null)
-            subRequest.add("\"hosp_patients\" = ?");
-        if(oldRecord.getEpidemiologistUUID() != null)
-            subRequest.add("\"epidemiologist\" = ?");
-
-        Utils.fillSQL(request, subRequest);
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-
+    private void updateStatement(PreparedStatement stmt, HospitalsDTO newRecord) throws SQLException {
         int i = 1;
+
         if(newRecord.getISO() != null)
             stmt.setString(i++, newRecord.getISO());
         if(newRecord.getDate() != null)
@@ -196,6 +180,37 @@ public class HospitalsDAO {
             stmt.setInt(i++, newRecord.getHosp_patients());
         if(newRecord.getEpidemiologistUUID() != null)
             stmt.setObject(i, newRecord.getEpidemiologistUUID());
+
+        stmt.executeUpdate();
+    }
+
+    private PreparedStatement getPreparedStatement(int d, HospitalsDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getISO() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getDate() != null)
+            subRequest.add("\"Date\" = ?");
+        if(record.getIcu_patients() != null)
+            subRequest.add("\"icu_patients\" = ?");
+        if(record.getHosp_patients() != null)
+            subRequest.add("\"hosp_patients\" = ?");
+        if(record.getEpidemiologistUUID() != null)
+            subRequest.add("\"epidemiologist\" = ?");
+
+        Utils.fillSQLSelect(request, subRequest);
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+
+        int i = d;
+        if(record.getISO() != null)
+            stmt.setString(i++, record.getISO());
+        if(record.getDate() != null)
+            stmt.setDate(i++, record.getDate());
+        if(record.getIcu_patients() != null)
+            stmt.setInt(i++, record.getIcu_patients());
+        if(record.getHosp_patients() != null)
+            stmt.setInt(i++, record.getHosp_patients());
+        if(record.getEpidemiologistUUID() != null)
+            stmt.setObject(i, record.getEpidemiologistUUID());
 
         return stmt;
     }

@@ -83,7 +83,7 @@ public final class Utils {
      * @param request the request string builder
      * @param subRequest the sub requests list
      */
-    public static void fillSQL(StringBuilder request, List<String> subRequest) {
+    public static void fillSQLSelect(StringBuilder request, List<String> subRequest) {
         boolean where = false;
         boolean and = false;
         for(String sub : subRequest) {
@@ -97,6 +97,30 @@ public final class Utils {
             } else {
                 request.append(" ").append(sub);
                 and = true;
+            }
+        }
+    }
+
+    /**
+     * Fills the SQL request with the sub requests
+     *
+     * @param request the request string builder
+     * @param subRequest the sub requests list
+     */
+    public static void fillSQLUpdate(StringBuilder request, List<String> subRequest) {
+        boolean set = false;
+        boolean comma = false;
+        for(String sub : subRequest) {
+            if(!set) {
+                request.append(" SET");
+                set = true;
+            }
+
+            if(comma) {
+                request.append(", ").append(sub);
+            } else {
+                request.append(" ").append(sub);
+                comma = true;
             }
         }
     }

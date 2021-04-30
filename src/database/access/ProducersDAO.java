@@ -1,7 +1,6 @@
 package database.access;
 
 import common.Utils;
-import database.transfer.HospitalsDTO;
 import database.transfer.ProducersDTO;
 
 import java.sql.*;
@@ -123,9 +122,8 @@ public class ProducersDAO {
         StringBuilder request = new StringBuilder("UPDATE Public.\"Producers\" SET " +
                 "\"Date\" = ?,\"Vaccines\" = ?");
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
-
-        stmt.executeUpdate();
+        PreparedStatement stmt = getStatement(3, oldRecord, conn, request);
+        updateStatement(conn, stmt, newRecord);
     }
 
     /**
@@ -138,25 +136,38 @@ public class ProducersDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(ProducersDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+        return getPreparedStatement(1, record, conn, request);
     }
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      * Used for "UPDATE" requests
      *
+     * @param d number of parameters before those that will be declared
      * @param oldRecord the old record
-     * @param newRecord the new record
      * @param conn connection
      * @param request the current request string builder
      * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(ProducersDTO oldRecord, ProducersDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    private PreparedStatement getStatement(int d, ProducersDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(d, oldRecord, conn, request);
     }
 
-    private PreparedStatement getPreparedStatement(ProducersDTO oldRecord, ProducersDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+    private void updateStatement(Connection conn, PreparedStatement stmt, ProducersDTO newRecord) throws SQLException {
+        int i = 1;
+
+        if(newRecord.getId() != null)
+            stmt.setString(i++, newRecord.getId());
+        if(newRecord.getDate() != null)
+            stmt.setDate(i++, newRecord.getDate());
+        if(newRecord.getVaccines() != null)
+            stmt.setArray(i, conn.createArrayOf("text",newRecord.getVaccines()));
+
+        stmt.executeUpdate();
+    }
+
+    private PreparedStatement getPreparedStatement(int d, ProducersDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(oldRecord.getId() != null)
             subRequest.add("\"ISO\" = ?");
@@ -165,16 +176,16 @@ public class ProducersDAO {
         if(oldRecord.getVaccines() != null)
             subRequest.add("\"Vaccines\" = ?");
 
-        Utils.fillSQL(request, subRequest);
+        Utils.fillSQLSelect(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        int i = 1;
-        if(newRecord.getId() != null)
-            stmt.setString(i++, newRecord.getId());
-        if(newRecord.getDate() != null)
-            stmt.setDate(i++, newRecord.getDate());
-        if(newRecord.getVaccines() != null)
-            stmt.setArray(i, conn.createArrayOf("text",newRecord.getVaccines()));
+        int i = d;
+        if(oldRecord.getId() != null)
+            stmt.setString(i++, oldRecord.getId());
+        if(oldRecord.getDate() != null)
+            stmt.setDate(i++, oldRecord.getDate());
+        if(oldRecord.getVaccines() != null)
+            stmt.setArray(i, conn.createArrayOf("text",oldRecord.getVaccines()));
 
         return stmt;
     }

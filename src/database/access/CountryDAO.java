@@ -132,7 +132,7 @@ public class CountryDAO {
      * Updates a record from the DB
      *
      * @param oldRecord the criteria
-     * @param newRecord the updated informations
+     * @param newRecord the updated information
      * @throws SQLException if an error occurs
      */
     public void update(CountryDTO oldRecord, CountryDTO newRecord) throws SQLException {
@@ -144,9 +144,8 @@ public class CountryDAO {
                 "\"Continent\" = ?,\"Region\" = ?,\"Country\" = ?,\"HDI\" = ?,\"Population\" = ?,\"area_sq_ml\" = ?" +
                 ",\"Climate\" = ?");
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
-
-        stmt.executeUpdate();
+        PreparedStatement stmt = getStatement(8, oldRecord, conn, request);
+        updateStatement(stmt, newRecord);
     }
 
     /**
@@ -159,50 +158,27 @@ public class CountryDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+        return getPreparedStatement(1, record, conn, request);
     }
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      * Used for "UPDATE" requests
      *
-     * @param oldRecord the old record
-     * @param newRecord the new record
+     * @param d number of parameters before those that will be declared
+     * @param record the record
      * @param conn connection
      * @param request the current request string builder
      * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(CountryDTO oldRecord, CountryDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    private PreparedStatement getStatement(int d, CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(d, record, conn, request);
     }
 
-    private PreparedStatement getPreparedStatement(CountryDTO oldRecord, CountryDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        List<String> subRequest = new ArrayList<>();
-        if(oldRecord.getId() != null)
-            subRequest.add("\"ISO\" = ?");
-        if(oldRecord.getContinent() != null)
-            subRequest.add("\"Continent\" = ?");
-        if(oldRecord.getRegion() != null)
-            subRequest.add("\"Region\" = ?");
-        if(oldRecord.getName() != null)
-            subRequest.add("\"Country\" = ?");
-        if(oldRecord.getHdi() != null)
-            subRequest.add("\"HDI\" = ?");
-        if(oldRecord.getPopulation() != null)
-            subRequest.add("\"Population\" = ?");
-        if(oldRecord.getArea_sq_ml() != null)
-            subRequest.add("\"area_sq_ml\" = ?");
-        if(oldRecord.getClimateId() != null)
-            subRequest.add("\"Climate\" = ?");
-
-        Utils.fillSQL(request, subRequest);
-
-        PreparedStatement stmt = conn.prepareStatement(request.toString());
-
+    private void updateStatement(PreparedStatement stmt, CountryDTO newRecord) throws SQLException {
         int i = 1;
-        if(newRecord.getId() != null)
-            stmt.setString(i++, newRecord.getId());
+
         if(newRecord.getContinent() != null)
             stmt.setString(i++, newRecord.getContinent());
         if(newRecord.getRegion() != null)
@@ -217,6 +193,50 @@ public class CountryDAO {
             stmt.setDouble(i++, newRecord.getArea_sq_ml());
         if(newRecord.getClimateId() != null)
             stmt.setInt(i, newRecord.getClimateId());
+
+        stmt.executeUpdate();
+    }
+
+    private PreparedStatement getPreparedStatement(int d, CountryDTO record, Connection conn, StringBuilder request) throws SQLException {
+        List<String> subRequest = new ArrayList<>();
+        if(record.getId() != null)
+            subRequest.add("\"ISO\" = ?");
+        if(record.getContinent() != null)
+            subRequest.add("\"Continent\" = ?");
+        if(record.getRegion() != null)
+            subRequest.add("\"Region\" = ?");
+        if(record.getName() != null)
+            subRequest.add("\"Country\" = ?");
+        if(record.getHdi() != null)
+            subRequest.add("\"HDI\" = ?");
+        if(record.getPopulation() != null)
+            subRequest.add("\"Population\" = ?");
+        if(record.getArea_sq_ml() != null)
+            subRequest.add("\"area_sq_ml\" = ?");
+        if(record.getClimateId() != null)
+            subRequest.add("\"Climate\" = ?");
+
+        Utils.fillSQLSelect(request, subRequest);
+
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+
+        int i = d;
+        if(record.getId() != null)
+            stmt.setString(i++, record.getId());
+        if(record.getContinent() != null)
+            stmt.setString(i++, record.getContinent());
+        if(record.getRegion() != null)
+            stmt.setString(i++, record.getRegion());
+        if(record.getName() != null)
+            stmt.setString(i++, record.getName());
+        if(record.getHdi() != null)
+            stmt.setDouble(i++, record.getHdi());
+        if(record.getPopulation() != null)
+            stmt.setInt(i++, record.getPopulation());
+        if(record.getArea_sq_ml() != null)
+            stmt.setDouble(i++, record.getArea_sq_ml());
+        if(record.getClimateId() != null)
+            stmt.setInt(i, record.getClimateId());
 
         return stmt;
     }

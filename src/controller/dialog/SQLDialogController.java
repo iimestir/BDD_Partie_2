@@ -1,5 +1,6 @@
 package controller.dialog;
 
+import common.Utils;
 import database.transfer.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,20 +42,30 @@ public class SQLDialogController implements Initializable {
     }
 
     /**
-     * Fills the gridpane with the criteria information
+     * Fills the grid pane with the criteria information
      *
+     * @param type request type
+     * @param id if the text field is an ID text field
      * @param labels nodes
      */
-    private void fillForm(SQLRequest type, Label... labels) {
+    private void fillForm(SQLRequest type, boolean id, Label... labels) {
         for(Label l : labels) {
+            formGridPane.add(l,0,rowIndex);
+
+            TextField criteriaTextField = new TextField();
+            criteriaTextField.setPromptText(l.getText());
+
+            formGridPane.add(criteriaTextField,1,rowIndex);
+
             if(type == SQLRequest.UPDATE) {
-                formGridPane.add(l,0,rowIndex);
-                formGridPane.add(new TextField(),1,rowIndex++);
-                formGridPane.add(new TextField(),2,rowIndex++);
-            } else {
-                formGridPane.add(l,0,rowIndex);
-                formGridPane.add(new TextField(),1,rowIndex++);
+                TextField updateTextField = new TextField();
+                updateTextField.setPromptText(l.getText() + " " + Utils.getTranslatedString("new_value"));
+                updateTextField.setVisible(!id);
+
+                formGridPane.add(updateTextField,2,rowIndex);
             }
+
+            rowIndex++;
         }
     }
 
@@ -71,13 +82,13 @@ public class SQLDialogController implements Initializable {
         switch(dto) {
             case CLIMATE -> {
                 if(sqlType != SQLRequest.INSERT)
-                    fillForm(sqlType, new Label("Id"));
+                    fillForm(sqlType, true, new Label("Id"));
 
-                fillForm(sqlType, new Label("Description"));
+                fillForm(sqlType, false, new Label("Description"));
             }
             case COUNTRY -> {
                 fillForm(
-                        sqlType,
+                        sqlType, false,
                         new Label("ISO"),
                         new Label("Continent"),
                         new Label("Region"),
@@ -90,7 +101,7 @@ public class SQLDialogController implements Initializable {
             }
             case HOSPITALS -> {
                 fillForm(
-                        sqlType,
+                        sqlType, false,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("icu_patients"),
@@ -100,7 +111,7 @@ public class SQLDialogController implements Initializable {
             }
             case PRODUCERS -> {
                 fillForm(
-                        sqlType,
+                        sqlType, false,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("Vaccines")
@@ -108,18 +119,20 @@ public class SQLDialogController implements Initializable {
             }
             case USER -> {
                 if(sqlType != SQLRequest.INSERT)
-                    fillForm(sqlType, new Label("UUID"));
+                    fillForm(sqlType, true, new Label("UUID"));
 
-                fillForm(sqlType, new Label("Firstname"));
-                fillForm(sqlType, new Label("Lastname"));
-                fillForm(sqlType, new Label("Street"));
-                fillForm(sqlType, new Label("Doornumber"));
-                fillForm(sqlType, new Label("City"));
-                fillForm(sqlType, new Label("ZIP"));
+                fillForm(
+                        sqlType, false,
+                        new Label("Firstname"),
+                        new Label("Lastname"),
+                        new Label("Doornumber"),
+                        new Label("City"),
+                        new Label("ZIP")
+                );
             }
             case VACCINATIONS -> {
                 fillForm(
-                        sqlType,
+                        sqlType, false,
                         new Label("ISO"),
                         new Label("Date"),
                         new Label("Tests"),

@@ -1,11 +1,9 @@
 package database.access;
 
 import common.Utils;
-import database.transfer.ClimateDTO;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 import javafx.util.Pair;
-import model.SQLRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -281,7 +279,7 @@ public class UserDAO {
      * Updates a user stored in the DB
      *
      * @param oldRecord the criteria
-     * @param newRecord the updated informations
+     * @param newRecord the updated information
      * @throws SQLException if an error occurs
      */
     public void update(UserDTO oldRecord, UserDTO newRecord) throws SQLException {
@@ -295,9 +293,8 @@ public class UserDAO {
                         "\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?"
         );
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
-
-        stmt.executeUpdate();
+        PreparedStatement stmt = getStatement(7, oldRecord, conn, request);
+        updateStatement(stmt, newRecord);
     }
 
     /**
@@ -341,25 +338,46 @@ public class UserDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(UserDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+        return getPreparedStatement(1, record, conn, request);
     }
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      * Used for "UPDATE" requests
      *
+     * @param d number of parameters before those that will be declared
      * @param oldRecord the old record
-     * @param newRecord the new record
      * @param conn connection
      * @param request the current request string builder
      * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(UserDTO oldRecord, UserDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    private PreparedStatement getStatement(int d, UserDTO oldRecord,  Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(d, oldRecord, conn, request);
     }
 
-    private PreparedStatement getPreparedStatement(UserDTO oldRecord, UserDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+    private void updateStatement(PreparedStatement stmt, UserDTO newRecord) throws SQLException {
+        int i = 1;
+
+        if(newRecord.getId() != null)
+            stmt.setObject(i++, newRecord.getId());
+        if(newRecord.getFirstName() != null)
+            stmt.setString(i++, newRecord.getFirstName());
+        if(newRecord.getLastName() != null)
+            stmt.setString(i++, newRecord.getLastName());
+        if(newRecord.getStreet() != null)
+            stmt.setString(i++, newRecord.getStreet());
+        if(newRecord.getDoorNumber() != null)
+            stmt.setInt(i++, newRecord.getDoorNumber());
+        if(newRecord.getCity() != null)
+            stmt.setString(i++, newRecord.getCity());
+        if(newRecord.getZipCode() != null)
+            stmt.setString(i, newRecord.getZipCode());
+
+        stmt.executeUpdate();
+    }
+
+    private PreparedStatement getPreparedStatement(int d, UserDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(oldRecord.getId() != null)
             subRequest.add("\"UUID\" = ?");
@@ -376,24 +394,24 @@ public class UserDAO {
         if(oldRecord.getZipCode() != null)
             subRequest.add("\"ZIP\" = ?");
 
-        Utils.fillSQL(request, subRequest);
+        Utils.fillSQLSelect(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        int i = 1;
-        if(newRecord.getId() != null)
-            stmt.setObject(i++, newRecord.getId());
-        if(newRecord.getFirstName() != null)
-            stmt.setString(i++, newRecord.getFirstName());
-        if(newRecord.getLastName() != null)
-            stmt.setString(i++, newRecord.getLastName());
-        if(newRecord.getStreet() != null)
-            stmt.setString(i++, newRecord.getStreet());
-        if(newRecord.getDoorNumber() != null)
-            stmt.setInt(i++, newRecord.getDoorNumber());
-        if(newRecord.getCity() != null)
-            stmt.setString(i++, newRecord.getCity());
-        if(newRecord.getZipCode() != null)
-            stmt.setString(i, newRecord.getZipCode());
+        int i = d;
+        if(oldRecord.getId() != null)
+            stmt.setObject(i++, oldRecord.getId());
+        if(oldRecord.getFirstName() != null)
+            stmt.setString(i++, oldRecord.getFirstName());
+        if(oldRecord.getLastName() != null)
+            stmt.setString(i++, oldRecord.getLastName());
+        if(oldRecord.getStreet() != null)
+            stmt.setString(i++, oldRecord.getStreet());
+        if(oldRecord.getDoorNumber() != null)
+            stmt.setInt(i++, oldRecord.getDoorNumber());
+        if(oldRecord.getCity() != null)
+            stmt.setString(i++, oldRecord.getCity());
+        if(oldRecord.getZipCode() != null)
+            stmt.setString(i, oldRecord.getZipCode());
 
         return stmt;
     }

@@ -1,7 +1,6 @@
 package database.access;
 
 import common.Utils;
-import database.transfer.CountryDTO;
 import database.transfer.VaccinationsDTO;
 
 import java.sql.*;
@@ -99,7 +98,7 @@ public class VaccinationsDAO {
      * Updates a record from the DB
      *
      * @param oldRecord the criteria
-     * @param newRecord the updated informations
+     * @param newRecord the updated information
      * @throws SQLException if an error occurs
      */
     public void update(VaccinationsDTO oldRecord, VaccinationsDTO newRecord) throws SQLException {
@@ -107,9 +106,8 @@ public class VaccinationsDAO {
         StringBuilder request = new StringBuilder("UPDATE Public.\"Vaccinations\" SET " +
                 "\"ISO\" = ?,\"Date\" = ?,\"Tests\" = ?,\"Vaccinations\" = ?");
 
-        PreparedStatement stmt = getStatement(oldRecord, newRecord, conn, request);
-
-        stmt.executeUpdate();
+        PreparedStatement stmt = getStatement(5, oldRecord, conn, request);
+        updateStatement(stmt, newRecord);
     }
 
     /**
@@ -146,25 +144,40 @@ public class VaccinationsDAO {
      * @throws SQLException if an error occurred
      */
     private PreparedStatement getStatement(VaccinationsDTO record, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(record, record, conn, request);
+        return getPreparedStatement(1, record, conn, request);
     }
 
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      * Used for "UPDATE" requests
      *
+     * @param d number of parameters before those that will be declared
      * @param oldRecord the old record
-     * @param newRecord the new record
      * @param conn connection
      * @param request the current request string builder
      * @return the prepared statement
      * @throws SQLException if an error occurred
      */
-    private PreparedStatement getStatement(VaccinationsDTO oldRecord, VaccinationsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
-        return getPreparedStatement(oldRecord, newRecord, conn, request);
+    private PreparedStatement getStatement(int d, VaccinationsDTO oldRecord,  Connection conn, StringBuilder request) throws SQLException {
+        return getPreparedStatement(d, oldRecord, conn, request);
     }
 
-    private PreparedStatement getPreparedStatement(VaccinationsDTO oldRecord, VaccinationsDTO newRecord, Connection conn, StringBuilder request) throws SQLException {
+    private void updateStatement(PreparedStatement stmt, VaccinationsDTO newRecord) throws SQLException {
+        int i = 1;
+
+        if(newRecord.getISO() != null)
+            stmt.setString(i++, newRecord.getISO());
+        if(newRecord.getDate() != null)
+            stmt.setDate(i++, newRecord.getDate());
+        if(newRecord.getTests() != null)
+            stmt.setInt(i++, newRecord.getTests());
+        if(newRecord.getVaccinations() != null)
+            stmt.setInt(i, newRecord.getVaccinations());
+
+        stmt.executeUpdate();
+    }
+
+    private PreparedStatement getPreparedStatement(int d, VaccinationsDTO oldRecord, Connection conn, StringBuilder request) throws SQLException {
         List<String> subRequest = new ArrayList<>();
         if(oldRecord.getISO() != null)
             subRequest.add("\"ISO\" = ?");
@@ -175,18 +188,18 @@ public class VaccinationsDAO {
         if(oldRecord.getVaccinations() != null)
             subRequest.add("\"Vaccinations\" = ?");
 
-        Utils.fillSQL(request, subRequest);
+        Utils.fillSQLSelect(request, subRequest);
         PreparedStatement stmt = conn.prepareStatement(request.toString());
 
-        int i = 1;
-        if(newRecord.getISO() != null)
-            stmt.setString(i++, newRecord.getISO());
-        if(newRecord.getDate() != null)
-            stmt.setDate(i++, newRecord.getDate());
-        if(newRecord.getTests() != null)
-            stmt.setInt(i++, newRecord.getTests());
-        if(newRecord.getVaccinations() != null)
-            stmt.setInt(i, newRecord.getVaccinations());
+        int i = d;
+        if(oldRecord.getISO() != null)
+            stmt.setString(i++, oldRecord.getISO());
+        if(oldRecord.getDate() != null)
+            stmt.setDate(i++, oldRecord.getDate());
+        if(oldRecord.getTests() != null)
+            stmt.setInt(i++, oldRecord.getTests());
+        if(oldRecord.getVaccinations() != null)
+            stmt.setInt(i, oldRecord.getVaccinations());
 
         return stmt;
     }
