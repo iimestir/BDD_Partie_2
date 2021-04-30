@@ -40,3 +40,13 @@ La compilation et du programme se fait grâce aux commandes ci-dessous (à exéc
 Vous pouvez maintenant lancer le programme avec la commande : 
 * mvn exec:java
 
+### Génération d'un fichier .jar
+Vous pouvez génerer un fichier .jar contenant toutes les dépendances pour but d'avoir un programme portable grace à la commande ci-dessous :
+* mvn clean compile assembly:single
+
+Le fichier .jar sera alors généré dans le dossier "target" et pourra être lancé comme tout autre exécutable java régulier :
+* En double cliquant dessus
+* En utilisant la commande : java -jar MonJar.jar
+
+Veuillez faire bien attention à votre version de java car il faut la version du JDK 15 pour pouvoir démarrer l'application.
+
