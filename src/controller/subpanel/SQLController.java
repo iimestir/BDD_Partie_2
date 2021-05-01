@@ -13,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,6 +34,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class SQLController implements Initializable {
+    @FXML private Button sqlButton;
     @FXML private CheckComboBox<SQLColumn> columnCheckBox;
     @FXML private ComboBox<SQLRequest> requestComboBox;
     @FXML private ComboBox<DTOType> tableComboBox;
@@ -54,6 +56,10 @@ public class SQLController implements Initializable {
         });
 
         columnCheckBox.disableProperty().bind(requestComboBox.valueProperty().isNotEqualTo(SQLRequest.SELECT));
+        sqlButton.disableProperty().bind(
+                requestComboBox.valueProperty().isNull()
+                        .or(tableComboBox.valueProperty().isNull())
+        );
     }
 
     /**

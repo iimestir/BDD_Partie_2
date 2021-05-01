@@ -16,9 +16,9 @@
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
          <children>
             <ComboBox fx:id="requestComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="%request" HBox.hgrow="ALWAYS" />
-            <ComboBox fx:id="tableComboBox" prefWidth="150.0" promptText="%db_table" />
-            <CheckComboBox fx:id="columnCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" title="" />
-            <Button alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#requestButtonAction" text="%sql" />
+            <ComboBox fx:id="tableComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="%db_table" HBox.hgrow="ALWAYS" />
+            <CheckComboBox fx:id="columnCheckBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" title="%sql_select" HBox.hgrow="ALWAYS" />
+            <Button fx:id="sqlButton" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="45.0" minHeight="25.0" minWidth="45.0" mnemonicParsing="false" onAction="#requestButtonAction" prefWidth="45.0" text="%sql" />
          </children>
       </HBox>
       <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">

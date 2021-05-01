@@ -158,13 +158,13 @@ public class ClimateDAO {
     }
 
     /**
-     * Returns the preparedStatement of a selection request
+     * Returns the prepared statement of a selection request
      *
-     * @param record
-     * @param conn
-     * @param request
-     * @return
-     * @throws SQLException
+     * @param record the record
+     * @param conn the DB connection
+     * @param request the request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurs
      */
     private PreparedStatement getPreparedStatement(ClimateDTO record, Connection conn, StringBuilder request) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(request.toString());
@@ -179,12 +179,12 @@ public class ClimateDAO {
     /**
      * Returns the prepared statement of an update request
      *
-     * @param oldRecord
-     * @param newRecord
-     * @param conn
-     * @param request
-     * @return
-     * @throws SQLException
+     * @param oldRecord the old record
+     * @param newRecord the new record
+     * @param conn the DB connection
+     * @param request the request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurs
      */
     private PreparedStatement getPreparedStatement(ClimateDTO oldRecord, ClimateDTO newRecord
             , Connection conn, StringBuilder request) throws SQLException {
@@ -199,6 +199,15 @@ public class ClimateDAO {
         return stmt;
     }
 
+    /**
+     * Prepare a statement for the sql request
+     *
+     * @param record the current record
+     * @param stmt the current non prepared statement
+     * @param i statement preparation index
+     * @return the final index
+     * @throws SQLException if an error occurred
+     */
     private int prepareStatement(ClimateDTO record, PreparedStatement stmt, int i) throws SQLException {
         if (record.getId() != null)
             stmt.setInt(i++, record.getId());

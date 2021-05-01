@@ -166,13 +166,13 @@ public class VaccinationsDAO {
     }
 
     /**
-     * Returns the preparedStatement of a selection request
+     * Returns the prepared statement of a selection request
      *
-     * @param record
-     * @param conn
-     * @param request
-     * @return
-     * @throws SQLException
+     * @param record the record
+     * @param conn the DB connection
+     * @param request the request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurs
      */
     private PreparedStatement getPreparedStatement(VaccinationsDTO record, Connection conn, StringBuilder request) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(request.toString());
@@ -187,12 +187,12 @@ public class VaccinationsDAO {
     /**
      * Returns the prepared statement of an update request
      *
-     * @param oldRecord
-     * @param newRecord
-     * @param conn
-     * @param request
-     * @return
-     * @throws SQLException
+     * @param oldRecord the old record
+     * @param newRecord the new record
+     * @param conn the DB connection
+     * @param request the request string builder
+     * @return the prepared statement
+     * @throws SQLException if an error occurs
      */
     private PreparedStatement getPreparedStatement(VaccinationsDTO oldRecord, VaccinationsDTO newRecord
             , Connection conn, StringBuilder request) throws SQLException {
@@ -207,6 +207,15 @@ public class VaccinationsDAO {
         return stmt;
     }
 
+    /**
+     * Prepare a statement for the sql request
+     *
+     * @param record the current record
+     * @param stmt the current non prepared statement
+     * @param i statement preparation index
+     * @return the final index
+     * @throws SQLException if an error occurred
+     */
     private int prepareStatement(VaccinationsDTO record, PreparedStatement stmt, int i) throws SQLException {
         if(record.getISO() != null)
             stmt.setString(i++, record.getISO());
