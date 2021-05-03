@@ -3,7 +3,6 @@ package common;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableObjectValue;
 
 /**
  * Used to store the current logged in user

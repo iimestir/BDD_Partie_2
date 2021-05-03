@@ -251,7 +251,7 @@ public class UserDAO {
             throw new SQLException("The specified UserDTO is not persistent");
 
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("UPDATE Public.\"User\" SET Password = crypt(?, gen_salt('bf'))");
+        StringBuilder request = new StringBuilder("UPDATE Public.\"User\" SET \"Password\" = crypt(?, gen_salt('bf'))");
 
         prepareStringBuilderStatement(false, user, conn, request);
 

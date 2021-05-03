@@ -37,8 +37,8 @@ public class EpidemiologistDAO {
         Connection conn = DBManager.getInstance().getDBConnection();
         StringBuilder request = new StringBuilder("SELECT * FROM Public.\"User\"");
 
-        prepareStringBuilderStatement(false, record, conn, request);
         request.append(" NATURAL JOIN Public.\"Epidemiologist\"");
+        prepareStringBuilderStatement(false, record, conn, request);
 
         PreparedStatement stmt = getPreparedStatement(record, conn, request);
 
@@ -67,11 +67,7 @@ public class EpidemiologistDAO {
         if(newRecord.getServiceNumber() != null)
             subRequestSet.add("\"Service Phone\" = ?");
         if(oldRecord.getId() != null)
-            subRequestSet.add("\"UUID\" = ?");
-        if(oldRecord.getCenter() != null)
-            subRequestSet.add("\"Center\" = ?");
-        if(oldRecord.getServiceNumber() != null)
-            subRequestSet.add("\"Service Phone\" = ?");
+            subRequestWhere.add("\"UUID\" = ?");
 
         Utils.fillSQLSet(request, subRequestSet);
         Utils.fillSQLWhere(request, subRequestWhere);
@@ -80,15 +76,11 @@ public class EpidemiologistDAO {
 
         int i = 1;
         if(newRecord.getCenter() != null)
-            stmt.setString(i++, newRecord.getFirstName());
+            stmt.setString(i++, newRecord.getCenter());
         if(newRecord.getServiceNumber() != null)
-            stmt.setString(i++, newRecord.getFirstName());
+            stmt.setString(i++, newRecord.getServiceNumber());
         if(oldRecord.getId() != null)
             stmt.setObject(i++, oldRecord.getId());
-        if(oldRecord.getCenter() != null)
-            stmt.setString(i++, oldRecord.getFirstName());
-        if(oldRecord.getServiceNumber() != null)
-            stmt.setString(i, oldRecord.getFirstName());
 
         stmt.executeUpdate();
     }

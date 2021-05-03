@@ -56,8 +56,7 @@ public class ProfileController implements Initializable {
     private void initConfirmButtonBinding() {
         confirmButton
                 .disableProperty()
-                .bind(passwordField.textProperty().isEmpty()
-                        .or(firstNameTextField.textProperty().isEmpty())
+                .bind(firstNameTextField.textProperty().isEmpty()
                         .or(lastNameTextField.textProperty().isEmpty())
                         .or(streetTextField.textProperty().isEmpty())
                         .or(doorTextField.textProperty().isEmpty())
@@ -76,6 +75,10 @@ public class ProfileController implements Initializable {
     private void initForm() {
         boolean isEpidemiologist = LoginToken.isEpidemiologist();
 
+        accountTypeComboBox.setValue(isEpidemiologist ? AccountType.EPIDEMIOLOGIST : AccountType.USER);
+        accountTypeComboBox.setDisable(true);
+
+        passwordField.setText("");
         firstNameTextField.setText(LoginToken.CURRENT_LOGIN.get().getFirstName());
         lastNameTextField.setText(LoginToken.CURRENT_LOGIN.get().getLastName());
         streetTextField.setText(LoginToken.CURRENT_LOGIN.get().getStreet());
@@ -151,6 +154,7 @@ public class ProfileController implements Initializable {
                 );
 
                 EpidemiologistBusinessLogic.getInstance().update(oldUser, updatedUser);
+                LoginToken.CURRENT_LOGIN.set(updatedUser);
             } else {
                 UserDTO oldUser = LoginToken.CURRENT_LOGIN.get();
                 UserDTO updatedUser = new UserDTO(
@@ -164,6 +168,7 @@ public class ProfileController implements Initializable {
                 );
 
                 EpidemiologistBusinessLogic.getInstance().update(oldUser, updatedUser);
+                LoginToken.CURRENT_LOGIN.set(updatedUser);
             }
 
             if(password != null && !password.equals(""))

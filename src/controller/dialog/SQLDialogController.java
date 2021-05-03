@@ -4,6 +4,7 @@ import common.Utils;
 import database.transfer.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -26,7 +27,7 @@ public class SQLDialogController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        formGridPane.getChildren().clear();
     }
 
     /**
@@ -39,6 +40,20 @@ public class SQLDialogController implements Initializable {
                 .filter(p -> p instanceof TextField)
                 .map(p -> ((TextField) p).getText())
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Fills the grid pane with a header
+     *
+     * @param labels header labels
+     */
+    private void fillHeader(Label... labels) {
+        int column = 1;
+
+        for(Label l : labels) {
+            l.setAlignment(Pos.CENTER);
+            formGridPane.add(l,column++,0);
+        }
     }
 
     /**
@@ -70,15 +85,50 @@ public class SQLDialogController implements Initializable {
     }
 
     /**
+     * Fills the grid pane with the criteria information
+     *
+     * @param type request type
+     * @param id if the text field is an ID text field
+     * @param prompt text field prompt customized
+     * @param labels nodes
+     */
+    private void fillForm(SQLRequest type, boolean id, String prompt, Label... labels) {
+        for(Label l : labels) {
+            formGridPane.add(l,0,rowIndex);
+
+            TextField criteriaTextField = new TextField();
+            criteriaTextField.setPromptText(prompt);
+
+            formGridPane.add(criteriaTextField,1,rowIndex);
+
+            if(type == SQLRequest.UPDATE) {
+                TextField updateTextField = new TextField();
+                updateTextField.setPromptText(prompt);
+                updateTextField.setVisible(!id);
+
+                formGridPane.add(updateTextField,2,rowIndex);
+            }
+
+            rowIndex++;
+        }
+    }
+
+    /**
      * Saves the criteria in the form
      *
      * @param sqlType Request type
      * @param dto criteria
      */
     public void setData(SQLRequest sqlType, DTOType dto) {
-        this.rowIndex = 0;
+        this.rowIndex = 1;
         this.dto = dto;
         this.sqlType = sqlType;
+
+        switch(sqlType) {
+            case SELECT, DELETE -> fillHeader(new Label("WHERE"));
+            case INSERT -> fillHeader(new Label("VALUES"));
+            case UPDATE -> fillHeader(new Label("WHERE"), new Label("SET"));
+        }
 
         switch(dto) {
             case CLIMATE -> {
@@ -103,8 +153,14 @@ public class SQLDialogController implements Initializable {
             case HOSPITALS -> {
                 fillForm(
                         sqlType, false,
-                        new Label("ISO"),
-                        new Label("Date"),
+                        new Label("ISO")
+                );
+                fillForm(
+                        sqlType, false, Utils.getTranslatedString("prompt_date"),
+                        new Label("Date")
+                );
+                fillForm(
+                        sqlType, false,
                         new Label("icu_patients"),
                         new Label("hosp_patients"),
                         new Label("epidemiologist")
@@ -113,8 +169,14 @@ public class SQLDialogController implements Initializable {
             case PRODUCERS -> {
                 fillForm(
                         sqlType, false,
-                        new Label("ISO"),
-                        new Label("Date"),
+                        new Label("ISO")
+                );
+                fillForm(
+                        sqlType, false, Utils.getTranslatedString("prompt_date"),
+                        new Label("Date")
+                );
+                fillForm(
+                        sqlType, false, Utils.getTranslatedString("prompt_vaccines_array"),
                         new Label("Vaccines")
                 );
             }
@@ -151,8 +213,14 @@ public class SQLDialogController implements Initializable {
             case VACCINATIONS -> {
                 fillForm(
                         sqlType, false,
-                        new Label("ISO"),
-                        new Label("Date"),
+                        new Label("ISO")
+                );
+                fillForm(
+                        sqlType, false, Utils.getTranslatedString("prompt_date"),
+                        new Label("Date")
+                );
+                fillForm(
+                        sqlType, false,
                         new Label("Tests"),
                         new Label("Vaccinations")
                 );
@@ -167,7 +235,7 @@ public class SQLDialogController implements Initializable {
      * @throws IllegalArgumentException if an input is not correct
      * @throws NumberFormatException if an input is not correct
      */
-    public Object getDTO() throws IllegalArgumentException, NumberFormatException {
+    public Object getDTO() throws IllegalArgumentException {
         List<String> args = getDTOArguments();
 
         return sqlType == SQLRequest.UPDATE ? getPairDTO(args) : getSingleDTO(args);

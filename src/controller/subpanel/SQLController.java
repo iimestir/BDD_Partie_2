@@ -64,42 +64,42 @@ public class SQLController implements Initializable {
      * @param table new value
      */
     private void fillColumnBox(DTOType table) {
-        columnCheckBox.getItems().clear();
-
         switch(table) {
             case CLIMATE ->
-                    columnCheckBox.getItems().addAll(SQLColumn.ID, SQLColumn.DESCRIPTION);
+                    columnCheckBox.getItems().setAll(SQLColumn.ID, SQLColumn.DESCRIPTION);
             case COUNTRY ->
-                    columnCheckBox.getItems().addAll(
+                    columnCheckBox.getItems().setAll(
                             SQLColumn.ISO, SQLColumn.CONTINENT, SQLColumn.REGION, SQLColumn.COUNTRY,
                             SQLColumn.HDI, SQLColumn.POPULATION, SQLColumn.AREA_SQ_ML, SQLColumn.CLIMATE
                     );
             case HOSPITALS ->
-                    columnCheckBox.getItems().addAll(
+                    columnCheckBox.getItems().setAll(
                             SQLColumn.ISO, SQLColumn.DATE, SQLColumn.ICU_PATIENTS, SQLColumn.HOSP_PATIENTS,
                             SQLColumn.EPIDEMIOLOGIST
                     );
             case PRODUCERS ->
-                    columnCheckBox.getItems().addAll(
+                    columnCheckBox.getItems().setAll(
                             SQLColumn.ISO, SQLColumn.DATE, SQLColumn.VACCINES
                     );
             case VACCINATIONS ->
-                    columnCheckBox.getItems().addAll(
+                    columnCheckBox.getItems().setAll(
                             SQLColumn.ISO, SQLColumn.DATE, SQLColumn.TESTS, SQLColumn.VACCINATIONS
                     );
             case USER -> {
-                    columnCheckBox.getItems().addAll(
+                    columnCheckBox.getItems().setAll(
                             SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
                             SQLColumn.CITY, SQLColumn.ZIP
                     );
             }
             case EPIDEMIOLOGIST -> {
-                columnCheckBox.getItems().addAll(
+                columnCheckBox.getItems().setAll(
                         SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
                         SQLColumn.CITY, SQLColumn.ZIP, SQLColumn.CENTER, SQLColumn.SERVICE_PHONE
                 );
             }
         }
+
+        columnCheckBox.getCheckModel().checkAll();
     }
 
     /**
@@ -120,11 +120,9 @@ public class SQLController implements Initializable {
         description.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((ClimateDTO) data.getValue()).getDescription()));
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ID))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ID))
             tableView.getColumns().add(id);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.DESCRIPTION))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.DESCRIPTION))
             tableView.getColumns().add(description);
 
         tableView.getItems().addAll(dto);
@@ -166,29 +164,21 @@ public class SQLController implements Initializable {
         climate.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((CountryDTO) data.getValue()).getClimateId().toString()));
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
             tableView.getColumns().add(iso);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.CONTINENT))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.CONTINENT))
             tableView.getColumns().add(continent);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.REGION))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.REGION))
             tableView.getColumns().add(region);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.COUNTRY))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.COUNTRY))
             tableView.getColumns().add(country);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.HDI))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.HDI))
             tableView.getColumns().add(hdi);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.POPULATION))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.POPULATION))
             tableView.getColumns().add(population);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.AREA_SQ_ML))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.AREA_SQ_ML))
             tableView.getColumns().add(area_sq_ml);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.CLIMATE))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.CLIMATE))
             tableView.getColumns().add(climate);
 
         tableView.getItems().addAll(dto);
@@ -221,20 +211,15 @@ public class SQLController implements Initializable {
         epidemiologist.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((HospitalsDTO) data.getValue()).getEpidemiologistUUID().toString()));
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
             tableView.getColumns().add(iso);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
             tableView.getColumns().add(date);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ICU_PATIENTS))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ICU_PATIENTS))
             tableView.getColumns().add(icu_patients);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.HOSP_PATIENTS))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.HOSP_PATIENTS))
             tableView.getColumns().add(hosp_patients);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.EPIDEMIOLOGIST))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.EPIDEMIOLOGIST))
             tableView.getColumns().add(epidemiologist);
 
         tableView.getItems().addAll(dto);
@@ -261,14 +246,11 @@ public class SQLController implements Initializable {
         vaccines.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(Arrays.toString(((ProducersDTO) data.getValue()).getVaccines())));
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
             tableView.getColumns().add(iso);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
             tableView.getColumns().add(date);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINES))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINES))
             tableView.getColumns().add(vaccines);
 
         tableView.getItems().addAll(dto);
@@ -298,17 +280,13 @@ public class SQLController implements Initializable {
         vaccinations.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((VaccinationsDTO) data.getValue()).getVaccinations().toString()));
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ISO))
             tableView.getColumns().add(iso);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.DATE))
             tableView.getColumns().add(date);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.TESTS))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.TESTS))
             tableView.getColumns().add(tests);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINATIONS))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.VACCINATIONS))
             tableView.getColumns().add(vaccinations);
 
         tableView.getItems().addAll(dto);
@@ -355,26 +333,19 @@ public class SQLController implements Initializable {
                     new ReadOnlyStringWrapper(((EpidemiologistDTO) data.getValue()).getServiceNumber()));
         }
 
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.UUID))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.UUID))
             tableView.getColumns().add(uuid);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.FIRSTNAME))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.FIRSTNAME))
             tableView.getColumns().add(firstname);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.LASTNAME))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.LASTNAME))
             tableView.getColumns().add(lastname);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.STREET))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.STREET))
             tableView.getColumns().add(street);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.DOOR_NUMBER))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.DOOR_NUMBER))
             tableView.getColumns().add(door);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.CITY))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.CITY))
             tableView.getColumns().add(city);
-        if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
-                || columnCheckBox.getCheckModel().isChecked(SQLColumn.ZIP))
+        if(columnCheckBox.getCheckModel().isChecked(SQLColumn.ZIP))
             tableView.getColumns().add(zip);
         if(!dto.isEmpty() && dto.get(0) instanceof EpidemiologistDTO) {
             if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()

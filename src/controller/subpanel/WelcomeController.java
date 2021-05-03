@@ -2,7 +2,10 @@ package controller.subpanel;
 
 import common.LoginToken;
 import common.Utils;
+import database.transfer.UserDTO;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -23,6 +26,10 @@ public class WelcomeController implements Initializable, Disposable {
         subTitleLabel.setText(Utils.currentFormattedTime());
 
         initTimeRefreshService();
+
+        LoginToken.CURRENT_LOGIN.addListener((observableValue, userDTO, t1) -> {
+            titleLabel.setText(Utils.getTranslatedString("hello") + " " + LoginToken.CURRENT_LOGIN.get().getFirstName());
+        });
     }
 
     /**

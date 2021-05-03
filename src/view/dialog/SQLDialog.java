@@ -14,8 +14,9 @@ import java.util.ResourceBundle;
 public class SQLDialog extends Dialog<Object> {
     private static final String FXML_PATH = "/fxml/dialogs/sql_dialog.fxml";
 
-    private SQLDialog(SQLRequest sqlType, DTOType dto) throws IOException, IllegalArgumentException, NumberFormatException {
+    private SQLDialog(SQLRequest sqlType, DTOType dto) throws IOException, IllegalArgumentException {
         setTitle(sqlType.toString());
+        setResizable(true);
 
         final FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH),
                 ResourceBundle.getBundle("translation", Utils.CURRENT_LOCALE));
@@ -32,7 +33,7 @@ public class SQLDialog extends Dialog<Object> {
         getDialogPane().getButtonTypes().addAll(ok, ButtonType.CANCEL);
     }
 
-    public static SQLDialog promptDialog(SQLRequest sqlType, DTOType dto) throws IOException, IllegalArgumentException, NumberFormatException {
+    public static SQLDialog promptDialog(SQLRequest sqlType, DTOType dto) throws IOException, IllegalArgumentException {
         return new SQLDialog(sqlType, dto);
     }
 }
