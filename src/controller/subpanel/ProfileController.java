@@ -3,6 +3,7 @@ package controller.subpanel;
 import common.LoginToken;
 import common.Utils;
 import database.business.EpidemiologistBusinessLogic;
+import database.business.UserBusinessLogic;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
 import javafx.event.ActionEvent;
@@ -117,7 +118,10 @@ public class ProfileController implements Initializable {
 
     @FXML
     public void confirmButtonAction(ActionEvent actionEvent) {
-        if(Utils.scorePassword(passwordField.getText()) < 9) {
+        String password = passwordField.getText();
+
+        if(password != null && !password.equals("")
+                && Utils.scorePassword(passwordField.getText()) < 9) {
             UITools.showErrorDialog(Utils.getTranslatedString("password_error_message"));
             return;
         }
@@ -161,6 +165,9 @@ public class ProfileController implements Initializable {
 
                 EpidemiologistBusinessLogic.getInstance().update(oldUser, updatedUser);
             }
+
+            if(password != null && !password.equals(""))
+                UserBusinessLogic.getInstance().updatePassword(password);
         } catch (IllegalArgumentException | SQLException ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
         }

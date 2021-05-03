@@ -72,6 +72,24 @@ public class UserBusinessLogic {
     }
 
     /**
+     * Updates the password of the current user in the DB
+     *
+     * @param newPassword the new password
+     * @throws SQLException if an error occurred
+     */
+    public void updatePassword(String newPassword) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            userDao.updateCurrentUserPassword(newPassword);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
      * Selects a climate from the DB
      *
      * @param climate the climate

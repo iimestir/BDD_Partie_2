@@ -53,29 +53,6 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
     }
 
     /**
-     * Used to edit a user profile
-     *
-     * @param user the account information (updated)
-     * @param username the current account username
-     * @param password the current account password
-     * @param newPassword the new password
-     * @throws SQLException if an error occurred
-     */
-    public void updateUser(UserDTO user, String username, String password, String newPassword) throws SQLException {
-        try {
-            DBManager.getInstance().initialize();
-            userDao.update(user, username, password, newPassword);
-            DBManager.getInstance().commit();
-        } catch(SQLException ex) {
-            DBManager.getInstance().rollback();
-
-            throw ex;
-        }
-
-        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
-    }
-
-    /**
      * Used to delete a user from the database
      *
      * @param user the account information

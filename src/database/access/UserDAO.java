@@ -1,5 +1,6 @@
 package database.access;
 
+import common.LoginToken;
 import common.Utils;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
@@ -90,48 +91,6 @@ public class UserDAO {
      */
     public UUID getUserId(String username, String password) throws SQLException {
         return select(username, password).getId();
-    }
-
-    /**
-     * Updates a user in the database
-     *
-     * @param user the user account information
-     * @param username the current account username
-     * @param password the current account password
-     * @param newPassword a password if the user changed his password
-     * @throws SQLException if an error occurred
-     */
-    public void update(UserDTO user, String username, String password, String newPassword) throws SQLException {
-        if(!user.isStored())
-            throw new SQLException("The specified UserDTO is not persistent");
-
-        Connection conn = DBManager.getInstance().getDBConnection();
-
-        boolean isEpidemiologist = user instanceof EpidemiologistDTO;
-
-        String request = "UPDATE Public.\"User\" SET \"Fistname\" = ?,\"Lastname\" = ?,";
-        if(newPassword != null) request += "\"Password\" = crypt(?, \"Password\"),";
-        request += "\"Street\" = ?,\"Doornumber\" = ?,\"City\" = ?,\"ZIP\" = ?";
-        request += " WHERE \"Username\" = crypt(?, \"Username\") AND \"Password\" = crypt(?, \"Password\")";
-
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1,user.getFirstName());
-        stmt.setString(2,user.getLastName());
-
-        int i = 3;
-        if(newPassword != null) {
-            stmt.setString(3, newPassword);
-            i = 4;
-        }
-
-        stmt.setString(i++, user.getStreet());
-        stmt.setInt(i++, user.getDoorNumber());
-        stmt.setString(i++, user.getCity());
-        stmt.setString(i++, user.getZipCode());
-        stmt.setString(i++, username);
-        stmt.setString(i, password);
-
-        stmt.executeUpdate();
     }
 
     /**
@@ -281,6 +240,30 @@ public class UserDAO {
     }
 
     /**
+     * Updates the password of the current user
+     *
+     * @param newPassword the new password
+     */
+    public void updateCurrentUserPassword(String newPassword) throws SQLException {
+        UserDTO user = LoginToken.CURRENT_LOGIN.get();
+
+        if(select(user).isEmpty())
+            throw new SQLException("The specified UserDTO is not persistent");
+
+        Connection conn = DBManager.getInstance().getDBConnection();
+        StringBuilder request = new StringBuilder("UPDATE Public.\"User\" SET Password = crypt(?, gen_salt('bf'))");
+
+        prepareStringBuilderStatement(false, user, conn, request);
+
+        PreparedStatement stmt = conn.prepareStatement(request.toString());
+
+        stmt.setString(1, newPassword);
+        prepareStatement(user, stmt, 2);
+
+        stmt.executeUpdate();
+    }
+
+    /**
      * Used on select methods
      *
      * @param stmt prepared statement
@@ -313,7 +296,7 @@ public class UserDAO {
     /**
      * Returns a prepared statement (including all "ADD" and "WHERE" clauses)
      *
-     * @param type request type
+     * @param type request type (true = SET, false = WHERE)
      * @param record the record
      * @param conn connection
      * @param request the current request string builder
