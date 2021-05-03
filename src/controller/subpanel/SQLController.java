@@ -348,7 +348,7 @@ public class SQLController implements Initializable {
                 new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getCity()));
         zip.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(((UserDTO) data.getValue()).getZipCode()));
-        if(dto instanceof EpidemiologistDTO) {
+        if(!dto.isEmpty() && dto.get(0) instanceof EpidemiologistDTO) {
             center.setCellValueFactory(data ->
                     new ReadOnlyStringWrapper(((EpidemiologistDTO) data.getValue()).getCenter()));
             phone.setCellValueFactory(data ->
@@ -376,7 +376,7 @@ public class SQLController implements Initializable {
         if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
                 || columnCheckBox.getCheckModel().isChecked(SQLColumn.ZIP))
             tableView.getColumns().add(zip);
-        if(dto instanceof EpidemiologistDTO) {
+        if(!dto.isEmpty() && dto.get(0) instanceof EpidemiologistDTO) {
             if(columnCheckBox.getCheckModel().getCheckedIndices().isEmpty()
                     || columnCheckBox.getCheckModel().isChecked(SQLColumn.CENTER))
                 tableView.getColumns().add(center);
@@ -453,7 +453,7 @@ public class SQLController implements Initializable {
      *
      * @param table table type
      * @param dto update criteria
-     * @param updated the updated informations
+     * @param updated the updated information
      * @throws IllegalAccessException if the user is not an epidemiologist
      * @throws SQLException if an error occurred
      */
@@ -542,9 +542,6 @@ public class SQLController implements Initializable {
             request(request, table, dto);
         } catch(Exception ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
-
-            // FIXME : DEBUG
-            ex.printStackTrace();
         }
     }
 }

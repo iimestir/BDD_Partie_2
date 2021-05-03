@@ -35,7 +35,7 @@ public class EpidemiologistDAO {
      */
     public List<EpidemiologistDTO> select(EpidemiologistDTO record) throws SQLException {
         Connection conn = DBManager.getInstance().getDBConnection();
-        StringBuilder request = new StringBuilder("SELECT * FROM Public.\"Country\"");
+        StringBuilder request = new StringBuilder("SELECT * FROM Public.\"User\"");
 
         prepareStringBuilderStatement(false, record, conn, request);
         request.append(" NATURAL JOIN Public.\"Epidemiologist\"");
