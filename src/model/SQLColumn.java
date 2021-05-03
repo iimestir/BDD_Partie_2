@@ -36,7 +36,11 @@ public enum SQLColumn {
     STREET("Street"),
     DOOR_NUMBER("Doornumber"),
     CITY("City"),
-    ZIP("ZIP");
+    ZIP("ZIP"),
+
+    // EPIDEMIOLOGIST
+    CENTER("Center"),
+    SERVICE_PHONE("Service Phone");
 
     private final String tableName;
 

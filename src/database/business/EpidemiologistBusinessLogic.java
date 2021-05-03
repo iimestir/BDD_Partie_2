@@ -2,6 +2,7 @@ package database.business;
 
 import common.Utils;
 import database.access.DBManager;
+import database.access.EpidemiologistDAO;
 import database.transfer.*;
 import view.UITools;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
  * Singleton class used for the epidemiologist database requests
  */
 public class EpidemiologistBusinessLogic extends UserBusinessLogic {
+    private static final EpidemiologistDAO epidemiologistDao = EpidemiologistDAO.getInstance();
     private static final EpidemiologistBusinessLogic instance = new EpidemiologistBusinessLogic();
 
     /**
@@ -456,6 +458,59 @@ public class EpidemiologistBusinessLogic extends UserBusinessLogic {
 
             throw ex;
         }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
+    }
+
+    /**
+     * Selects a record from the user table in the DB
+     *
+     * @param record the user informations
+     * @throws SQLException if an error occurred
+     */
+    public List<EpidemiologistDTO> select(EpidemiologistDTO record) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<EpidemiologistDTO> result = epidemiologistDao.select(record);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
+     * Updates a user record from the DB
+     *
+     * @param oldRecord the user record
+     * @param newRecord the updated user record
+     * @throws SQLException if an error occurred
+     */
+    public void update(EpidemiologistDTO oldRecord, EpidemiologistDTO newRecord) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            epidemiologistDao.update(oldRecord, newRecord);
+            DBManager.getInstance().commit();
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+
+        UITools.showDialog(Utils.getTranslatedString("message_record_updated"));
+    }
+
+    /**
+     * Deletes a user record from the DB
+     *
+     * @param record the user record
+     * @throws SQLException if an error occurred
+     */
+    public void delete(EpidemiologistDTO record) throws SQLException {
+        deleteUser(record);
 
         UITools.showDialog(Utils.getTranslatedString("message_record_deleted"));
     }

@@ -83,7 +83,7 @@ public final class Utils {
      * @param request the request string builder
      * @param subRequest the sub requests list
      */
-    public static void fillSQLSelect(StringBuilder request, List<String> subRequest) {
+    public static void fillSQLWhere(StringBuilder request, List<String> subRequest) {
         boolean where = false;
         boolean and = false;
         for(String sub : subRequest) {
@@ -107,7 +107,7 @@ public final class Utils {
      * @param request the request string builder
      * @param subRequest the sub requests list
      */
-    public static void fillSQLUpdate(StringBuilder request, List<String> subRequest) {
+    public static void fillSQLSet(StringBuilder request, List<String> subRequest) {
         boolean set = false;
         boolean comma = false;
         for(String sub : subRequest) {

@@ -160,9 +160,9 @@ public class VaccinationsDAO {
             subRequest.add("\"Vaccinations\" = ?");
 
         if(type)
-            Utils.fillSQLUpdate(request, subRequest);
+            Utils.fillSQLSet(request, subRequest);
         else
-            Utils.fillSQLSelect(request, subRequest);
+            Utils.fillSQLWhere(request, subRequest);
     }
 
     /**

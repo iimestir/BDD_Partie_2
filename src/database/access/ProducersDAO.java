@@ -151,9 +151,9 @@ public class ProducersDAO {
             subRequest.add("\"Vaccines\" = ?");
 
         if(type)
-            Utils.fillSQLUpdate(request, subRequest);
+            Utils.fillSQLSet(request, subRequest);
         else
-            Utils.fillSQLSelect(request, subRequest);
+            Utils.fillSQLWhere(request, subRequest);
     }
 
     /**

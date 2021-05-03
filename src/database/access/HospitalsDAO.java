@@ -168,9 +168,9 @@ public class HospitalsDAO {
             subRequest.add("\"epidemiologist\" = ?");
 
         if(type)
-            Utils.fillSQLUpdate(request, subRequest);
+            Utils.fillSQLSet(request, subRequest);
         else
-            Utils.fillSQLSelect(request, subRequest);
+            Utils.fillSQLWhere(request, subRequest);
     }
 
     /**

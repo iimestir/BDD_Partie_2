@@ -132,26 +132,6 @@ public class UserDAO {
         stmt.setString(i, password);
 
         stmt.executeUpdate();
-
-        if(isEpidemiologist)
-            updateEpidemiologist(((EpidemiologistDTO) user));
-    }
-
-    /**
-     * Updates the epidemiologist table
-     *
-     * @param epidemiologist epidemiologist
-     */
-    private void updateEpidemiologist(EpidemiologistDTO epidemiologist) throws SQLException {
-        Connection conn = DBManager.getInstance().getDBConnection();
-
-        String request = "UPDATE Public.\"Epidemiologist\" SET \"Center\" = ?,\"Service Phone\" = ?";
-
-        PreparedStatement stmt = conn.prepareStatement(request);
-        stmt.setString(1,epidemiologist.getCenter());
-        stmt.setString(2,epidemiologist.getServiceNumber());
-
-        stmt.executeUpdate();
     }
 
     /**
@@ -290,9 +270,7 @@ public class UserDAO {
 
         Connection conn = DBManager.getInstance().getDBConnection();
 
-        StringBuilder request = new StringBuilder(
-                "UPDATE Public.\"User\""
-        );
+        StringBuilder request = new StringBuilder("UPDATE Public.\"User\"");
 
         prepareStringBuilderStatement(true, newRecord, conn, request);
         prepareStringBuilderStatement(false, oldRecord, conn, request);
@@ -359,9 +337,9 @@ public class UserDAO {
             subRequest.add("\"ZIP\" = ?");
 
         if(type)
-            Utils.fillSQLUpdate(request, subRequest);
+            Utils.fillSQLSet(request, subRequest);
         else
-            Utils.fillSQLSelect(request, subRequest);
+            Utils.fillSQLWhere(request, subRequest);
     }
 
     /**

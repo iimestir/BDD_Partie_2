@@ -1,39 +1,40 @@
 # Base de données - Projet II
 ### Auteurs du projet
+Groupe AZ
 * IMESTIR Ibrahim 000524358
 * OUDAHYA Ismaïl 000479390
-* BELGADA Naoufal 000479191  
-Groupe AZ
+* BELGADA Naoufal 000479191
 
 ## Features
+Voici les différentes features intégrées au programme :
 - Interface graphique
-- Système de création de compte
-- Système de connexion
+- Système de gestion de compte avec connexion et inscription
+- Système de visualisation de la base de données simplifié
+- Système de requêtes SQL simplifié
 - Dashboard
-- Requêtes SQL
 
 ### Interface graphique
 L'interface graphique permet de visualiser certaines statistiques sous forme de dashboard (voir section Dashboard), elle permet aussi la création de compte et la connexion
 
 ### Dashboard
 Le dashboard permet de visualiser plusieurs statistiques contenues dans la base de données :
-- Types de vaccins par pays (Camembert)
+- Nombre de types de vaccins par pays (Camembert)
 - Nombre de vaccinations par pays (Camembert)
 - Nombre d'infectés par pays selon le rapport le plus récent (Camembert)
-- Evolution du nombre d'hospitalisations par pays (Graphique)
-- Evolution du nombre d'infectés par pays (Graphique)
+- Evolution du nombre d'infectés par pays (Graphique : 30 derniers jours)
+- Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
 
 ## Compilation
 ### Prérequis
 Le projet a été réalisé avec Java en utilisant le JDK 15 et Maven, il vous faut donc une version du JDK similaire et maven d'installé sur l'ordinateur
-(ou utiliser l'IDE IntelliJ).
+(ou utiliser l'IDE IntelliJ ayant un JDK15 d'installé).
 Le programme ne pourra être compilé avec une version antérieure au JDK 15.
 
 Maven peut être obtenu via le site officiel de maven : https://maven.apache.org/download.cgi \
 La dernière version est compatible avec le JDK 15.
 
 ### Compilation & Lancement
-La compilation et du programme se fait grâce aux commandes ci-dessous (à exécuter dans l'ordre) :
+La compilation du programme se fait grâce aux commandes ci-dessous (à exécuter dans l'ordre) :
 * mvn compile
 * mvn clean install
 
@@ -41,12 +42,12 @@ Vous pouvez maintenant lancer le programme avec la commande :
 * mvn exec:java
 
 ### Génération d'un fichier .jar
-Vous pouvez génerer un fichier .jar contenant toutes les dépendances pour but d'avoir un programme portable grace à la commande ci-dessous :
+Vous pouvez générer un fichier executable .jar contenant toutes les dépendances pour but d'avoir un programme portable grace à la commande ci-dessous :
 * mvn clean compile assembly:single
 
 Le fichier .jar sera alors généré dans le dossier "target" et pourra être lancé comme tout autre exécutable java régulier :
-* En double cliquant dessus
-* En utilisant la commande : java -jar MonJar.jar
+* Soit en double cliquant dessus
+* Soit en utilisant la commande : java -jar MonJar.jar
 
-Veuillez faire bien attention à votre version de java car il faut la version du JDK 15 pour pouvoir démarrer l'application.
+Veuillez bien faire attention à votre version de java car il faut la version du JDK 15 pour pouvoir démarrer l'application.
 
