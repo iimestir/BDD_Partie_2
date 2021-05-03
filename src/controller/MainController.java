@@ -1,5 +1,6 @@
 package controller;
 
+import controller.subpanel.ProfileController;
 import controller.subpanel.SQLController;
 import controller.subpanel.WelcomeController;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable, Disposable {
     @FXML private WelcomeController welcomeController;
     @FXML private SQLController sqlController;
+    @FXML private ProfileController profileController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

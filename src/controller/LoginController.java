@@ -2,7 +2,6 @@ package controller;
 
 import common.LoginToken;
 import database.business.UserBusinessLogic;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,8 +9,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Disposable;
 import model.Panel;
-import view.UITools;
 import view.Navigator;
+import view.UITools;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,8 +39,10 @@ public class LoginController implements Initializable, Disposable {
 
     public void loginButtonAction() {
         try {
-            LoginToken.CURRENT_USER = UserBusinessLogic.getInstance()
-                    .login(usernameTextField.getText(), passwordField.getText());
+            LoginToken.CURRENT_LOGIN.set(
+                    UserBusinessLogic.getInstance()
+                    .login(usernameTextField.getText(), passwordField.getText())
+            );
 
             Navigator.getInstance().push(Panel.MAIN);
         } catch (Exception ex) {

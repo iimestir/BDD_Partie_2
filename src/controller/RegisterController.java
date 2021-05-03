@@ -2,9 +2,9 @@ package controller;
 
 import common.Utils;
 import database.business.EpidemiologistBusinessLogic;
+import database.business.UserBusinessLogic;
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
-import database.business.UserBusinessLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,8 +13,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.AccountType;
-import view.UITools;
 import view.Navigator;
+import view.UITools;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -85,6 +86,7 @@ public class RegisterController implements Initializable {
 
     /**
      * Used to disable or enable the epidemiologist forms
+     *
      * @param enable boolean
      */
     private void setEpidemiologistForms(boolean enable) {
@@ -99,6 +101,7 @@ public class RegisterController implements Initializable {
 
     /**
      * Used to create an account when the button is clicked
+     *
      * @param actionEvent not used here
      */
     public void createAccountButtonAction(ActionEvent actionEvent) {
@@ -136,6 +139,7 @@ public class RegisterController implements Initializable {
 
     /**
      * Used to return from the register menu when the cancel button is clicked
+     *
      * @param actionEvent not used here
      */
     public void cancelButtonAction(ActionEvent actionEvent) {

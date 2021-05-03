@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <TabPane fx:controller="controller.MainController" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1">
   <tabs>
     <Tab text="%welcome">
@@ -20,12 +18,13 @@
       <Tab text="%sql">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-             <fx:include fx:id="sql" source="subpanels/sql.fxml"/>
+            <fx:include fx:id="sql" source="subpanels/sql.fxml"/>
          </content>
       </Tab>
       <Tab text="%account">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <fx:include fx:id="profile" source="subpanels/profile.fxml"/>
          </content>
       </Tab>
   </tabs>

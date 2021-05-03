@@ -6,7 +6,6 @@ public enum Panel {
     LOGIN("login.fxml"),
     REGISTER("register.fxml");
 
-
     private final String fxmlPath;
 
     Panel(String fxmlPath) {

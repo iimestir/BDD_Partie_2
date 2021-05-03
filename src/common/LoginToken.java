@@ -2,19 +2,21 @@ package common;
 
 import database.transfer.EpidemiologistDTO;
 import database.transfer.UserDTO;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableObjectValue;
 
 /**
  * Used to store the current logged in user
  */
 public final class LoginToken {
-    public static UserDTO CURRENT_USER;
+    public static SimpleObjectProperty<UserDTO> CURRENT_LOGIN = new SimpleObjectProperty<>();
 
     /**
      * Checks if the user is logged in
      * @return boolean
      */
     public static boolean isLoggedIn() {
-        return CURRENT_USER != null;
+        return CURRENT_LOGIN.get() != null;
     }
 
     /**
@@ -23,7 +25,7 @@ public final class LoginToken {
      * @return boolean
      */
     public static boolean isEpidemiologist() {
-        return CURRENT_USER instanceof EpidemiologistDTO;
+        return CURRENT_LOGIN.get() instanceof EpidemiologistDTO;
     }
 
     /**
@@ -33,6 +35,6 @@ public final class LoginToken {
         if(!isLoggedIn())
             return;
 
-        CURRENT_USER = null;
+        CURRENT_LOGIN.set(null);
     }
 }
