@@ -12,6 +12,7 @@ Voici les différentes features intégrées au programme :
 - Système de visualisation de la base de données simplifié
 - Système de requêtes SQL simplifié
 - Dashboard
+- Carte du monde interactive montrant le nombre d'hospitalisations par pays
 - Base de données
 
 ### Base de données
@@ -38,6 +39,13 @@ Les informations détaillés de ces tables sont fournis dans le rapport.
 
 ### Interface graphique
 L'interface graphique permet de visualiser certaines statistiques sous forme de dashboard (voir section Dashboard), elle permet aussi la création de compte et la connexion
+
+### Carte du monde
+La carte du monde est une carte coloriant tous les pays selon leur nombre d'hospitalisations (selon le dernier rapport).
+Elle se met à jour à chaque clique sur l'onglet "Carte/Map". 
+
+Vous pouvez aussi cliquer sur un pays désiré pour obtenir 
+les informations relatives à ce pays et au dernier rapport émis.
 
 ### Dashboard
 Le dashboard permet de visualiser plusieurs statistiques contenues dans la base de données :
