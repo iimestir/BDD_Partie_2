@@ -1,5 +1,6 @@
 package controller.dialog;
 
+import common.LoginToken;
 import common.Utils;
 import database.transfer.*;
 import javafx.fxml.FXML;
@@ -69,6 +70,35 @@ public class SQLDialogController implements Initializable {
 
             TextField criteriaTextField = new TextField();
             criteriaTextField.setPromptText(l.getText());
+
+            formGridPane.add(criteriaTextField,1,rowIndex);
+
+            if(type == SQLRequest.UPDATE) {
+                TextField updateTextField = new TextField();
+                updateTextField.setPromptText(l.getText() + " " + Utils.getTranslatedString("new_value"));
+                updateTextField.setVisible(!id);
+
+                formGridPane.add(updateTextField,2,rowIndex);
+            }
+
+            rowIndex++;
+        }
+    }
+
+    /**
+     * Fills the grid pane with the criteria information
+     *
+     * @param type request type
+     * @param id if the text field is an ID text field
+     * @param labels nodes
+     */
+    private void fillFormPrefill(SQLRequest type, boolean id, String prefill, Label... labels) {
+        for(Label l : labels) {
+            formGridPane.add(l,0,rowIndex);
+
+            TextField criteriaTextField = new TextField();
+            criteriaTextField.setDisable(true);
+            criteriaTextField.setText(prefill);
 
             formGridPane.add(criteriaTextField,1,rowIndex);
 
@@ -162,9 +192,23 @@ public class SQLDialogController implements Initializable {
                 fillForm(
                         sqlType, false,
                         new Label("icu_patients"),
-                        new Label("hosp_patients"),
-                        new Label("epidemiologist")
+                        new Label("hosp_patients")
                 );
+
+                switch(sqlType) {
+                    case INSERT -> {
+                        fillFormPrefill(
+                                sqlType, false, LoginToken.CURRENT_LOGIN.get().getId().toString(),
+                                new Label("epidemiologist")
+                        );
+                    }
+                    default -> {
+                        fillForm(
+                                sqlType, false,
+                                new Label("epidemiologist")
+                        );
+                    }
+                }
             }
             case PRODUCERS -> {
                 fillForm(

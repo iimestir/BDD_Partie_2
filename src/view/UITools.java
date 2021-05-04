@@ -12,7 +12,6 @@ import java.util.function.UnaryOperator;
  * Used to show many kind of dialogs
  */
 public final class UITools {
-
     /**
      * Used to show an error dialog
      *
