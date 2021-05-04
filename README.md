@@ -12,6 +12,29 @@ Voici les différentes features intégrées au programme :
 - Système de visualisation de la base de données simplifié
 - Système de requêtes SQL simplifié
 - Dashboard
+- Base de données
+
+### Base de données
+Nous utilisons PostgreSQL pour modéliser notre base de données relationnelle, il est donc nécessaire de disposer
+d'une installation similaire sur la machine de test avec les même tables pour que le programme fonctionne
+correctement.
+
+Étant donné la nature de notre projet avec l'interface graphique simplifiée et la syntaxe particulière 
+de PostgreSQL, nous ne pensons pas que notre interface fonctionnerait avec d'autres language SQL relationnelles.
+
+Les informations de connexion à la base de données se trouvent dans la classe "DBManager.java"
+se trouvant dans le package "database.access".
+
+Voici la liste des tables de la BDD que nous avons utilisé :
+- Countries
+- Hospitals
+- Producers
+- Tests
+- Climate
+- User
+- Epidemiologist
+
+Les informations détaillés de ces tables sont fournis dans le rapport.
 
 ### Interface graphique
 L'interface graphique permet de visualiser certaines statistiques sous forme de dashboard (voir section Dashboard), elle permet aussi la création de compte et la connexion

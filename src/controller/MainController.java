@@ -3,6 +3,7 @@ package controller;
 import controller.subpanel.ProfileController;
 import controller.subpanel.SQLController;
 import controller.subpanel.WelcomeController;
+import controller.subpanel.WorldMapController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import model.Disposable;
@@ -14,6 +15,7 @@ public class MainController implements Initializable, Disposable {
     @FXML private WelcomeController welcomeController;
     @FXML private SQLController sqlController;
     @FXML private ProfileController profileController;
+    @FXML private WorldMapController mapController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
