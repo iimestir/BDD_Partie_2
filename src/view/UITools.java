@@ -22,6 +22,7 @@ public final class UITools {
         alert.setTitle(Utils.getTranslatedString("error"));
         alert.setHeaderText(Utils.getTranslatedString("error_header"));
         alert.setContentText(errMsg);
+        alert.setResizable(true);
         alert.showAndWait();
     }
 
@@ -35,6 +36,7 @@ public final class UITools {
         dialog.setTitle(Utils.getTranslatedString("message"));
         dialog.setHeaderText(Utils.getTranslatedString("information"));
         dialog.setContentText(msg);
+        dialog.setResizable(true);
         dialog.showAndWait();
     }
 

@@ -35,7 +35,7 @@ public class CountryDialogController implements Initializable {
         );
 
         if(countries.isEmpty())
-            throw new SQLException(Utils.getTranslatedString("country_not_persistent") + " -> " + ISO);
+            throw new SQLException(Utils.getTranslatedString("country_not_persistent") + " (" + ISO + ")");
 
         List<HospitalsDTO> hospitals = UserBusinessLogic.getInstance().select(
                 new HospitalsDTO(ISO,null,null,null,null)

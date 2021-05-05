@@ -1,4 +1,4 @@
-package controller.subpanel;
+package controller.subpanels;
 
 import common.LoginToken;
 import common.Utils;
@@ -6,7 +6,6 @@ import database.business.EpidemiologistBusinessLogic;
 import database.business.UserBusinessLogic;
 import database.transfer.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -29,6 +28,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("rawtypes")
 public class SQLController implements Initializable {
     @FXML private Button sqlButton;
     @FXML private CheckComboBox<SQLColumn> columnCheckBox;
@@ -47,9 +47,7 @@ public class SQLController implements Initializable {
 
         tableView.setEditable(false);
 
-        tableComboBox.valueProperty().addListener((observableValue, dtoType, t1) -> {
-            fillColumnBox(t1);
-        });
+        tableComboBox.valueProperty().addListener((observableValue, dtoType, t1) -> fillColumnBox(t1));
 
         columnCheckBox.disableProperty().bind(requestComboBox.valueProperty().isNotEqualTo(SQLRequest.SELECT));
         sqlButton.disableProperty().bind(
@@ -85,18 +83,14 @@ public class SQLController implements Initializable {
                     columnCheckBox.getItems().setAll(
                             SQLColumn.ISO, SQLColumn.DATE, SQLColumn.TESTS, SQLColumn.VACCINATIONS
                     );
-            case USER -> {
-                    columnCheckBox.getItems().setAll(
-                            SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
-                            SQLColumn.CITY, SQLColumn.ZIP
-                    );
-            }
-            case EPIDEMIOLOGIST -> {
-                columnCheckBox.getItems().setAll(
-                        SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
-                        SQLColumn.CITY, SQLColumn.ZIP, SQLColumn.CENTER, SQLColumn.SERVICE_PHONE
-                );
-            }
+            case USER -> columnCheckBox.getItems().setAll(
+                    SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
+                    SQLColumn.CITY, SQLColumn.ZIP
+            );
+            case EPIDEMIOLOGIST -> columnCheckBox.getItems().setAll(
+                    SQLColumn.UUID, SQLColumn.FIRSTNAME, SQLColumn.LASTNAME, SQLColumn.STREET, SQLColumn.DOOR_NUMBER,
+                    SQLColumn.CITY, SQLColumn.ZIP, SQLColumn.CENTER, SQLColumn.SERVICE_PHONE
+            );
         }
 
         columnCheckBox.getCheckModel().checkAll();
@@ -480,9 +474,10 @@ public class SQLController implements Initializable {
             case SELECT -> selectOnTable(table, ((DTO) dto));
             case INSERT -> insertOnTable(table, ((DTO) dto));
             case UPDATE -> {
-                Pair<DTO, DTO> dtos = ((Pair<DTO,DTO>) dto);
-                DTO oldRecord = dtos.getKey();
-                DTO newRecord = dtos.getValue();
+                @SuppressWarnings("unchecked")
+                Pair<DTO, DTO> pairDto = ((Pair<DTO,DTO>) dto);
+                DTO oldRecord = pairDto.getKey();
+                DTO newRecord = pairDto.getValue();
 
                 updateOnTable(table, oldRecord, newRecord);
             }
@@ -492,10 +487,8 @@ public class SQLController implements Initializable {
 
     /**
      * When the user pushes the "SQL" button
-     *
-     * @param actionEvent not used here
      */
-    public void requestButtonAction(ActionEvent actionEvent) {
+    public void requestButtonAction() {
         try {
             final SQLRequest request = requestComboBox.getValue();
             final DTOType table = tableComboBox.getValue();

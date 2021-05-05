@@ -35,7 +35,7 @@ Voici la liste des tables de la BDD que nous avons utilisé :
 - User
 - Epidemiologist
 
-Les informations détaillés de ces tables sont fournis dans le rapport.
+Les informations détaillées de ces tables sont fournies dans le rapport.
 
 ### Interface graphique
 L'interface graphique permet de visualiser certaines statistiques sous forme de dashboard (voir section Dashboard), elle permet aussi la création de compte et la connexion
@@ -51,8 +51,8 @@ les informations relatives à ce pays et au dernier rapport émis.
 Le dashboard permet de visualiser plusieurs statistiques contenues dans la base de données :
 - Nombre de types de vaccins par pays (Camembert)
 - Nombre de vaccinations par pays (Camembert)
-- Nombre d'infectés par pays selon le rapport le plus récent (Camembert)
-- Evolution du nombre d'infectés par pays (Graphique : 30 derniers jours)
+- Nombre d'hospitalisations par pays selon le rapport le plus récent (Camembert)
+- Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
 - Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
 
 ## Compilation

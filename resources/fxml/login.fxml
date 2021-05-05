@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-      minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/15.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+      minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.LoginController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>

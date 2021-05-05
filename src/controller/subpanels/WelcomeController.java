@@ -1,11 +1,8 @@
-package controller.subpanel;
+package controller.subpanels;
 
 import common.LoginToken;
 import common.Utils;
-import database.transfer.UserDTO;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -15,6 +12,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class WelcomeController implements Initializable, Disposable {
+    @FXML private Label uuidLabel;
     @FXML private Label titleLabel;
     @FXML private Label subTitleLabel;
 
@@ -23,12 +21,25 @@ public class WelcomeController implements Initializable, Disposable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         titleLabel.setText(Utils.getTranslatedString("hello") + " " + LoginToken.CURRENT_LOGIN.get().getFirstName());
+        if(LoginToken.isEpidemiologist())
+            uuidLabel.setText(Utils.getTranslatedString("your_id_is") + " " + LoginToken.CURRENT_LOGIN.get().getId());
+
+        uuidLabel.setVisible(LoginToken.isEpidemiologist());
+
         subTitleLabel.setText(Utils.currentFormattedTime());
 
         initTimeRefreshService();
 
         LoginToken.CURRENT_LOGIN.addListener((observableValue, userDTO, t1) -> {
-            titleLabel.setText(Utils.getTranslatedString("hello") + " " + LoginToken.CURRENT_LOGIN.get().getFirstName());
+            if(t1 != null) {
+                titleLabel.setText(
+                        Utils.getTranslatedString("hello") + " " + LoginToken.CURRENT_LOGIN.get().getFirstName()
+                );
+
+                if(LoginToken.isEpidemiologist())
+                    uuidLabel.setText(Utils.getTranslatedString("your_id_is") + " " + LoginToken.CURRENT_LOGIN.get().getId());
+                uuidLabel.setVisible(LoginToken.isEpidemiologist());
+            }
         });
     }
 
@@ -39,11 +50,10 @@ public class WelcomeController implements Initializable, Disposable {
         service = new Thread(() -> {
             while(!service.isInterrupted()) {
                 try {
+                    //noinspection BusyWait
                     Thread.sleep(1000);
 
-                    Platform.runLater(() -> {
-                        subTitleLabel.setText(Utils.currentFormattedTime());
-                    });
+                    Platform.runLater(() -> subTitleLabel.setText(Utils.currentFormattedTime()));
                 } catch (InterruptedException e) {
                     System.out.println("Interrupted Service");
                     service.interrupt();

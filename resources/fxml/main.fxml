@@ -4,36 +4,25 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
-  <tabs>
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+         fx:controller="controller.MainController">
     <Tab text="%welcome">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-        <fx:include fx:id="welcome" source="subpanels/welcome.fxml" />
-      </content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <fx:include fx:id="welcome" source="subpanels/welcome.fxml"/>
     </Tab>
     <Tab text="%dashboard">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
     </Tab>
-      <Tab fx:id="mapTab" text="%map">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            <fx:include fx:id="map" source="subpanels/map.fxml" />
-         </content>
-      </Tab>
-      <Tab text="%sql">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            <fx:include fx:id="sql" source="subpanels/sql.fxml" />
-         </content>
-      </Tab>
-      <Tab text="%account">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            <fx:include fx:id="profile" source="subpanels/profile.fxml" />
-         </content>
-      </Tab>
-  </tabs>
+    <Tab fx:id="mapTab" text="%map">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <fx:include fx:id="map" source="subpanels/map.fxml"/>
+    </Tab>
+    <Tab text="%sql">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <fx:include fx:id="sql" source="subpanels/sql.fxml"/>
+    </Tab>
+    <Tab text="%account">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <fx:include fx:id="profile" source="subpanels/profile.fxml"/>
+    </Tab>
 </TabPane>

@@ -1,10 +1,11 @@
-package controller.subpanel;
+package controller.subpanels;
 
 import database.business.UserBusinessLogic;
 import database.transfer.CountryDTO;
 import database.transfer.HospitalsDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.WorldMapView;
 import view.UITools;
@@ -18,8 +19,16 @@ import java.util.*;
 public class WorldMapController implements Initializable {
     @FXML private WorldMapView worldMapView;
 
+    private final Color DISABLED = new Color(0.25,0.25,0.25,1.0);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        worldMapView.setCountrySelectionMode(WorldMapView.SelectionMode.SINGLE);
+
+        worldMapView.setOnScroll(
+                scrollEvent -> worldMapView.setZoomFactor(worldMapView.getZoomFactor() + scrollEvent.getDeltaY()/78.0)
+        );
+
         worldMapView.selectedCountriesProperty().addListener((observableValue, countries, t1) -> {
             if(!t1.isEmpty()) {
                 try {
@@ -56,9 +65,12 @@ public class WorldMapController implements Initializable {
                 Optional<CountryDTO> find = countries.stream().filter(p -> p.getId().equals(iso)).findFirst();
 
                 WorldMapView.CountryView view = new WorldMapView.CountryView(country);
+                Tooltip tooltip = new Tooltip();
+                view.setOnMouseEntered(evt -> tooltip.setText(country.getLocale().getDisplayCountry()));
+                Tooltip.install(view, tooltip);
 
                 if(find.isEmpty()) {
-                    view.setFill(Color.GRAY);
+                    view.setFill(DISABLED);
                     return view;
                 }
 
@@ -69,13 +81,13 @@ public class WorldMapController implements Initializable {
 
                 List<HospitalsDTO> hospitals = UserBusinessLogic.getInstance().select(criteria);
                 if(hospitals.isEmpty()) {
-                    view.setFill(Color.GRAY);
+                    view.setFill(DISABLED);
                     return view;
                 }
                 hospitals.sort(Comparator.comparing(HospitalsDTO::getDate));
                 HospitalsDTO lastReport = hospitals.get(hospitals.size()-1);
 
-                float p = ((float) lastReport.getHosp_patients()) / ((float) mostInfectedReport.getHosp_patients());
+                float p = ((float) lastReport.getHosp_patients()) / (((float) mostInfectedReport.getHosp_patients())+1);
                 view.setFill(new Color(p,1.0-p,0.3,1.0));
 
                 return view;

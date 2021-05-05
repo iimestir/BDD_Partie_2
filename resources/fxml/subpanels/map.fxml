@@ -4,8 +4,7 @@
 <?import org.controlsfx.control.WorldMapView?>
 
 
-<VBox xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.subpanel.WorldMapController">
-   <children>
-      <WorldMapView fx:id="worldMapView" />
-   </children>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.subpanels.WorldMapController">
+   <WorldMapView fx:id="worldMapView"/>
 </VBox>

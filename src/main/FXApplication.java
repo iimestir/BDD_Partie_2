@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import model.Panel;
 import view.Navigator;
 
-public class App extends Application {
+public class FXApplication extends Application {
     @Override
     public void start(Stage stage) {
         // Window settings
@@ -15,14 +15,12 @@ public class App extends Application {
         stage.setMinWidth(800);
         stage.setMinHeight(500);
         stage.setTitle(Utils.getTranslatedString("title"));
-        stage.setOnCloseRequest(event -> {
-            Navigator.getInstance().exit();
-        });
+        stage.setOnCloseRequest(event -> Navigator.getInstance().exit());
 
         Navigator.getInstance().register(stage, Panel.LOGIN);
     }
 
-    public static void run(String[] args) {
+    public static void start(String[] args) {
         launch(args);
     }
 }

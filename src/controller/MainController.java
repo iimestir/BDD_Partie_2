@@ -1,15 +1,12 @@
 package controller;
 
-import controller.subpanel.ProfileController;
-import controller.subpanel.SQLController;
-import controller.subpanel.WelcomeController;
-import controller.subpanel.WorldMapController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import controller.subpanels.ProfileController;
+import controller.subpanels.SQLController;
+import controller.subpanels.WelcomeController;
+import controller.subpanels.WorldMapController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import model.Disposable;
 
 import java.net.URL;
