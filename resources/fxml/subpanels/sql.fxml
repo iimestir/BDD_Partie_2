@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
-
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="30.0"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="controller.subpanels.SQLController">

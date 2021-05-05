@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
          fx:controller="controller.MainController">
     <Tab text="%welcome">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
         <fx:include fx:id="welcome" source="subpanels/welcome.fxml"/>
     </Tab>
-    <Tab text="%dashboard">
+    <Tab fx:id="dashboardTab" text="%dashboard">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <fx:include fx:id="dashboard" source="subpanels/dashboard.fxml"/>
     </Tab>
     <Tab fx:id="mapTab" text="%map">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>

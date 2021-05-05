@@ -2,7 +2,6 @@ package view.dialog;
 
 import common.Utils;
 import controller.dialog.CountryDialogController;
-import controller.dialog.SQLDialogController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -11,6 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("rawtypes")
 public class CountryDialog extends Dialog {
     private static final String FXML_PATH = "/fxml/dialogs/country_dialog.fxml";
 

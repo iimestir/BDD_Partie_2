@@ -488,7 +488,8 @@ public class SQLController implements Initializable {
     /**
      * When the user pushes the "SQL" button
      */
-    public void requestButtonAction() {
+    @FXML
+    private void requestButtonAction() {
         try {
             final SQLRequest request = requestComboBox.getValue();
             final DTOType table = tableComboBox.getValue();

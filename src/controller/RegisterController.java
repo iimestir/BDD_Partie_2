@@ -101,10 +101,9 @@ public class RegisterController implements Initializable {
 
     /**
      * Used to create an account when the button is clicked
-     *
-     * @param actionEvent not used here
      */
-    public void createAccountButtonAction(ActionEvent actionEvent) {
+    @FXML
+    private void createAccountButtonAction() {
         if(Utils.scorePassword(passwordField.getText()) < 9) {
             UITools.showErrorDialog(Utils.getTranslatedString("password_error_message"));
             return;
@@ -139,10 +138,9 @@ public class RegisterController implements Initializable {
 
     /**
      * Used to return from the register menu when the cancel button is clicked
-     *
-     * @param actionEvent not used here
      */
-    public void cancelButtonAction(ActionEvent actionEvent) {
+    @FXML
+    private void cancelButtonAction() {
         Navigator.getInstance().pop();
     }
 }

@@ -37,7 +37,8 @@ public class LoginController implements Initializable, Disposable {
                 );
     }
 
-    public void loginButtonAction() {
+    @FXML
+    private void loginButtonAction() {
         try {
             LoginToken.CURRENT_LOGIN.set(
                     UserBusinessLogic.getInstance()
@@ -50,7 +51,8 @@ public class LoginController implements Initializable, Disposable {
         }
     }
 
-    public void registerButtonAction() {
+    @FXML
+    private void registerButtonAction() {
         Navigator.getInstance().push(Panel.REGISTER);
     }
 

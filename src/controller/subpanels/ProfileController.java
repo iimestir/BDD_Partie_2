@@ -120,7 +120,7 @@ public class ProfileController implements Initializable {
     }
 
     @FXML
-    public void confirmButtonAction(ActionEvent actionEvent) {
+    private void confirmButtonAction() {
         String password = passwordField.getText();
 
         if(password != null && !password.equals("")
@@ -179,7 +179,7 @@ public class ProfileController implements Initializable {
     }
 
     @FXML
-    public void disconnectButtonAction(ActionEvent actionEvent) {
+    private void disconnectButtonAction() {
         Navigator.getInstance().pop();
         LoginToken.logOff();
     }

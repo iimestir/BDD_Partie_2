@@ -12,7 +12,7 @@ Voici les différentes features intégrées au programme :
 - Système de visualisation de la base de données simplifié
 - Système de requêtes SQL simplifié
 - Dashboard
-- Carte du monde interactive montrant le nombre d'hospitalisations par pays
+- Carte du monde interactive
 - Base de données
 
 ### Base de données
@@ -45,7 +45,7 @@ La carte du monde est une carte coloriant tous les pays selon leur nombre d'hosp
 Elle se met à jour à chaque clique sur l'onglet "Carte/Map". 
 
 Vous pouvez aussi cliquer sur un pays désiré pour obtenir 
-les informations relatives à ce pays et au dernier rapport émis.
+les informations détaillées relatives à ce pays et au dernier rapport émis.
 
 ### Dashboard
 Le dashboard permet de visualiser plusieurs statistiques contenues dans la base de données :
@@ -53,7 +53,7 @@ Le dashboard permet de visualiser plusieurs statistiques contenues dans la base 
 - Nombre de vaccinations par pays (Camembert)
 - Nombre d'hospitalisations par pays selon le rapport le plus récent (Camembert)
 - Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
-- Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
+- Evolution du nombre de cas de soins intensifs par pays (Graphique : 30 derniers jours)
 
 ## Compilation
 ### Prérequis
