@@ -52,8 +52,8 @@ Le dashboard permet de visualiser plusieurs statistiques contenues dans la base 
 - Nombre de types de vaccins par pays (Camembert)
 - Nombre de vaccinations par pays (Camembert)
 - Nombre d'hospitalisations par pays selon le rapport le plus récent (Camembert)
-- Evolution du nombre d'hospitalisations par pays (Graphique : 30 derniers jours)
-- Evolution du nombre de cas de soins intensifs par pays (Graphique : 30 derniers jours)
+- Evolution du nombre d'hospitalisations par pays (Graphique)
+- Evolution du nombre de cas de soins intensifs par pays (Graphique)
 
 ## Compilation
 ### Prérequis
