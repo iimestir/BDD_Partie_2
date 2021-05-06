@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.WorldMapView?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controller.subpanels.WorldMapController">
-   <WorldMapView fx:id="worldMapView"/>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.subpanels.WorldMapController">
+   <WorldMapView fx:id="worldMapView" countrySelectionMode="SINGLE" locationSelectionMode="SINGLE" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
 </VBox>
