@@ -5,7 +5,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
-
 import java.util.function.UnaryOperator;
 
 /**

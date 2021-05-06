@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox minHeight="300.0" minWidth="300.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controller.subpanels.WelcomeController">
+
+<VBox minHeight="300.0" minWidth="300.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.subpanels.WelcomeController">
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <Label fx:id="titleLabel" text="Title">
       <font>
-         <Font size="36.0"/>
+         <Font size="36.0" />
       </font>
    </Label>
    <Label fx:id="uuidLabel" text="uuid">
       <padding>
-         <Insets bottom="15.0"/>
+         <Insets bottom="15.0" />
       </padding>
    </Label>
-   <Label fx:id="subTitleLabel" text="subTitle"/>
+   <Label fx:id="subTitleLabel" text="subTitle" />
+   <BorderPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <bottom>
+         <Hyperlink alignment="BOTTOM_RIGHT" cacheShape="false" centerShape="false" focusTraversable="false" onAction="#aboutAction" scaleShape="false" text="%about" BorderPane.alignment="CENTER">
+            <effect>
+               <Blend />
+            </effect>
+         </Hyperlink>
+      </bottom>
+   </BorderPane>
 </VBox>

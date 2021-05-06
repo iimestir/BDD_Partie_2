@@ -79,4 +79,9 @@ public class CountryDTO extends DTO<String> {
     public void setClimateId(int climateId) {
         this.climateId = climateId;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

@@ -3,8 +3,11 @@ package controller.subpanels;
 import common.LoginToken;
 import common.Utils;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import model.Disposable;
 
@@ -77,5 +80,19 @@ public class WelcomeController implements Initializable, Disposable {
     @Override
     public void resume() {
         service.start();
+    }
+
+    @FXML
+    private void aboutAction() {
+        Dialog dialog = new Dialog();
+        dialog.setTitle(Utils.getTranslatedString("about"));
+        dialog.setHeaderText("Groupe AZ");
+        dialog.setContentText("""
+                IMESTIR Ibrahim (000524358)
+                OUDAHYA Ismaïl (000479390)
+                BELGADA Naoufal (000479191)"""
+        );
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
     }
 }

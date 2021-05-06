@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("DuplicatedCode")
 public class DashboardController implements Initializable {
-    @FXML private CheckComboBox<String> countryCheckComboBox;
+    @FXML private CheckComboBox<CountryDTO> countryCheckComboBox;
     @FXML private PieChart vaccinesPieChart;
     @FXML private PieChart vaccinationsPieChart;
     @FXML private PieChart hospPieChart;
@@ -38,7 +38,7 @@ public class DashboardController implements Initializable {
     private final Map<String, List<VaccinationsDTO>> vaccinations = new HashMap<>();
     private final Map<String, String[]> producers = new HashMap<>();
 
-    private final ListChangeListener<String> listener = change -> updateCharts();
+    private final ListChangeListener<CountryDTO> listener = change -> updateCharts();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,10 +61,10 @@ public class DashboardController implements Initializable {
      */
     public void loadDatas() {
         try {
-            loadCountriesData();
             loadHospitalsData();
             loadVaccinationsData();
             loadProducersData();
+            loadCountriesData();
         } catch (SQLException ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
         }
@@ -97,11 +97,9 @@ public class DashboardController implements Initializable {
      */
     private void loadCountriesData() throws SQLException {
         List<CountryDTO> records = UserBusinessLogic.getInstance().selectAllCountries();
-        records.sort(Comparator.comparing(CountryDTO::getId));
+        records.sort(Comparator.comparing(CountryDTO::getName));
 
-        countryCheckComboBox.getItems().setAll(
-                records.stream().map(CountryDTO::getId).collect(Collectors.toList())
-        );
+        countryCheckComboBox.getItems().setAll(records);
     }
 
     /**
@@ -174,7 +172,7 @@ public class DashboardController implements Initializable {
         vaccinesPieChart.getData().clear();
 
         producers.forEach((p, q) -> {
-            if(!countryCheckComboBox.getCheckModel().getCheckedItems().contains(p))
+            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
                 return;
 
             PieChart.Data data = new PieChart.Data(p, q.length);
@@ -192,7 +190,7 @@ public class DashboardController implements Initializable {
         vaccinationsPieChart.getData().clear();
 
         vaccinations.forEach((p, q) -> {
-            if(!countryCheckComboBox.getCheckModel().getCheckedItems().contains(p))
+            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
                 return;
 
             VaccinationsDTO report = q.get(q.size() - 1);
@@ -211,7 +209,7 @@ public class DashboardController implements Initializable {
         hospPieChart.getData().clear();
 
         hospitals.forEach((p, q) -> {
-            if(!countryCheckComboBox.getCheckModel().getCheckedItems().contains(p))
+            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
                 return;
 
             HospitalsDTO report = q.get(q.size() - 1);
@@ -234,7 +232,7 @@ public class DashboardController implements Initializable {
                     e -> {
                         tooltip.relocate(e.getSceneX(), e.getSceneY());
 
-                        tooltip.setText(String.valueOf(data.getPieValue()));
+                        tooltip.setText(data.getName() + " : " + data.getPieValue());
                         tooltip.setVisible(true);
                     });
 
@@ -270,7 +268,7 @@ public class DashboardController implements Initializable {
         hospLineChart.getData().clear();
 
         hospitals.forEach((p, q) -> {
-            if(!countryCheckComboBox.getCheckModel().getCheckedItems().contains(p))
+            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
                 return;
 
             List<XYChart.Data<String, Integer>> datas =
@@ -289,7 +287,7 @@ public class DashboardController implements Initializable {
         icuLineChart.getData().clear();
 
         hospitals.forEach((p, q) -> {
-            if(!countryCheckComboBox.getCheckModel().getCheckedItems().contains(p))
+            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
                 return;
 
             List<XYChart.Data<String, Integer>> datas =

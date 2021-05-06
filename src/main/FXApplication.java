@@ -2,6 +2,7 @@ package main;
 
 import common.Utils;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import model.Panel;
 import view.Navigator;
@@ -14,6 +15,7 @@ public class FXApplication extends Application {
         stage.setHeight(500);
         stage.setMinWidth(800);
         stage.setMinHeight(500);
+        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon/covid19.png")));
         stage.setTitle(Utils.getTranslatedString("title"));
         stage.setOnCloseRequest(event -> Navigator.getInstance().exit());
 
