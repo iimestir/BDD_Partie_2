@@ -86,7 +86,7 @@ public class WelcomeController implements Initializable, Disposable {
     private void aboutAction() {
         Dialog dialog = new Dialog();
         dialog.setTitle(Utils.getTranslatedString("about"));
-        dialog.setHeaderText("Groupe AZ");
+        dialog.setHeaderText(Utils.getTranslatedString("group"));
         dialog.setContentText("""
                 IMESTIR Ibrahim (000524358)
                 OUDAHYA Ismaïl (000479390)

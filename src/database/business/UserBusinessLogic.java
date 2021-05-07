@@ -207,6 +207,26 @@ public class UserBusinessLogic {
     }
 
     /**
+     * Selects all hospitals reports from the DB
+     *
+     * @param months number of months
+     * @throws SQLException if an error occurred
+     */
+    public List<HospitalsDTO> selectAllHospitalsLimited(int months) throws SQLException {
+        try {
+            DBManager.getInstance().initialize();
+            List<HospitalsDTO> result = hospitalsDao.selectAllDateBound(months);
+            DBManager.getInstance().commit();
+
+            return result;
+        } catch(SQLException ex) {
+            DBManager.getInstance().rollback();
+
+            throw ex;
+        }
+    }
+
+    /**
      * Selects a vaccinations report from the DB
      *
      * @param vaccinations the vaccinations report

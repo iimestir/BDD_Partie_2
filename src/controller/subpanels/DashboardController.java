@@ -34,11 +34,44 @@ public class DashboardController implements Initializable {
     @FXML private LineChart<String, Integer> icuLineChart;
     @FXML private Label tooltip;
 
-    private final Map<String, List<HospitalsDTO>> hospitals = new HashMap<>();
-    private final Map<String, List<VaccinationsDTO>> vaccinations = new HashMap<>();
     private final Map<String, String[]> producers = new HashMap<>();
+    private final Map<String, List<VaccinationsDTO>> vaccinations = new HashMap<>();
+    private final Map<String, List<HospitalsDTO>> hospitals = new HashMap<>();
 
-    private final ListChangeListener<CountryDTO> listener = change -> updateCharts();
+    private final ListChangeListener<CountryDTO> listener = change -> {
+        change.next();
+        boolean update = false;
+
+        if(change.getRemovedSize() != 0) {
+            final List<String> removed = change.getRemoved().stream().map(CountryDTO::getId).collect(Collectors.toList());
+
+            vaccinesPieChart.getData().removeIf(data -> removed.contains(data.getName()));
+            vaccinationsPieChart.getData().removeIf(data -> removed.contains(data.getName()));
+            hospPieChart.getData().removeIf(data -> removed.contains(data.getName()));
+            hospLineChart.getData().removeIf(data -> removed.contains(data.getName()));
+            icuLineChart.getData().removeIf(data -> removed.contains(data.getName()));
+
+            update = true;
+        }
+
+        if(change.getAddedSize() != 0) {
+            fillVaccinesPieData(change.getAddedSubList());
+            fillVaccinationPieData(change.getAddedSubList());
+            fillHospPieData(change.getAddedSubList());
+            fillHospLineChart(change.getAddedSubList());
+            fillIcuLineChart(change.getAddedSubList());
+
+            update = true;
+        }
+
+        if(update) {
+            updatePieChartMouseEvent(vaccinesPieChart);
+            updatePieChartMouseEvent(vaccinationsPieChart);
+            updatePieChartMouseEvent(hospPieChart);
+            updateLineChartMouseEvent(hospLineChart);
+            updateLineChartMouseEvent(icuLineChart);
+        }
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -53,13 +86,13 @@ public class DashboardController implements Initializable {
         hospLineChart.setLegendVisible(false);
         icuLineChart.setLegendVisible(false);
 
-        enableListener();
+        countryCheckComboBox.getCheckModel().getCheckedItems().addListener(listener);
     }
 
     /**
      * Loads the datas from the database
      */
-    public void loadDatas() {
+    public void loadData() {
         try {
             loadHospitalsData();
             loadVaccinationsData();
@@ -68,26 +101,6 @@ public class DashboardController implements Initializable {
         } catch (SQLException ex) {
             UITools.showErrorDialog(ex.getLocalizedMessage());
         }
-    }
-
-    /**
-     * Updates the dashboard
-     */
-    public void updateCharts() {
-        if(countryCheckComboBox.getCheckModel().getCheckedItems().size() == 0) {
-            vaccinesPieChart.getData().clear();
-            vaccinationsPieChart.getData().clear();
-            hospPieChart.getData().clear();
-            hospLineChart.getData().clear();
-            icuLineChart.getData().clear();
-            return;
-        }
-
-        updateVaccinesPieChart();
-        updateVaccinationsPieChart();
-        updateHospPieChart();
-        fillHospLineChart();
-        fillIcuLineChart();
     }
 
     /**
@@ -130,7 +143,7 @@ public class DashboardController implements Initializable {
      * @throws SQLException if an SQL error occurs
      */
     private void loadHospitalsData() throws SQLException {
-        List<HospitalsDTO> records = UserBusinessLogic.getInstance().selectAllHospitals();
+        List<HospitalsDTO> records = UserBusinessLogic.getInstance().selectAllHospitalsLimited(6);
         records.sort(Comparator.comparing(HospitalsDTO::getDate));
 
         records.forEach(p -> {
@@ -163,62 +176,6 @@ public class DashboardController implements Initializable {
                         p.getVaccines()
                 );
         });
-    }
-
-    /**
-     * Updates the vaccines pie chart
-     */
-    private void updateVaccinesPieChart() {
-        vaccinesPieChart.getData().clear();
-
-        producers.forEach((p, q) -> {
-            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
-                return;
-
-            PieChart.Data data = new PieChart.Data(p, q.length);
-
-            vaccinesPieChart.getData().add(data);
-        });
-
-        updatePieChartMouseEvent(vaccinesPieChart);
-    }
-
-    /**
-     * Updates the vaccinations pie chart
-     */
-    private void updateVaccinationsPieChart() {
-        vaccinationsPieChart.getData().clear();
-
-        vaccinations.forEach((p, q) -> {
-            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
-                return;
-
-            VaccinationsDTO report = q.get(q.size() - 1);
-            PieChart.Data data = new PieChart.Data(report.getISO(), report.getVaccinations());
-
-            vaccinationsPieChart.getData().add(data);
-        });
-
-        updatePieChartMouseEvent(vaccinationsPieChart);
-    }
-
-    /**
-     * Updates the hospitals pie chart
-     */
-    private void updateHospPieChart() {
-        hospPieChart.getData().clear();
-
-        hospitals.forEach((p, q) -> {
-            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
-                return;
-
-            HospitalsDTO report = q.get(q.size() - 1);
-            PieChart.Data data = new PieChart.Data(report.getISO(), report.getHosp_patients());
-
-            hospPieChart.getData().add(data);
-        });
-
-        updatePieChartMouseEvent(hospPieChart);
     }
 
     /**
@@ -262,40 +219,104 @@ public class DashboardController implements Initializable {
     }
 
     /**
-     * Fills the hospitalisations pie chart with datas
+     * Checks if the pie chart contains a given data
+     *
+     * @param chart chart
+     * @param iso the data
+     * @return boolean
      */
-    private void fillHospLineChart() {
-        hospLineChart.getData().clear();
+    private boolean containsData(PieChart chart, String iso) {
+        return chart.getData().stream().anyMatch(p -> p.getName().equals(iso));
+    }
 
-        hospitals.forEach((p, q) -> {
-            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
+    /**
+     * Fills the vaccines amount pie chart with data
+     *
+     * @param addedSubList given added data
+     */
+    private void fillVaccinesPieData(List<? extends CountryDTO> addedSubList) {
+        addedSubList.forEach(p -> {
+            if(producers.get(p.getId()) == null || producers.get(p.getId()).length == 0
+                    || containsData(vaccinesPieChart, p.getId()))
+                return;
+
+            PieChart.Data data = new PieChart.Data(p.getId(), producers.get(p.getId()).length);
+
+            vaccinesPieChart.getData().add(data);
+        });
+    }
+
+    /**
+     * Fills the vaccinations amount pie chart with data
+     *
+     * @param addedSubList given added data
+     */
+    private void fillVaccinationPieData(List<? extends CountryDTO> addedSubList) {
+        addedSubList.forEach(p -> {
+            if(vaccinations.get(p.getId()) == null || vaccinations.get(p.getId()).isEmpty()
+                    || containsData(vaccinationsPieChart, p.getId()))
+                return;
+
+            VaccinationsDTO report = vaccinations.get(p.getId()).get(vaccinations.get(p.getId()).size()-1);
+            PieChart.Data data = new PieChart.Data(p.getId(), report.getVaccinations());
+
+            vaccinationsPieChart.getData().add(data);
+        });
+    }
+
+    /**
+     * Fills the hospitalisations amount pie chart with data
+     *
+     * @param addedSubList given added data
+     */
+    private void fillHospPieData(List<? extends CountryDTO> addedSubList) {
+        addedSubList.forEach(p -> {
+            if(hospitals.get(p.getId()) == null || hospitals.get(p.getId()).isEmpty()
+                    || containsData(hospPieChart, p.getId()))
+                return;
+
+            HospitalsDTO report = hospitals.get(p.getId()).get(hospitals.get(p.getId()).size()-1);
+            PieChart.Data data = new PieChart.Data(p.getId(), report.getHosp_patients());
+
+            hospPieChart.getData().add(data);
+        });
+    }
+
+    /**
+     * Fills the hospitalisations pie chart with datas
+     *
+     * @param addedSubList given added data
+     */
+    private void fillHospLineChart(List<? extends CountryDTO> addedSubList) {
+        addedSubList.forEach(p -> {
+            if(hospitals.get(p.getId()) == null || hospitals.get(p.getId()).isEmpty())
                 return;
 
             List<XYChart.Data<String, Integer>> datas =
-                    q.stream()
+                    hospitals.get(p.getId()).stream()
                             .map(r -> new XYChart.Data<>(r.getDate().toString(), r.getHosp_patients()))
                             .collect(Collectors.toList());
 
-            fillLineChart(p, hospLineChart, datas);
+            fillLineChart(p.getId(), hospLineChart, datas);
         });
     }
 
     /**
      * Fills the ICU pie chart with datas
+     *
+     * @param addedSubList given added data
      */
-    private void fillIcuLineChart() {
-        icuLineChart.getData().clear();
-
-        hospitals.forEach((p, q) -> {
-            if(countryCheckComboBox.getCheckModel().getCheckedItems().stream().noneMatch(pr -> pr.getId().equals(p)))
+    private void fillIcuLineChart(List<? extends CountryDTO> addedSubList) {
+        addedSubList.forEach(p -> {
+            if(hospitals.get(p.getId()) == null || hospitals.get(p.getId()).isEmpty())
                 return;
 
             List<XYChart.Data<String, Integer>> datas =
-                    q.stream()
+                    hospitals.get(p.getId()).stream()
                             .map(r -> new XYChart.Data<>(r.getDate().toString(), r.getIcu_patients()))
                             .collect(Collectors.toList());
 
-            fillLineChart(p, icuLineChart, datas);
+            fillLineChart(p.getId(), icuLineChart, datas);
         });
     }
 
@@ -309,38 +330,15 @@ public class DashboardController implements Initializable {
 
         chart.getData().add(series);
         chart.setCreateSymbols(false);
-        updateLineChartMouseEvent(chart);
-    }
-
-    /**
-     * Initializes listeners
-     */
-    private void enableListener() {
-        countryCheckComboBox.getCheckModel().getCheckedItems().addListener(listener);
-    }
-
-    /**
-     * Disables listeners
-     */
-    private void disableListener() {
-        countryCheckComboBox.getCheckModel().getCheckedItems().removeListener(listener);
     }
 
     @FXML
     private void selectAllAction() {
-        disableListener();
         countryCheckComboBox.getCheckModel().checkAll();
-        enableListener();
-
-        updateCharts();
     }
 
     @FXML
     private void deselectAllAction() {
-        disableListener();
         countryCheckComboBox.getCheckModel().clearChecks();
-        enableListener();
-
-        updateCharts();
     }
 }

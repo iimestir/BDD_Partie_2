@@ -5,6 +5,7 @@ import database.transfer.HospitalsDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +52,28 @@ public class HospitalsDAO {
         String request = "SELECT * FROM Public.\"Hospitals\"";
 
         PreparedStatement stmt = conn.prepareStatement(request);
+
+        return retrieveHospitals(stmt);
+    }
+
+    /**
+     * Selects all records with a date bound
+     *
+     * @param months number of months
+     * @return records list
+     * @throws SQLException if an error occurs
+     */
+    public List<HospitalsDTO> selectAllDateBound(int months) throws SQLException {
+        Connection conn = DBManager.getInstance().getDBConnection();
+        String request = "SELECT * FROM Public.\"Hospitals\" WHERE \"Date\" BETWEEN ? AND ?";
+
+        PreparedStatement stmt = conn.prepareStatement(request);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(System.currentTimeMillis()));
+        cal.add(Calendar.MONTH, -months);
+
+        stmt.setDate(1, new Date(cal.getTimeInMillis()));
+        stmt.setDate(2, new Date(System.currentTimeMillis()));
 
         return retrieveHospitals(stmt);
     }

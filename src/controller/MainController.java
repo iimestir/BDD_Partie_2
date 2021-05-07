@@ -28,7 +28,7 @@ public class MainController implements Initializable, Disposable {
 
         dashboardTab.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
             if(t1) {
-                dashboardController.loadDatas();
+                dashboardController.loadData();
             }
         });
     }
