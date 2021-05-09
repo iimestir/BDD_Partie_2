@@ -47,6 +47,8 @@ Elle se met à jour à chaque clique sur l'onglet "Carte/Map".
 Vous pouvez aussi cliquer sur un pays désiré pour obtenir 
 les informations détaillées relatives à ce pays et au dernier rapport émis.
 
+La couleur de la carte du monde vire du rouge vif vers le vert, le rouge vif est la couleur prise selon le pire nombre jamais observé de cas d'hospitalisations dans le monde.
+
 ### Dashboard
 Le dashboard permet de visualiser plusieurs statistiques contenues dans la base de données :
 - Nombre de types de vaccins par pays (Camembert)
