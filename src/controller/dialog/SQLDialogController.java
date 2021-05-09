@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import model.DTOType;
 import model.SQLRequest;
+import view.UITools;
 
 import java.net.URL;
 import java.util.List;
@@ -282,7 +283,13 @@ public class SQLDialogController implements Initializable {
     public Object getDTO() throws IllegalArgumentException {
         List<String> args = getDTOArguments();
 
-        return sqlType == SQLRequest.UPDATE ? getPairDTO(args) : getSingleDTO(args);
+        try {
+            return sqlType == SQLRequest.UPDATE ? getPairDTO(args) : getSingleDTO(args);
+        }
+        catch (IllegalArgumentException ex) {
+            UITools.showErrorDialog(ex.getLocalizedMessage());
+            throw ex;
+        }
     }
 
     /**
@@ -291,7 +298,7 @@ public class SQLDialogController implements Initializable {
      * @param args DTO args
      * @return the DTO criteria
      */
-    private DTO getSingleDTO(List<String> args) {
+    private DTO getSingleDTO(List<String> args) throws IllegalArgumentException {
         int i = -1;
 
         switch(dto) {
@@ -397,7 +404,7 @@ public class SQLDialogController implements Initializable {
      * @param args DTO args
      * @return a pair containing the DTO criteria to update and the updated informations
      */
-    private Pair<DTO,DTO> getPairDTO(List<String> args) {
+    private Pair<DTO,DTO> getPairDTO(List<String> args) throws IllegalArgumentException {
         switch(dto) {
             case CLIMATE -> {
                 return getClimateDTOPair(args);
@@ -426,7 +433,7 @@ public class SQLDialogController implements Initializable {
         }
     }
 
-    private Pair<DTO, DTO> getEpidemiologistDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getEpidemiologistDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = 1;
 
@@ -455,7 +462,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getUserDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getUserDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = 1;
 
@@ -480,7 +487,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getVaccinationsDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getVaccinationsDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = -1;
 
@@ -500,7 +507,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getProducersDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getProducersDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = 1;
 
@@ -517,7 +524,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getHospitalsDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getHospitalsDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = -1;
 
@@ -539,7 +546,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getCountryDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getCountryDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = 1;
 
@@ -566,7 +573,7 @@ public class SQLDialogController implements Initializable {
         );
     }
 
-    private Pair<DTO, DTO> getClimateDTOPair(List<String> args) {
+    private Pair<DTO, DTO> getClimateDTOPair(List<String> args) throws IllegalArgumentException {
         int o = -2;
         int n = 1;
 

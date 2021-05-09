@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class DBManager {
     private static final DBManager instance = new DBManager();
 
-    private static final String DB_NAME = "BDD2";
+    private static final String DB_NAME = "Test";
     private static final String DB_URL = "jdbc:postgresql://localhost/" + DB_NAME;
     private static final String DB_USER = "bdd_application";
     private static final String DB_PWD = "password";
